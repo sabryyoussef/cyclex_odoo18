@@ -295,65 +295,46 @@
 
 ---
 
-### Phase 4: Integrations
+### Phase 4: QR Code Generation (Odoo)
 
-#### Checkpoint 4.1: SMS Misr Integration ✓
-- [ ] Set up SMS Misr API credentials in Odoo settings
-- [ ] Create SMS sending service:
-  - [ ] Generate 6-digit random code
-  - [ ] Format SMS message (Arabic/English)
-  - [ ] Send via SMS Misr API
-  - [ ] Log SMS status
-- [ ] Add error handling and retry logic
-- [ ] Create SMS log model for tracking
-
-#### Checkpoint 4.2: Firebase FCM Integration ✓
-- [ ] Create Firebase project
-- [ ] Add Android app to Firebase
-- [ ] Add iOS app to Firebase
-- [ ] Download configuration files
-- [ ] Set up FCM server key in Odoo
-- [ ] Create notification service:
-  - [ ] Order status updates
-  - [ ] Collector assignment
-  - [ ] Order completion
-  - [ ] Withdrawal approval
-  - [ ] Custom admin notifications
-- [ ] Support multilingual notifications
-
-#### Checkpoint 4.3: QR Code Generation ✓
-- [ ] Install Python QR code library
-- [ ] Generate unique QR codes for each order
-- [ ] Store QR as image in order record
-- [ ] Create QR validation logic
-- [ ] Add QR expiry (optional security)
+#### Checkpoint 4.1: QR Code Implementation
+- [ ] Install Python QR code library (`qrcode`, `pillow`)
+- [ ] Generate unique QR codes for each order (based on UUID)
+- [ ] Store QR as image (Binary field) in order record
+- [ ] Create QR validation logic in collector scan endpoint
+- [ ] Add QR display in backend order form view
+- [ ] Add QR code to order details API response
+- [ ] Add security measures (order ID validation)
 
 ---
 
-### Phase 5: Business Logic & Rules
+### Phase 5: Business Logic & Rules (Odoo)
 
-#### Checkpoint 5.1: Order Workflow Automation ✓
-- [ ] Auto-assign orders to collectors (based on location)
+#### Checkpoint 5.1: Order Workflow Automation
+- [ ] Auto-assign orders to collectors (based on location/working areas)
 - [ ] Set 3-day deadline on order acceptance
 - [ ] Auto-revert unfulfilled orders to "available" after 3 days
-- [ ] Send automated notifications at each status change
+- [ ] Send automated notifications at each status change (placeholders ready)
 - [ ] Prevent duplicate order acceptance
+- [ ] Add scheduled actions for deadline monitoring
 
-#### Checkpoint 5.2: Wallet Logic ✓
+#### Checkpoint 5.2: Wallet Logic
 - [ ] Auto-credit wallet on order completion
 - [ ] Validate withdrawal threshold (1000 EGP)
 - [ ] Create withdrawal approval workflow
 - [ ] Track wallet transaction history
 - [ ] Prevent negative balance
+- [ ] Add withdrawal request notifications (placeholders ready)
 
-#### Checkpoint 5.3: Commission Calculation ✓
+#### Checkpoint 5.3: Commission Calculation
 - [ ] Calculate commission on order completion
 - [ ] Apply collector-specific commission rates
 - [ ] Track unpaid commissions
 - [ ] Create commission payout workflow
 - [ ] Generate commission reports
+- [ ] Add commission analytics dashboard
 
-#### Checkpoint 5.4: Validation & Security ✓
+#### Checkpoint 5.4: Validation & Security
 - [ ] Phone number format validation
 - [ ] Password strength requirements
 - [ ] Rate limiting for API calls
@@ -361,93 +342,176 @@
 - [ ] Image upload size limits (photos)
 - [ ] Prevent duplicate phone number registration
 - [ ] Collector working area limit (max 5)
+- [ ] Add input sanitization for all APIs
 
 ---
 
-### Phase 6: Testing & Documentation
+### Phase 6: Testing & Documentation (Odoo)
 
-#### Checkpoint 6.1: API Testing (Postman) ✓
-- [ ] Create Postman collection for all endpoints
-- [ ] Test authentication flow
-- [ ] Test customer workflow (register → create request → track order)
-- [ ] Test collector workflow (register → accept order → complete)
-- [ ] Test wallet operations
+#### Checkpoint 6.1: API Testing (Postman/Insomnia)
+- [ ] Create Postman collection for all 22 endpoints
+- [ ] Test authentication flow (login, register, verify, resend)
+- [ ] Test customer workflow (register → create request → track order → rate)
+- [ ] Test collector workflow (register → accept order → scan QR → complete)
+- [ ] Test wallet operations (balance, transactions, withdraw)
 - [ ] Test edge cases and error handling
-- [ ] Document API responses
+- [ ] Document all API responses with examples
 
-#### Checkpoint 6.2: Backend Testing ✓
+#### Checkpoint 6.2: Backend Testing
 - [ ] Test model constraints and validations
-- [ ] Test computed fields
-- [ ] Test workflow transitions
+- [ ] Test computed fields (balances, ratings, commission)
+- [ ] Test workflow transitions (draft → pending → assigned → collected)
 - [ ] Test commission calculations
-- [ ] Test SMS sending (sandbox mode)
-- [ ] Test Firebase notifications (test devices)
+- [ ] Test QR code generation and validation
+- [ ] Test scheduled actions (cron jobs)
+- [ ] Load testing with sample data
 
-#### Checkpoint 6.3: Documentation ✓
-- [ ] API documentation (endpoints, parameters, responses)
-- [ ] Database schema documentation
+#### Checkpoint 6.3: Documentation
+- [ ] Complete API documentation (already started: API_DOCUMENTATION.md)
+- [ ] Database schema documentation with ERD
 - [ ] User roles and permissions guide
-- [ ] Admin dashboard guide
-- [ ] Integration setup guides (SMS, Firebase)
+- [ ] Admin dashboard usage guide
+- [ ] Backend workflow documentation
 - [ ] Mobile app integration guide
+- [ ] Deployment guide
 
 ---
 
-### Phase 7: Mobile App Coordination
+### Phase 7: External Integrations (Final Odoo Stage)
 
-#### Checkpoint 7.1: iOS App (Swift) ✓
-- [ ] Share API documentation with iOS team
-- [ ] Provide Firebase configuration
-- [ ] Coordinate authentication flow
-- [ ] Coordinate UI/UX for customer features
-- [ ] Coordinate UI/UX for collector features
+#### Checkpoint 7.1: SMS Misr Integration
+- [ ] Set up SMS Misr API credentials in Odoo system parameters
+- [ ] Create `cyclex.sms` service model:
+  - [ ] Generate 6-digit random code
+  - [ ] Format SMS message (Arabic/English templates)
+  - [ ] Send via SMS Misr REST API
+  - [ ] Log SMS status (sent/failed/delivered)
+- [ ] Integrate with registration endpoint
+- [ ] Integrate with resend-code endpoint
+- [ ] Add error handling and retry logic
+- [ ] Create SMS log model for tracking and debugging
+- [ ] Add SMS balance monitoring
+
+#### Checkpoint 7.2: Firebase FCM Integration
+- [ ] Create Firebase project (Console setup)
+- [ ] Add Android app to Firebase
+- [ ] Add iOS app to Firebase
+- [ ] Download configuration files (google-services.json, GoogleService-Info.plist)
+- [ ] Install `firebase-admin` Python library
+- [ ] Set up FCM server key in Odoo system parameters
+- [ ] Create `cyclex.notification` service model:
+  - [ ] Order status updates (pending → assigned → collected)
+  - [ ] Collector assignment notifications
+  - [ ] Order completion notifications
+  - [ ] Withdrawal approval/rejection notifications
+  - [ ] Custom admin broadcast notifications
+- [ ] Support multilingual notifications (ar/en based on user preference)
+- [ ] Add notification history tracking
+- [ ] Test with real devices (Android & iOS)
+
+---
+
+### Phase 8: Mobile App Development (Outside Odoo - Special Phase)
+
+> **Note:** This phase is handled by mobile development teams and runs in parallel with Odoo backend work.
+
+#### Checkpoint 8.1: iOS App (Swift)
+- [ ] Share complete API documentation with iOS team
+- [ ] Provide Firebase configuration files
+- [ ] Set up project structure (MVVM/Clean Architecture)
+- [ ] Implement authentication flow (login, register, verify)
+- [ ] Implement customer features:
+  - [ ] Browse categories and products
+  - [ ] Create recycling requests
+  - [ ] Upload photos (camera/gallery)
+  - [ ] Track order status
+  - [ ] View wallet balance and transactions
+  - [ ] Rate completed orders
+- [ ] Implement collector features:
+  - [ ] Register as collector
+  - [ ] View available orders
+  - [ ] Accept/reject orders
+  - [ ] Scan QR codes
+  - [ ] Complete orders
+  - [ ] View commission earnings
+- [ ] Implement QR code scanner (AVFoundation)
+- [ ] Implement push notifications (Firebase Cloud Messaging)
+- [ ] Implement GPS location capture
+- [ ] Implement multilingual support (Arabic/English)
 - [ ] Test API integration
-- [ ] Implement QR scanner
 
-#### Checkpoint 7.2: Android App (Kotlin) ✓
-- [ ] Share API documentation with Android team
-- [ ] Provide Firebase configuration
-- [ ] Coordinate authentication flow
-- [ ] Coordinate UI/UX for customer features
-- [ ] Coordinate UI/UX for collector features
+#### Checkpoint 8.2: Android App (Kotlin)
+- [ ] Share complete API documentation with Android team
+- [ ] Provide Firebase configuration files
+- [ ] Set up project structure (MVVM/Clean Architecture)
+- [ ] Implement authentication flow (login, register, verify)
+- [ ] Implement customer features:
+  - [ ] Browse categories and products
+  - [ ] Create recycling requests
+  - [ ] Upload photos (camera/gallery)
+  - [ ] Track order status
+  - [ ] View wallet balance and transactions
+  - [ ] Rate completed orders
+- [ ] Implement collector features:
+  - [ ] Register as collector
+  - [ ] View available orders
+  - [ ] Accept/reject orders
+  - [ ] Scan QR codes
+  - [ ] Complete orders
+  - [ ] View commission earnings
+- [ ] Implement QR code scanner (CameraX + ML Kit)
+- [ ] Implement push notifications (Firebase Cloud Messaging)
+- [ ] Implement GPS location capture
+- [ ] Implement multilingual support (Arabic/English)
 - [ ] Test API integration
-- [ ] Implement QR scanner
 
-#### Checkpoint 7.3: Cross-Platform Testing ✓
-- [ ] Test notifications on both platforms
-- [ ] Test photo upload functionality
-- [ ] Test GPS location capture
+#### Checkpoint 8.3: Mobile Testing & QA
+- [ ] Test notifications on both platforms (iOS & Android)
+- [ ] Test photo upload functionality (compression, formats)
+- [ ] Test GPS location capture accuracy
 - [ ] Test QR code generation and scanning
 - [ ] Test real-time order status updates
-- [ ] Test multilingual support (Arabic/English)
+- [ ] Test multilingual support (UI + API responses)
+- [ ] Test offline functionality (if applicable)
+- [ ] Test different screen sizes and orientations
+- [ ] Performance testing (battery, memory, network)
+- [ ] Security testing (token storage, secure communication)
 
 ---
 
-### Phase 8: Deployment & Launch
+### Phase 9: Deployment & Launch
 
-#### Checkpoint 8.1: Staging Environment ✓
-- [ ] Set up staging Odoo instance
-- [ ] Deploy CycleX module
-- [ ] Configure SMS Misr (test mode)
-- [ ] Configure Firebase (dev project)
-- [ ] Load sample data (categories, products, test users)
-- [ ] Conduct UAT (User Acceptance Testing)
+#### Checkpoint 9.1: Staging Environment
+- [ ] Set up staging Odoo instance (dedicated server/cloud)
+- [ ] Deploy CycleX module to staging
+- [ ] Configure SMS Misr in test mode
+- [ ] Configure Firebase dev project
+- [ ] Load sample data (categories, products, test users, working areas)
+- [ ] Deploy staging mobile apps (TestFlight for iOS, Firebase App Distribution for Android)
+- [ ] Conduct UAT (User Acceptance Testing) with internal team
+- [ ] Fix identified bugs and issues
 
-#### Checkpoint 8.2: Production Setup ✓
-- [ ] Set up production Odoo instance
-- [ ] Configure production database
+#### Checkpoint 9.2: Production Setup
+- [ ] Set up production Odoo instance (scalable infrastructure)
+- [ ] Configure production database with replication
 - [ ] Set up SMS Misr production credentials
 - [ ] Set up Firebase production project
-- [ ] Configure backups
-- [ ] Set up monitoring and logging
+- [ ] Configure SSL certificates (HTTPS)
+- [ ] Configure automated backups (daily database + filestore)
+- [ ] Set up monitoring and logging (server, database, API)
+- [ ] Set up error tracking (Sentry or similar)
+- [ ] Configure CDN for static assets (optional)
 
-#### Checkpoint 8.3: Go Live ✓
+#### Checkpoint 9.3: Go Live
 - [ ] Deploy to production
-- [ ] Onboard initial collectors
-- [ ] Launch marketing campaign
-- [ ] Monitor system performance
-- [ ] Provide user support
-- [ ] Collect feedback for improvements
+- [ ] Submit iOS app to App Store
+- [ ] Submit Android app to Google Play Store
+- [ ] Onboard initial collectors (pilot program)
+- [ ] Launch marketing campaign (social media, ads)
+- [ ] Monitor system performance (server load, API response times)
+- [ ] Provide user support (help desk, in-app chat)
+- [ ] Collect user feedback for improvements
+- [ ] Plan v2 features based on feedback
 
 ---
 
@@ -462,10 +526,10 @@
   - `requests` (for SMS API)
   - `firebase-admin` (for FCM)
 
-### External Services
-- **SMS Misr:** API credentials required
-- **Firebase:** Project setup for Android & iOS
-- **GPS/Maps:** Google Maps API (optional for location services)
+### External Services (Phase 7 - Final Odoo Stage)
+- **SMS Misr:** API credentials required for OTP verification
+- **Firebase FCM:** Project setup for Android & iOS push notifications
+- **GPS/Maps:** Built-in device GPS (no API key required for basic location capture)
 
 ### Security Considerations
 - [ ] HTTPS for all API endpoints
@@ -510,19 +574,32 @@
 
 ---
 
-**Last Updated:** October 15, 2025  
-**Version:** 1.0  
-**Status:** Planning Phase
+**Last Updated:** October 17, 2025  
+**Version:** 2.0  
+**Status:** Phase 3 Completed ✅ | Phase 4 (QR Code) In Progress
 
 ---
 
-## Notes
+## 📝 Phase Organization Notes
 
-- All checkboxes are unchecked for lazy planning - mark them as you progress
-- Phases can be executed in parallel where dependencies allow
-- Prioritize Phase 1-3 for MVP (Minimum Viable Product)
-- Phase 4-5 for production readiness
-- Phase 6-8 for launch preparation
+### Odoo Backend Phases (Sequential)
+1. **Phase 1-3:** ✅ **COMPLETED** - Backend Foundation, Views/UI, API Development
+2. **Phase 4:** QR Code Generation (Next up)
+3. **Phase 5:** Business Logic & Rules
+4. **Phase 6:** Testing & Documentation
+5. **Phase 7:** External Integrations (SMS Misr + Firebase) - *Final Odoo stage*
 
-**Ready to start building! 🎉**
+### Non-Odoo Phases (Can run in parallel)
+6. **Phase 8:** Mobile App Development (iOS & Android) - *Special Phase - Outside Odoo*
+7. **Phase 9:** Deployment & Launch
+
+### Key Points
+- ✅ **Phase 1-3 are complete:** Full backend with 22 REST API endpoints
+- 🎯 **Current focus:** Phase 4 (QR Code Generation)
+- 📱 **Mobile development (Phase 8)** can start in parallel with Phase 4-7
+- 🔌 **Integrations (Phase 7)** are deliberately at the end of Odoo work
+- 🚀 **MVP readiness:** Complete Phase 1-6 for full backend functionality
+- 🎉 **Production ready:** Complete Phase 1-7 for integrated system
+
+**Let's continue building! 💪**
 
