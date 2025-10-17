@@ -207,14 +207,44 @@ class CyclexRequest(models.Model):
         self.ensure_one()
         if self.status != 'assigned':
             raise ValidationError(_('Only assigned requests can be marked as collected.'))
+        
+        # Update request status
         self.write({
             'status': 'collected',
             'completion_date': fields.Datetime.now()
         })
-        # TODO: Create wallet transaction for customer
+        
+        # Create wallet transaction for customer
+        self._create_wallet_transaction()
+        
         # TODO: Create commission record for collector
         # TODO: Send notification to customer
         return True
+    
+    def _create_wallet_transaction(self):
+        """Create wallet transaction when request is collected"""
+        self.ensure_one()
+        
+        # Get or create customer wallet
+        Wallet = self.env['cyclex.wallet']
+        wallet = Wallet.search([('user_id', '=', self.customer_id.id)], limit=1)
+        if not wallet:
+            wallet = Wallet.create_wallet_for_customer(self.customer_id.id)
+        
+        # Add credit to wallet
+        description = _('Payment for request %s - %s kg of %s') % (
+            self.name, 
+            self.weight, 
+            self.product_id.name
+        )
+        
+        wallet.add_credit(
+            amount=self.calculated_price,
+            description=description,
+            request_id=self.id
+        )
+        
+        return wallet
     
     def action_cancel(self):
         """Cancel the request"""

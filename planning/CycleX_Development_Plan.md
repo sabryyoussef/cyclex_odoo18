@@ -84,23 +84,27 @@
 - [x] Add business logic methods (submit, assign, collect, cancel)
 - [x] Add data validation (weight, quantity, pickup date)
 
-#### Checkpoint 1.5: Core Models - Wallet System ✓
-- [ ] Create `cyclex.wallet` model:
-  - [ ] User (many2one res.partner)
-  - [ ] Balance (float)
-  - [ ] Total earned (float)
-  - [ ] Total withdrawn (float)
-  - [ ] Withdrawal threshold (default: 1000 EGP)
-  - [ ] Status (active/frozen)
-- [ ] Create `cyclex.wallet.transaction` model:
-  - [ ] Wallet (many2one)
-  - [ ] Request/Order (many2one)
-  - [ ] Amount
-  - [ ] Type (credit/debit)
-  - [ ] Description
-  - [ ] Transaction date
-- [ ] Add wallet balance calculation methods
-- [ ] Add withdrawal request functionality
+#### Checkpoint 1.5: Core Models - Wallet System ✅
+- [x] Create `cyclex.wallet` model:
+  - [x] User (many2one res.partner)
+  - [x] Balance (monetary, computed & stored)
+  - [x] Total earned (monetary, computed & stored)
+  - [x] Total withdrawn (monetary, computed & stored)
+  - [x] Withdrawal threshold (default: 1000 EGP)
+  - [x] Status (active/frozen)
+- [x] Create `cyclex.wallet.transaction` model:
+  - [x] Wallet (many2one)
+  - [x] Customer (related from wallet)
+  - [x] Request/Order (many2one)
+  - [x] Amount (positive for credit, negative for debit)
+  - [x] Type (credit/debit)
+  - [x] Description
+  - [x] Transaction date
+- [x] Add wallet balance calculation methods
+- [x] Add withdrawal request functionality
+- [x] Add business methods (add_credit, add_debit, freeze, activate)
+- [x] Add data validation (amount sign, balance check, withdrawal threshold)
+- [x] Integrate with request model (automatic wallet credit on collection)
 
 #### Checkpoint 1.6: Collector-Specific Models ✓
 - [ ] Extend `res.partner` for collector fields:
