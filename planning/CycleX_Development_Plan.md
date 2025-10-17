@@ -349,7 +349,7 @@
 ### Phase 6: Testing & Documentation (Odoo)
 
 #### Checkpoint 6.1: API Testing (Postman/Insomnia)
-- [ ] Create Postman collection for all 22 endpoints
+- [x] Create Postman collection for all 22 endpoints ✅
 - [ ] Test authentication flow (login, register, verify, resend)
 - [ ] Test customer workflow (register → create request → track order → rate)
 - [ ] Test collector workflow (register → accept order → scan QR → complete)
@@ -683,8 +683,8 @@
 ---
 
 **Last Updated:** October 17, 2025  
-**Version:** 2.2  
-**Status:** Phase 5 Completed ✅ | Phase 6 (Testing & Documentation) Next
+**Version:** 2.3  
+**Status:** Phase 5 Completed ✅ | Phase 6 Started (Postman Collection ✅)
 
 ---
 
