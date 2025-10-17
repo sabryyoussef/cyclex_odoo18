@@ -61,26 +61,28 @@
   - [x] Active status
 - [x] Create 11 sample products with pricing (0.50 - 45.00 EGP/kg)
 
-#### Checkpoint 1.4: Core Models - Requests/Orders ✓
-- [ ] Create `cyclex.request` model:
-  - [ ] Customer (many2one res.partner)
-  - [ ] Collector (many2one res.partner, optional)
-  - [ ] Category (many2one)
-  - [ ] Product (many2one)
-  - [ ] Quantity
-  - [ ] Weight (kg)
-  - [ ] Calculated price
-  - [ ] Photos (binary fields, max 2)
-  - [ ] GPS location (from customer profile)
-  - [ ] Pickup date
-  - [ ] Status (draft/pending/assigned/collected/cancelled)
-  - [ ] QR code (generated unique identifier)
-  - [ ] Rating (selection: 1-5 stars)
-  - [ ] Comments (text)
-  - [ ] Creation date
-  - [ ] Completion date
-- [ ] Add computed fields for price calculation
-- [ ] Add QR code generation logic
+#### Checkpoint 1.4: Core Models - Requests/Orders ✅
+- [x] Create `cyclex.request` model:
+  - [x] Customer (many2one res.partner)
+  - [x] Collector (many2one res.partner, optional)
+  - [x] Category (many2one)
+  - [x] Product (many2one)
+  - [x] Quantity
+  - [x] Weight (kg)
+  - [x] Calculated price
+  - [x] Photos (binary fields, max 2)
+  - [x] GPS location (from customer profile)
+  - [x] Pickup date
+  - [x] Status (draft/pending/assigned/collected/cancelled)
+  - [x] QR code (generated unique identifier via UUID)
+  - [x] Rating (selection: 1-5 stars)
+  - [x] Comments (text)
+  - [x] Creation date
+  - [x] Completion date
+- [x] Add computed fields for price calculation (weight × price_per_kg)
+- [x] Add QR code generation logic (UUID v4)
+- [x] Add business logic methods (submit, assign, collect, cancel)
+- [x] Add data validation (weight, quantity, pickup date)
 
 #### Checkpoint 1.5: Core Models - Wallet System ✓
 - [ ] Create `cyclex.wallet` model:
