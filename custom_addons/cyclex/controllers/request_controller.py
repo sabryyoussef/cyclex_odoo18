@@ -83,11 +83,8 @@ class CyclexRequestController(http.Controller):
             if 'photo_2' in kwargs and kwargs['photo_2']:
                 request_vals['photo_2'] = kwargs['photo_2']  # Base64
             
-            # Create request
+            # Create request (QR code is auto-generated in create method)
             new_request = request.env['cyclex.request'].sudo().create(request_vals)
-            
-            # Generate QR code
-            new_request.sudo().generate_qr_code()
             
             return {
                 'success': True,
@@ -99,6 +96,7 @@ class CyclexRequestController(http.Controller):
                     'calculated_price': new_request.calculated_price,
                     'currency_symbol': new_request.currency_id.symbol,
                     'qr_code': new_request.qr_code,
+                    'qr_code_image': new_request.qr_code_image.decode('utf-8') if new_request.qr_code_image else None,
                     'pickup_date': str(new_request.pickup_date),
                     'product_name': new_request.product_id.name,
                     'category_name': new_request.category_id.name,
@@ -262,6 +260,7 @@ class CyclexRequestController(http.Controller):
                     'create_date': str(req.create_date),
                     'completion_date': str(req.completion_date) if req.completion_date else None,
                     'qr_code': req.qr_code,
+                    'qr_code_image': req.qr_code_image.decode('utf-8') if req.qr_code_image else None,
                     'rating': req.rating if req.rating else None,
                     'comments': req.comments or '',
                     'photo_1': req.photo_1.decode('utf-8') if req.photo_1 else None,

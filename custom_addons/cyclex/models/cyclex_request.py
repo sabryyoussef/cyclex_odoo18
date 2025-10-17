@@ -4,6 +4,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import uuid
 from datetime import datetime
+import qrcode
+import base64
+from io import BytesIO
 
 
 class CyclexRequest(models.Model):
@@ -97,6 +100,12 @@ class CyclexRequest(models.Model):
         index=True
     )
     
+    qr_code_image = fields.Binary(
+        string='QR Code Image',
+        attachment=True,
+        help='QR Code image for order scanning'
+    )
+    
     rating = fields.Selection([
         ('1', '1 - Poor'),
         ('2', '2 - Fair'),
@@ -161,9 +170,11 @@ class CyclexRequest(models.Model):
         if vals.get('name', _('New')) == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code('cyclex.request') or _('New')
         
-        # Generate unique QR code
+        # Generate unique QR code and image
         if not vals.get('qr_code'):
-            vals['qr_code'] = self._generate_qr_code()
+            qr_data = self._generate_qr_code()
+            vals['qr_code'] = qr_data
+            vals['qr_code_image'] = self._generate_qr_code_image(qr_data)
         
         # Get customer's GPS location if available
         if vals.get('customer_id') and not vals.get('gps_latitude'):
@@ -177,6 +188,29 @@ class CyclexRequest(models.Model):
     def _generate_qr_code(self):
         """Generate a unique QR code for the request"""
         return str(uuid.uuid4())
+    
+    def _generate_qr_code_image(self, qr_data):
+        """Generate QR code image from the QR data"""
+        # Create QR code
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        
+        # Create image
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convert to binary
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        img_binary = base64.b64encode(buffer.getvalue())
+        buffer.close()
+        
+        return img_binary
     
     # ==========================================
     # Business Methods

@@ -83,6 +83,7 @@
                             </group>
                             <group string="QR Code &amp; Rating">
                                 <field name="qr_code" readonly="1"/>
+                                <field name="qr_code_image" widget="image" readonly="1" options="{'size': [200, 200]}"/>
                                 <field name="rating" widget="priority" readonly="status != 'collected'"/>
                                 <field name="comments" readonly="status != 'collected'"/>
                             </group>
