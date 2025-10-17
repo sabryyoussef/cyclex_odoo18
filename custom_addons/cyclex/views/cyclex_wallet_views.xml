@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Placeholder for Wallet Views - To be implemented in Checkpoint 1.5 -->
+        
+        <record id="action_cyclex_wallet" model="ir.actions.act_window">
+            <field name="name">Wallets</field>
+            <field name="res_model">cyclex.wallet</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+    </data>
+</odoo>
+

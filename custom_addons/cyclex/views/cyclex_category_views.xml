@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Placeholder for Category Views - To be implemented in Checkpoint 1.3 -->
+        
+        <record id="action_cyclex_category" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">cyclex.category</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        
+    </data>
+</odoo>
+

@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cyclex_category_customer,cyclex.category.customer,model_cyclex_category,group_cyclex_customer,1,0,0,0
+access_cyclex_category_manager,cyclex.category.manager,model_cyclex_category,group_cyclex_manager,1,1,1,1
+access_cyclex_product_customer,cyclex.product.customer,model_cyclex_product,group_cyclex_customer,1,0,0,0
+access_cyclex_product_manager,cyclex.product.manager,model_cyclex_product,group_cyclex_manager,1,1,1,1
+access_cyclex_request_customer,cyclex.request.customer,model_cyclex_request,group_cyclex_customer,1,1,1,0
+access_cyclex_request_collector,cyclex.request.collector,model_cyclex_request,group_cyclex_collector,1,1,1,0
+access_cyclex_request_manager,cyclex.request.manager,model_cyclex_request,group_cyclex_manager,1,1,1,1
+access_cyclex_wallet_customer,cyclex.wallet.customer,model_cyclex_wallet,group_cyclex_customer,1,0,0,0
+access_cyclex_wallet_manager,cyclex.wallet.manager,model_cyclex_wallet,group_cyclex_manager,1,1,1,1
+access_cyclex_wallet_transaction_customer,cyclex.wallet.transaction.customer,model_cyclex_wallet_transaction,group_cyclex_customer,1,0,0,0
+access_cyclex_wallet_transaction_manager,cyclex.wallet.transaction.manager,model_cyclex_wallet_transaction,group_cyclex_manager,1,1,1,1
+access_cyclex_commission_collector,cyclex.commission.collector,model_cyclex_commission,group_cyclex_collector,1,0,0,0
+access_cyclex_commission_manager,cyclex.commission.manager,model_cyclex_commission,group_cyclex_manager,1,1,1,1
+access_cyclex_working_area_collector,cyclex.working.area.collector,model_cyclex_working_area,group_cyclex_collector,1,0,0,0
+access_cyclex_working_area_manager,cyclex.working.area.manager,model_cyclex_working_area,group_cyclex_manager,1,1,1,1
+

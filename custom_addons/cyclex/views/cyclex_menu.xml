@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Root Menu -->
+        <menuitem id="menu_cyclex_root"
+                  name="CycleX"
+                  web_icon="cyclex,static/description/icon.png"
+                  sequence="10"
+                  groups="group_cyclex_customer"/>
+
+        <!-- Requests Menu -->
+        <menuitem id="menu_cyclex_requests"
+                  name="Requests"
+                  parent="menu_cyclex_root"
+                  sequence="10"
+                  groups="group_cyclex_customer"/>
+
+        <menuitem id="menu_cyclex_request_all"
+                  name="All Requests"
+                  parent="menu_cyclex_requests"
+                  action="action_cyclex_request"
+                  sequence="10"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_request_pending"
+                  name="Pending Requests"
+                  parent="menu_cyclex_requests"
+                  sequence="20"
+                  groups="group_cyclex_collector"/>
+
+        <menuitem id="menu_cyclex_request_my"
+                  name="My Requests"
+                  parent="menu_cyclex_requests"
+                  sequence="30"
+                  groups="group_cyclex_customer"/>
+
+        <!-- Customers Menu -->
+        <menuitem id="menu_cyclex_customers"
+                  name="Customers"
+                  parent="menu_cyclex_root"
+                  sequence="20"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_customer_list"
+                  name="All Customers"
+                  parent="menu_cyclex_customers"
+                  action="action_cyclex_customer"
+                  sequence="10"
+                  groups="group_cyclex_manager"/>
+
+        <!-- Collectors Menu -->
+        <menuitem id="menu_cyclex_collectors"
+                  name="Collectors"
+                  parent="menu_cyclex_root"
+                  sequence="30"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_collector_list"
+                  name="All Collectors"
+                  parent="menu_cyclex_collectors"
+                  action="action_cyclex_collector"
+                  sequence="10"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_collector_pending"
+                  name="Pending Approval"
+                  parent="menu_cyclex_collectors"
+                  sequence="20"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_commission"
+                  name="Commissions"
+                  parent="menu_cyclex_collectors"
+                  action="action_cyclex_commission"
+                  sequence="30"
+                  groups="group_cyclex_manager"/>
+
+        <!-- Wallet Menu -->
+        <menuitem id="menu_cyclex_wallet"
+                  name="Wallet"
+                  parent="menu_cyclex_root"
+                  sequence="40"
+                  groups="group_cyclex_customer"/>
+
+        <menuitem id="menu_cyclex_wallet_balance"
+                  name="My Wallet"
+                  parent="menu_cyclex_wallet"
+                  action="action_cyclex_wallet"
+                  sequence="10"
+                  groups="group_cyclex_customer"/>
+
+        <menuitem id="menu_cyclex_wallet_transactions"
+                  name="Transactions"
+                  parent="menu_cyclex_wallet"
+                  sequence="20"
+                  groups="group_cyclex_customer"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_cyclex_configuration"
+                  name="Configuration"
+                  parent="menu_cyclex_root"
+                  sequence="100"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_categories"
+                  name="Categories"
+                  parent="menu_cyclex_configuration"
+                  action="action_cyclex_category"
+                  sequence="10"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_products"
+                  name="Products"
+                  parent="menu_cyclex_configuration"
+                  action="action_cyclex_product"
+                  sequence="20"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_working_areas"
+                  name="Working Areas"
+                  parent="menu_cyclex_configuration"
+                  action="action_cyclex_working_area"
+                  sequence="30"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_settings"
+                  name="Settings"
+                  parent="menu_cyclex_configuration"
+                  sequence="100"
+                  groups="group_cyclex_admin"/>
+
+    </data>
+</odoo>
+

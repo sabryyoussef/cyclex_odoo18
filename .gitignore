@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Odoo
+*.log
+*.pot
+*.pyc
+.DS_Store
+sessions/
+filestore/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.sql
+*.db
+
+# OS
+Thumbs.db
+.directory
+
+# Odoo specific
+odoo.log
+odoo-server.log
+
