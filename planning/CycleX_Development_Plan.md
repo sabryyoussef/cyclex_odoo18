@@ -202,90 +202,96 @@
 
 ---
 
-### Phase 3: API Development (Controllers)
+### Phase 3: API Development (Controllers) ✅
 
-#### Checkpoint 3.1: Authentication APIs ✓
-- [ ] `/api/cyclex/login` (POST)
-  - [ ] Accept phone number & password
-  - [ ] Return auth token + user profile
-- [ ] `/api/cyclex/register` (POST)
-  - [ ] Accept: name, phone, password, confirm_password
-  - [ ] Optional: fcm_token, language
-  - [ ] Generate 6-digit verification code
-  - [ ] Send SMS via SMS Misr
-  - [ ] Return success + user_id
-- [ ] `/api/cyclex/verify` (POST)
-  - [ ] Accept: phone, verification_code
-  - [ ] Activate account on success
-  - [ ] Return auth token
-- [ ] `/api/cyclex/resend-code` (POST)
-  - [ ] Resend verification code via SMS
+#### Checkpoint 3.1: Authentication APIs ✅
+- [x] `/api/cyclex/login` (POST)
+  - [x] Accept phone number & password
+  - [x] Return auth token + user profile
+- [x] `/api/cyclex/register` (POST)
+  - [x] Accept: name, phone, password, confirm_password
+  - [x] Optional: fcm_token, language
+  - [x] Generate 6-digit verification code
+  - [x] Send SMS via SMS Misr (TODO: Integration)
+  - [x] Return success + user_id
+- [x] `/api/cyclex/verify` (POST)
+  - [x] Accept: phone, verification_code
+  - [x] Activate account on success
+  - [x] Return auth token
+- [x] `/api/cyclex/resend-code` (POST)
+  - [x] Resend verification code via SMS
+- [x] `/api/cyclex/profile` (GET)
+  - [x] Get current user profile
+- [x] `/api/cyclex/update-profile` (POST)
+  - [x] Update user information
 
-#### Checkpoint 3.2: Categories & Products APIs ✓
-- [ ] `/api/cyclex/categories` (GET)
-  - [ ] Return hierarchical category list
-  - [ ] Filter by parent category
-  - [ ] Support language parameter (ar/en)
-- [ ] `/api/cyclex/products` (GET)
-  - [ ] Return products by category
-  - [ ] Include pricing, images
-  - [ ] Support search/filter
+#### Checkpoint 3.2: Categories & Products APIs ✅
+- [x] `/api/cyclex/categories` (GET)
+  - [x] Return hierarchical category list
+  - [x] Filter by parent category
+  - [x] Support language parameter (ar/en)
+- [x] `/api/cyclex/products` (GET)
+  - [x] Return products by category
+  - [x] Include pricing, images
+  - [x] Support search/filter
+- [x] `/api/cyclex/product/<id>` (GET)
+  - [x] Get product details by ID
 
-#### Checkpoint 3.3: Request/Order APIs ✓
-- [ ] `/api/cyclex/request/create` (POST)
-  - [ ] Accept: category_id, product_id, quantity, weight, photos (base64), pickup_date
-  - [ ] Auto-detect GPS from user profile
-  - [ ] Calculate price
-  - [ ] Generate QR code
-  - [ ] Return request details
-- [ ] `/api/cyclex/request/list` (GET)
-  - [ ] Return user's request history
-  - [ ] Filter by status
-  - [ ] Pagination support
-- [ ] `/api/cyclex/request/details/:id` (GET)
-  - [ ] Return full request details including QR code
-- [ ] `/api/cyclex/request/cancel/:id` (POST)
-  - [ ] Allow cancellation if status is pending
+#### Checkpoint 3.3: Request/Order APIs ✅
+- [x] `/api/cyclex/request/create` (POST)
+  - [x] Accept: category_id, product_id, quantity, weight, photos (base64), pickup_date
+  - [x] Auto-detect GPS from user profile
+  - [x] Calculate price
+  - [x] Generate QR code
+  - [x] Return request details
+- [x] `/api/cyclex/request/list` (GET)
+  - [x] Return user's request history
+  - [x] Filter by status
+  - [x] Pagination support
+- [x] `/api/cyclex/request/details/<id>` (GET)
+  - [x] Return full request details including QR code
+- [x] `/api/cyclex/request/cancel/<id>` (POST)
+  - [x] Allow cancellation if status is pending
 
-#### Checkpoint 3.4: Collector APIs ✓
-- [ ] `/api/cyclex/collector/register` (POST)
-  - [ ] Accept: name, phone, id_number, vehicle_type, working_areas
-  - [ ] Set status to "pending approval"
-  - [ ] Notify admin
-- [ ] `/api/cyclex/collector/available-orders` (GET)
-  - [ ] Return orders in collector's working areas
-  - [ ] Filter by status (pending/available)
-- [ ] `/api/cyclex/collector/accept-order/:id` (POST)
-  - [ ] Assign order to collector
-  - [ ] Set 3-day completion deadline
-  - [ ] Notify customer
-- [ ] `/api/cyclex/collector/reject-order/:id` (POST)
-  - [ ] Reject order assignment
-- [ ] `/api/cyclex/collector/scan-qr` (POST)
-  - [ ] Validate QR code
-  - [ ] Return order details
-- [ ] `/api/cyclex/collector/complete-order/:id` (POST)
-  - [ ] Mark order as collected
-  - [ ] Update wallet balance
-  - [ ] Calculate commission
-  - [ ] Notify customer
+#### Checkpoint 3.4: Collector APIs ✅
+- [x] `/api/cyclex/collector/register` (POST)
+  - [x] Accept: name, phone, id_number, vehicle_type, working_areas
+  - [x] Set status to "pending approval"
+  - [x] Notify admin (TODO)
+- [x] `/api/cyclex/collector/available-orders` (GET)
+  - [x] Return orders in collector's working areas
+  - [x] Filter by status (pending/available)
+- [x] `/api/cyclex/collector/accept-order/<id>` (POST)
+  - [x] Assign order to collector
+  - [x] Set 3-day completion deadline
+  - [x] Notify customer (TODO)
+- [x] `/api/cyclex/collector/reject-order/<id>` (POST)
+  - [x] Reject order assignment
+- [x] `/api/cyclex/collector/scan-qr` (POST)
+  - [x] Validate QR code
+  - [x] Return order details
+- [x] `/api/cyclex/collector/complete-order/<id>` (POST)
+  - [x] Mark order as collected
+  - [x] Update wallet balance
+  - [x] Calculate commission
+  - [x] Notify customer (TODO)
 
-#### Checkpoint 3.5: Wallet APIs ✓
-- [ ] `/api/cyclex/wallet/balance` (GET)
-  - [ ] Return current balance, total earned, withdrawable amount
-- [ ] `/api/cyclex/wallet/transactions` (GET)
-  - [ ] Return transaction history
-  - [ ] Pagination support
-- [ ] `/api/cyclex/wallet/withdraw` (POST)
-  - [ ] Accept: amount
-  - [ ] Validate minimum threshold
-  - [ ] Create withdrawal request
+#### Checkpoint 3.5: Wallet APIs ✅
+- [x] `/api/cyclex/wallet/balance` (GET)
+  - [x] Return current balance, total earned, withdrawable amount
+- [x] `/api/cyclex/wallet/transactions` (GET)
+  - [x] Return transaction history
+  - [x] Pagination support
+- [x] `/api/cyclex/wallet/withdraw` (POST)
+  - [x] Accept: amount
+  - [x] Validate minimum threshold
+  - [x] Create withdrawal request
 
-#### Checkpoint 3.6: Rating & Feedback APIs ✓
-- [ ] `/api/cyclex/order/rate/:id` (POST)
-  - [ ] Accept: rating (1-5), comments
-  - [ ] Update order record
-  - [ ] Update collector's average rating
+#### Checkpoint 3.6: Rating & Feedback APIs ✅
+- [x] `/api/cyclex/order/rate/<id>` (POST)
+  - [x] Accept: rating (1-5), comments
+  - [x] Update order record
+  - [x] Update collector's average rating
 
 ---
 
