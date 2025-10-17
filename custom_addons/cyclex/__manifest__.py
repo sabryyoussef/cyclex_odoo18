@@ -66,6 +66,7 @@ Technical Details:
         'views/cyclex_request_views.xml',
         'views/cyclex_wallet_views.xml',
         'views/cyclex_commission_views.xml',
+        'views/cyclex_dashboard.xml',
         
         # Menu (loaded last to reference existing actions)
         'views/cyclex_menu.xml',

@@ -213,6 +213,51 @@
             </field>
         </record>
 
+        <!-- Customer Kanban View -->
+        <record id="view_cyclex_customer_kanban" model="ir.ui.view">
+            <field name="name">cyclex.customer.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="phone_verified"/>
+                    <field name="account_status"/>
+                    <field name="total_requests_created"/>
+                    <field name="total_earnings"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                            <span class="o_kanban_record_subtitle"><field name="phone"/></span>
+                                        </div>
+                                        <span t-if="record.phone_verified.raw_value" class="badge badge-success">Verified</span>
+                                        <span t-else="" class="badge badge-warning">Not Verified</span>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <field name="account_status" widget="label_selection" options="{'classes': {'active': 'success', 'suspended': 'warning', 'banned': 'danger'}}"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <span><i class="fa fa-list"/> <field name="total_requests_created"/> Requests</span>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span><i class="fa fa-money"/> <field name="total_earnings" widget="monetary"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <!-- Customer Search View -->
         <record id="view_cyclex_customer_search" model="ir.ui.view">
             <field name="name">cyclex.customer.search</field>
@@ -235,6 +280,56 @@
                         <filter string="Language" name="group_language" context="{'group_by': 'preferred_language'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <!-- Collector Kanban View -->
+        <record id="view_cyclex_collector_kanban" model="ir.ui.view">
+            <field name="name">cyclex.collector.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="collector_approval_status"/>
+                    <field name="collector_vehicle_type"/>
+                    <field name="working_area_count"/>
+                    <field name="total_requests_completed"/>
+                    <field name="average_rating"/>
+                    <field name="total_commissions"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                            <span class="o_kanban_record_subtitle"><field name="phone"/></span>
+                                        </div>
+                                        <span t-if="record.collector_approval_status.raw_value == 'approved'" class="badge badge-success">Approved</span>
+                                        <span t-elif="record.collector_approval_status.raw_value == 'pending'" class="badge badge-warning">Pending</span>
+                                        <span t-else="" class="badge badge-danger">Rejected</span>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div><i class="fa fa-car"/> <field name="collector_vehicle_type"/></div>
+                                        <div><i class="fa fa-map-marker"/> <field name="working_area_count"/> Areas</div>
+                                        <div><i class="fa fa-star"/> Rating: <field name="average_rating" widget="float"/> / 5</div>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <span><field name="total_requests_completed"/> Orders</span>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span><i class="fa fa-money"/> <field name="total_commissions" widget="monetary"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -270,7 +365,7 @@
         <record id="action_cyclex_customer" model="ir.actions.act_window">
             <field name="name">Customers</field>
             <field name="res_model">res.partner</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="domain">[('cyclex_user_type', '=', 'customer')]</field>
             <field name="context">{'default_cyclex_user_type': 'customer', 'default_customer_rank': 1}</field>
             <field name="search_view_id" ref="view_cyclex_customer_search"/>
@@ -302,7 +397,7 @@
         <record id="action_cyclex_collector" model="ir.actions.act_window">
             <field name="name">Collectors</field>
             <field name="res_model">res.partner</field>
-            <field name="view_mode">list,form</field>
+            <field name="view_mode">kanban,list,form</field>
             <field name="domain">[('cyclex_user_type', '=', 'collector')]</field>
             <field name="context">{'default_cyclex_user_type': 'collector'}</field>
             <field name="search_view_id" ref="view_cyclex_collector_search"/>

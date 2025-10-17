@@ -96,6 +96,55 @@
                   sequence="20"
                   groups="group_cyclex_customer"/>
 
+        <!-- Reporting & Analytics Menu -->
+        <menuitem id="menu_cyclex_reporting"
+                  name="Reporting"
+                  parent="menu_cyclex_root"
+                  sequence="50"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_dashboard"
+                  name="Dashboard"
+                  parent="menu_cyclex_reporting"
+                  action="action_cyclex_dashboard"
+                  sequence="10"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_request_analysis"
+                  name="Request Analysis"
+                  parent="menu_cyclex_reporting"
+                  action="action_cyclex_request_analysis"
+                  sequence="20"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_commission_analysis"
+                  name="Commission Analysis"
+                  parent="menu_cyclex_reporting"
+                  action="action_cyclex_commission_analysis"
+                  sequence="30"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_transaction_analysis"
+                  name="Transaction Analysis"
+                  parent="menu_cyclex_reporting"
+                  action="action_cyclex_wallet_transaction_analysis"
+                  sequence="40"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_top_collectors"
+                  name="Top Collectors"
+                  parent="menu_cyclex_reporting"
+                  action="action_cyclex_top_collectors"
+                  sequence="50"
+                  groups="group_cyclex_manager"/>
+
+        <menuitem id="menu_cyclex_product_popularity"
+                  name="Product Popularity"
+                  parent="menu_cyclex_reporting"
+                  action="action_cyclex_product_popularity"
+                  sequence="60"
+                  groups="group_cyclex_manager"/>
+
         <!-- Configuration Menu -->
         <menuitem id="menu_cyclex_configuration"
                   name="Configuration"

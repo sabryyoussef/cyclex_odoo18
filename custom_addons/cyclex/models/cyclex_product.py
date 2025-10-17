@@ -58,9 +58,11 @@ class CyclexProduct(models.Model):
     
     @api.depends('name')
     def _compute_request_count(self):
-        # Placeholder - will be implemented in Phase 1.4
+        """Count total requests for this product"""
         for product in self:
-            product.request_count = 0
+            product.request_count = self.env['cyclex.request'].search_count([
+                ('product_id', '=', product.id)
+            ])
     
     _sql_constraints = [
         ('name_category_unique', 'unique(name, category_id)',
