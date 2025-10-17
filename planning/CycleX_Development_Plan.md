@@ -411,61 +411,127 @@
 
 ---
 
-### Phase 8: Mobile App Development (Outside Odoo - Special Phase)
+### Phase 8: Mobile App Development (FLUTTER - SEPARATE TEAM) 🔵
 
-> **Note:** This phase is handled by mobile development teams and runs in parallel with Odoo backend work.
+> **⚠️ IMPORTANT:** This is **NOT Odoo developer work**. This is handled by a separate Flutter mobile development team.
+> 
+> **Technology:** Flutter (Single codebase for iOS + Android)  
+> **Team:** Mobile developers (not Odoo developers)  
+> **Timeline:** Can start NOW (runs in parallel with Phase 6-7)  
+> **Reference:** `MOBILE_INTEGRATION_GUIDE.md` for complete integration details
 
-#### Checkpoint 8.1: iOS App (Swift)
-- [ ] Share complete API documentation with iOS team
-- [ ] Provide Firebase configuration files
-- [ ] Set up project structure (MVVM/Clean Architecture)
-- [ ] Implement authentication flow (login, register, verify)
-- [ ] Implement customer features:
-  - [ ] Browse categories and products
-  - [ ] Create recycling requests
-  - [ ] Upload photos (camera/gallery)
-  - [ ] Track order status
-  - [ ] View wallet balance and transactions
-  - [ ] Rate completed orders
-- [ ] Implement collector features:
-  - [ ] Register as collector
-  - [ ] View available orders
-  - [ ] Accept/reject orders
-  - [ ] Scan QR codes
-  - [ ] Complete orders
-  - [ ] View commission earnings
-- [ ] Implement QR code scanner (AVFoundation)
-- [ ] Implement push notifications (Firebase Cloud Messaging)
-- [ ] Implement GPS location capture
-- [ ] Implement multilingual support (Arabic/English)
-- [ ] Test API integration
+---
 
-#### Checkpoint 8.2: Android App (Kotlin)
-- [ ] Share complete API documentation with Android team
-- [ ] Provide Firebase configuration files
-- [ ] Set up project structure (MVVM/Clean Architecture)
-- [ ] Implement authentication flow (login, register, verify)
-- [ ] Implement customer features:
-  - [ ] Browse categories and products
-  - [ ] Create recycling requests
-  - [ ] Upload photos (camera/gallery)
-  - [ ] Track order status
-  - [ ] View wallet balance and transactions
-  - [ ] Rate completed orders
-- [ ] Implement collector features:
-  - [ ] Register as collector
-  - [ ] View available orders
-  - [ ] Accept/reject orders
-  - [ ] Scan QR codes
-  - [ ] Complete orders
-  - [ ] View commission earnings
-- [ ] Implement QR code scanner (CameraX + ML Kit)
-- [ ] Implement push notifications (Firebase Cloud Messaging)
-- [ ] Implement GPS location capture
-- [ ] Implement multilingual support (Arabic/English)
-- [ ] Test API integration
+#### 📋 Odoo Developer's Role in Phase 8
 
-#### Checkpoint 8.3: Mobile Testing & QA
+**What YOU Do:**
+- ✅ Provide `API_DOCUMENTATION.md` to mobile team
+- ✅ Provide `MOBILE_INTEGRATION_GUIDE.md` to mobile team
+- ✅ Provide API server URL
+- ✅ Create test accounts if needed
+- ⏳ WAIT for Firebase Server Key from them (needed for Phase 7)
+- ⏳ WAIT for package names from them
+- 📞 Answer API-related questions
+- 🧪 Test API endpoints when they report issues
+
+**What YOU DON'T Do:**
+- ❌ Don't write Flutter code
+- ❌ Don't create Firebase project (they do it)
+- ❌ Don't implement mobile UI
+- ❌ Don't handle camera/GPS on mobile
+- ❌ Don't work on mobile QR scanner
+
+---
+
+#### 🔴 What ODOO Developer Needs FROM Mobile Team
+
+**Critical (Before Phase 7):**
+- [ ] **Firebase Server Key** (from Firebase Console → Project Settings → Cloud Messaging)
+  ```
+  Format: AAAAxxxxxxx:APAxxxxx... (~180 characters)
+  Purpose: Send push notifications from Odoo
+  ```
+- [ ] **Android Package Name** (e.g., `com.cyclex.app`)
+  ```
+  Purpose: Firebase FCM targeting
+  ```
+- [ ] **iOS Bundle ID** (e.g., `com.cyclex.app`)
+  ```
+  Purpose: Firebase FCM targeting
+  ```
+
+**For Testing (Phase 7):**
+- [ ] **Test Device FCM Tokens** (Android + iOS)
+  ```
+  Format: Long string ~150+ characters
+  Purpose: Test push notifications before production
+  ```
+
+**Coordination:**
+- [ ] Confirm API server URL (development/staging/production)
+- [ ] Report any API issues or bugs
+- [ ] Provide feedback on API usability
+
+**Complete Integration Guide:** `MOBILE_INTEGRATION_GUIDE.md`
+
+---
+
+#### 🔵 Mobile Team's Checkpoints (Their Work - Not Yours)
+
+---
+
+#### Checkpoint 8.1: Flutter Project Setup (Mobile Team)
+- [ ] Create Flutter project (single codebase for iOS + Android)
+- [ ] Set up Firebase project at console.firebase.google.com
+- [ ] Add Android app to Firebase (download `google-services.json`)
+- [ ] Add iOS app to Firebase (download `GoogleService-Info.plist`)
+- [ ] **Send Firebase Server Key to Odoo developer** 🔴
+- [ ] **Send package names to Odoo developer** 🔴
+- [ ] Add Flutter dependencies (see `MOBILE_INTEGRATION_GUIDE.md`)
+
+#### Checkpoint 8.2: API Integration (Mobile Team)
+- [ ] Receive API documentation from Odoo developer
+- [ ] Create API service class for all 22 endpoints
+- [ ] Implement JSON-RPC 2.0 client
+- [ ] Implement authentication (login, register, verify)
+- [ ] Handle auth tokens (secure storage)
+- [ ] Implement error handling for all error codes
+- [ ] Test all API endpoints from mobile app
+
+#### Checkpoint 8.3: Customer Features (Mobile Team)
+- [ ] Browse categories screen
+- [ ] Browse products screen
+- [ ] Create recycling request screen
+- [ ] Photo capture & upload (ImagePicker)
+- [ ] GPS location capture (Geolocator)
+- [ ] My requests list screen
+- [ ] Request details with QR code display
+- [ ] Wallet balance screen
+- [ ] Transaction history screen
+- [ ] Rate completed orders screen
+
+#### Checkpoint 8.4: Collector Features (Mobile Team)
+- [ ] Collector registration screen
+- [ ] Available orders list
+- [ ] Accept/reject order actions
+- [ ] QR code scanner (qr_code_scanner package)
+- [ ] Scan QR and validate with backend
+- [ ] Complete order flow
+- [ ] Commission earnings screen
+- [ ] My completed orders
+
+#### Checkpoint 8.5: Firebase FCM Integration (Mobile Team)
+- [ ] Initialize Firebase in app
+- [ ] Request notification permissions
+- [ ] Get FCM token on app start
+- [ ] Send FCM token to backend (during login/register)
+- [ ] **Provide test FCM tokens to Odoo developer** 🔴
+- [ ] Handle foreground notifications
+- [ ] Handle background notifications
+- [ ] Handle notification tap actions
+- [ ] Test with backend notifications (after Phase 7)
+
+#### Checkpoint 8.6: Mobile Testing & QA (Mobile Team)
 - [ ] Test notifications on both platforms (iOS & Android)
 - [ ] Test photo upload functionality (compression, formats)
 - [ ] Test GPS location capture accuracy
