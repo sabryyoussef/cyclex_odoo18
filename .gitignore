@@ -20,6 +20,9 @@ ENV/
 .DS_Store
 sessions/
 filestore/
+odoo18/
+enterprise_18/
+odoo.conf
 
 # IDE
 .vscode/
