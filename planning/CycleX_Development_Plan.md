@@ -127,17 +127,23 @@
 - [x] Add 12 sample working areas (Cairo, Giza, Alexandria, Qalyubia, Dakahlia)
 - [x] Add approval workflow methods (approve, reject, suspend)
 
-#### Checkpoint 1.7: Commission System ✓
-- [ ] Create `cyclex.commission` model:
-  - [ ] Collector (many2one)
-  - [ ] Request (many2one)
-  - [ ] Order value
-  - [ ] Commission rate
-  - [ ] Commission amount
-  - [ ] Status (pending/paid)
-  - [ ] Payment date
-- [ ] Add commission calculation on order completion
-- [ ] Create commission payout tracking
+#### Checkpoint 1.7: Commission System ✅
+- [x] Create `cyclex.commission` model:
+  - [x] Collector (many2one)
+  - [x] Request (many2one)
+  - [x] Customer (related from request)
+  - [x] Order value
+  - [x] Commission rate
+  - [x] Commission amount (computed: value × rate / 100)
+  - [x] Status (pending/paid)
+  - [x] Payment date
+  - [x] Create date (indexed)
+  - [x] Notes field
+- [x] Add commission calculation on order completion (automatic)
+- [x] Create commission payout tracking (mark paid/pending)
+- [x] Add business methods (create_commission_for_request, mark_paid, mark_pending)
+- [x] Add data validation (order value > 0, rate 0-100%, unique per request)
+- [x] Integrate with request model (automatic commission on collection)
 
 ---
 

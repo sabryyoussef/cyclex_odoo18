@@ -217,8 +217,11 @@ class CyclexRequest(models.Model):
         # Create wallet transaction for customer
         self._create_wallet_transaction()
         
-        # TODO: Create commission record for collector
+        # Create commission record for collector
+        self._create_commission_record()
+        
         # TODO: Send notification to customer
+        # TODO: Send notification to collector
         return True
     
     def _create_wallet_transaction(self):
@@ -245,6 +248,19 @@ class CyclexRequest(models.Model):
         )
         
         return wallet
+    
+    def _create_commission_record(self):
+        """Create commission record when request is collected"""
+        self.ensure_one()
+        
+        if not self.collector_id:
+            return None
+        
+        # Create commission using factory method
+        Commission = self.env['cyclex.commission']
+        commission = Commission.create_commission_for_request(self)
+        
+        return commission
     
     def action_cancel(self):
         """Cancel the request"""
