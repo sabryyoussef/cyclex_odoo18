@@ -47,6 +47,171 @@
             <field name="value"></field>
         </record>
 
+        <!-- ============================================ -->
+        <!-- CATEGORIES - Root and Main Categories        -->
+        <!-- ============================================ -->
+        
+        <!-- Root Category -->
+        <record id="category_root_cyclex" model="cyclex.category">
+            <field name="name">Recyclable Materials</field>
+            <field name="description">All recyclable materials accepted by CycleX</field>
+        </record>
+
+        <!-- Main Categories -->
+        <record id="category_plastic" model="cyclex.category">
+            <field name="name">Plastic</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">All types of recyclable plastic materials</field>
+        </record>
+
+        <record id="category_metal" model="cyclex.category">
+            <field name="name">Metal</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">All types of recyclable metal materials</field>
+        </record>
+
+        <record id="category_paper" model="cyclex.category">
+            <field name="name">Paper</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">All types of recyclable paper materials</field>
+        </record>
+
+        <record id="category_glass" model="cyclex.category">
+            <field name="name">Glass</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">All types of recyclable glass materials</field>
+        </record>
+
+        <record id="category_cardboard" model="cyclex.category">
+            <field name="name">Cardboard</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">All types of cardboard and carton materials</field>
+        </record>
+
+        <record id="category_electronics" model="cyclex.category">
+            <field name="name">Electronics</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">Electronic waste and components</field>
+        </record>
+
+        <!-- Plastic Subcategories -->
+        <record id="category_plastic_bottles" model="cyclex.category">
+            <field name="name">Plastic Bottles</field>
+            <field name="parent_id" ref="category_plastic"/>
+            <field name="description">PET and HDPE bottles</field>
+        </record>
+
+        <record id="category_plastic_bags" model="cyclex.category">
+            <field name="name">Plastic Bags</field>
+            <field name="parent_id" ref="category_plastic"/>
+            <field name="description">Clean plastic bags and films</field>
+        </record>
+
+        <!-- Metal Subcategories -->
+        <record id="category_aluminum" model="cyclex.category">
+            <field name="name">Aluminum</field>
+            <field name="parent_id" ref="category_metal"/>
+            <field name="description">Aluminum cans and materials</field>
+        </record>
+
+        <record id="category_iron" model="cyclex.category">
+            <field name="name">Iron/Steel</field>
+            <field name="parent_id" ref="category_metal"/>
+            <field name="description">Iron and steel materials</field>
+        </record>
+
+        <record id="category_copper" model="cyclex.category">
+            <field name="name">Copper</field>
+            <field name="parent_id" ref="category_metal"/>
+            <field name="description">Copper wires and materials</field>
+        </record>
+
+        <!-- ============================================ -->
+        <!-- PRODUCTS - Sample Products                   -->
+        <!-- ============================================ -->
+
+        <!-- Plastic Products -->
+        <record id="product_pet_bottles" model="cyclex.product">
+            <field name="name">PET Bottles (Clear)</field>
+            <field name="category_id" ref="category_plastic_bottles"/>
+            <field name="price_per_kg">3.50</field>
+            <field name="description">Clear PET plastic bottles (water, soda bottles)</field>
+        </record>
+
+        <record id="product_hdpe_bottles" model="cyclex.product">
+            <field name="name">HDPE Bottles (Colored)</field>
+            <field name="category_id" ref="category_plastic_bottles"/>
+            <field name="price_per_kg">2.80</field>
+            <field name="description">HDPE plastic bottles (milk jugs, detergent bottles)</field>
+        </record>
+
+        <record id="product_plastic_bags_clean" model="cyclex.product">
+            <field name="name">Clean Plastic Bags</field>
+            <field name="category_id" ref="category_plastic_bags"/>
+            <field name="price_per_kg">1.50</field>
+            <field name="description">Clean plastic shopping bags and films</field>
+        </record>
+
+        <!-- Metal Products -->
+        <record id="product_aluminum_cans" model="cyclex.product">
+            <field name="name">Aluminum Cans</field>
+            <field name="category_id" ref="category_aluminum"/>
+            <field name="price_per_kg">8.00</field>
+            <field name="description">Empty aluminum beverage cans</field>
+        </record>
+
+        <record id="product_scrap_aluminum" model="cyclex.product">
+            <field name="name">Scrap Aluminum</field>
+            <field name="category_id" ref="category_aluminum"/>
+            <field name="price_per_kg">6.50</field>
+            <field name="description">Mixed aluminum scrap materials</field>
+        </record>
+
+        <record id="product_iron_scrap" model="cyclex.product">
+            <field name="name">Iron Scrap</field>
+            <field name="category_id" ref="category_iron"/>
+            <field name="price_per_kg">2.00</field>
+            <field name="description">Iron and steel scrap materials</field>
+        </record>
+
+        <record id="product_copper_wire" model="cyclex.product">
+            <field name="name">Copper Wire</field>
+            <field name="category_id" ref="category_copper"/>
+            <field name="price_per_kg">45.00</field>
+            <field name="description">Clean copper electrical wire</field>
+        </record>
+
+        <!-- Paper Products -->
+        <record id="product_mixed_paper" model="cyclex.product">
+            <field name="name">Mixed Paper</field>
+            <field name="category_id" ref="category_paper"/>
+            <field name="price_per_kg">1.20</field>
+            <field name="description">Newspapers, magazines, office paper</field>
+        </record>
+
+        <record id="product_cardboard_boxes" model="cyclex.product">
+            <field name="name">Cardboard Boxes</field>
+            <field name="category_id" ref="category_cardboard"/>
+            <field name="price_per_kg">1.80</field>
+            <field name="description">Corrugated cardboard and boxes</field>
+        </record>
+
+        <!-- Glass Products -->
+        <record id="product_glass_bottles" model="cyclex.product">
+            <field name="name">Glass Bottles</field>
+            <field name="category_id" ref="category_glass"/>
+            <field name="price_per_kg">0.50</field>
+            <field name="description">Clean glass bottles and jars</field>
+        </record>
+
+        <!-- Electronics Products -->
+        <record id="product_small_electronics" model="cyclex.product">
+            <field name="name">Small Electronics</field>
+            <field name="category_id" ref="category_electronics"/>
+            <field name="price_per_kg">5.00</field>
+            <field name="description">Phones, chargers, small electronic devices</field>
+        </record>
+
     </data>
 </odoo>
 
