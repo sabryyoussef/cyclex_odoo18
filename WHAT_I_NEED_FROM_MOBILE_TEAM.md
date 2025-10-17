@@ -8,7 +8,23 @@
 
 ## 🎯 Summary
 
-As the Odoo developer, you **don't do any mobile development work**. However, you **need specific information** from the mobile team to complete Phase 7 (External Integrations).
+As the Odoo developer, you **don't do any mobile development work**. However, you **need specific information** from the mobile team to complete **Phase 7.2 (Firebase FCM)**.
+
+**⚠️ Important:** Phase 7.1 (SMS Misr) requires **NOTHING** from mobile team - that's 100% your work!
+
+---
+
+## ⚡ Quick Answer
+
+### What Mobile Team Provides:
+1. 🔴 **Firebase Server Key** (for push notifications)
+2. 🔴 **App package names** (Android + iOS)
+3. 🟡 **Test FCM tokens** (for testing)
+
+### What Mobile Team Does NOT Provide:
+- ❌ **SMS Misr** - You handle this yourself
+- ❌ Firebase config files (google-services.json) - They keep those
+- ❌ Any mobile code or Flutter files
 
 ---
 
@@ -358,33 +374,39 @@ Week 7-8 (Testing):
 **Q: "Can we start development now?"**
 - A: "YES! All APIs are ready. You don't need to wait for Phase 7. Build the app, notifications will be added later"
 
+**Q: "Do we need to set up SMS Misr?"**
+- A: "NO! SMS is 100% backend work. I handle SMS Misr account and sending. You just display input field for verification code."
+
 ---
 
 ## ✅ TL;DR (Too Long; Didn't Read)
 
 ### What You Need:
 
-**From Mobile Team (Critical):**
+**From Mobile Team (Critical for Phase 7.2):**
 1. 🔴 Firebase Server Key (~180 char string)
 2. 🔴 Android package name (com.example.app)
 3. 🔴 iOS bundle ID (com.example.app)
 4. 🟡 Test FCM tokens (for testing)
 
-**What You Provide:**
+**What You Provide to Mobile Team:**
 1. ✅ API_DOCUMENTATION.md
 2. ✅ MOBILE_INTEGRATION_GUIDE.md
 3. ✅ API server URL
 
-**What You Don't Need:**
+**What You Don't Need From Mobile Team:**
+- ❌ **SMS Misr** - You handle yourself (Phase 7.1)
 - ❌ Any Firebase config files (they keep those)
 - ❌ Any mobile code or Flutter files
 - ❌ Any mobile app build files
 
 **Your Phase 7 Work:**
-- 🔜 Use their Server Key to send notifications FROM Odoo
-- 🔜 Implement SMS sending for verification
+- 🔜 **Phase 7.1:** Set up SMS Misr yourself - send verification codes
+- 🔜 **Phase 7.2:** Use their Server Key to send push notifications FROM Odoo
 
 ---
 
 **That's it! Simple and clear. 🎯**
+
+**Key Point:** Only Firebase requires mobile team input. SMS Misr is all yours!
 
