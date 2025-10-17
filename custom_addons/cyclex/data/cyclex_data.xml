@@ -212,6 +212,123 @@
             <field name="description">Phones, chargers, small electronic devices</field>
         </record>
 
+        <!-- ============================================ -->
+        <!-- WORKING AREAS - Egyptian Cities/Districts   -->
+        <!-- ============================================ -->
+
+        <!-- Cairo Governorate -->
+        <record id="working_area_nasr_city" model="cyclex.working.area">
+            <field name="name">Nasr City</field>
+            <field name="governorate">Cairo</field>
+            <field name="description">Nasr City area in Cairo</field>
+            <field name="center_latitude">30.0444</field>
+            <field name="center_longitude">31.3486</field>
+            <field name="radius_km">5.0</field>
+        </record>
+
+        <record id="working_area_maadi" model="cyclex.working.area">
+            <field name="name">Maadi</field>
+            <field name="governorate">Cairo</field>
+            <field name="description">Maadi district in Cairo</field>
+            <field name="center_latitude">29.9602</field>
+            <field name="center_longitude">31.2497</field>
+            <field name="radius_km">4.0</field>
+        </record>
+
+        <record id="working_area_heliopolis" model="cyclex.working.area">
+            <field name="name">Heliopolis</field>
+            <field name="governorate">Cairo</field>
+            <field name="description">Heliopolis area in Cairo</field>
+            <field name="center_latitude">30.0875</field>
+            <field name="center_longitude">31.3246</field>
+            <field name="radius_km">6.0</field>
+        </record>
+
+        <record id="working_area_zamalek" model="cyclex.working.area">
+            <field name="name">Zamalek</field>
+            <field name="governorate">Cairo</field>
+            <field name="description">Zamalek island in Cairo</field>
+            <field name="center_latitude">30.0626</field>
+            <field name="center_longitude">31.2218</field>
+            <field name="radius_km">3.0</field>
+        </record>
+
+        <record id="working_area_fifth_settlement" model="cyclex.working.area">
+            <field name="name">Fifth Settlement</field>
+            <field name="governorate">Cairo</field>
+            <field name="description">New Cairo - Fifth Settlement</field>
+            <field name="center_latitude">30.0131</field>
+            <field name="center_longitude">31.4291</field>
+            <field name="radius_km">8.0</field>
+        </record>
+
+        <!-- Giza Governorate -->
+        <record id="working_area_dokki" model="cyclex.working.area">
+            <field name="name">Dokki</field>
+            <field name="governorate">Giza</field>
+            <field name="description">Dokki district in Giza</field>
+            <field name="center_latitude">30.0385</field>
+            <field name="center_longitude">31.2125</field>
+            <field name="radius_km">4.0</field>
+        </record>
+
+        <record id="working_area_6th_october" model="cyclex.working.area">
+            <field name="name">6th of October City</field>
+            <field name="governorate">Giza</field>
+            <field name="description">6th of October City</field>
+            <field name="center_latitude">29.9477</field>
+            <field name="center_longitude">30.9391</field>
+            <field name="radius_km">10.0</field>
+        </record>
+
+        <record id="working_area_mohandessin" model="cyclex.working.area">
+            <field name="name">Mohandessin</field>
+            <field name="governorate">Giza</field>
+            <field name="description">Mohandessin district in Giza</field>
+            <field name="center_latitude">30.0482</field>
+            <field name="center_longitude">31.2001</field>
+            <field name="radius_km">3.5</field>
+        </record>
+
+        <!-- Alexandria Governorate -->
+        <record id="working_area_smouha" model="cyclex.working.area">
+            <field name="name">Smouha</field>
+            <field name="governorate">Alexandria</field>
+            <field name="description">Smouha district in Alexandria</field>
+            <field name="center_latitude">31.2260</field>
+            <field name="center_longitude">29.9464</field>
+            <field name="radius_km">5.0</field>
+        </record>
+
+        <record id="working_area_miami" model="cyclex.working.area">
+            <field name="name">Miami</field>
+            <field name="governorate">Alexandria</field>
+            <field name="description">Miami area in Alexandria</field>
+            <field name="center_latitude">31.2456</field>
+            <field name="center_longitude">29.9792</field>
+            <field name="radius_km">4.0</field>
+        </record>
+
+        <!-- Qalyubia Governorate -->
+        <record id="working_area_shubra_el_kheima" model="cyclex.working.area">
+            <field name="name">Shubra El Kheima</field>
+            <field name="governorate">Qalyubia</field>
+            <field name="description">Shubra El Kheima city</field>
+            <field name="center_latitude">30.1286</field>
+            <field name="center_longitude">31.2422</field>
+            <field name="radius_km">6.0</field>
+        </record>
+
+        <!-- Dakahlia Governorate -->
+        <record id="working_area_mansoura" model="cyclex.working.area">
+            <field name="name">Mansoura</field>
+            <field name="governorate">Dakahlia</field>
+            <field name="description">Mansoura city</field>
+            <field name="center_latitude">31.0364</field>
+            <field name="center_longitude">31.3807</field>
+            <field name="radius_km">7.0</field>
+        </record>
+
     </data>
 </odoo>
 

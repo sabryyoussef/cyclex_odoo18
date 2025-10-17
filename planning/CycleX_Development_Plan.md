@@ -106,20 +106,26 @@
 - [x] Add data validation (amount sign, balance check, withdrawal threshold)
 - [x] Integrate with request model (automatic wallet credit on collection)
 
-#### Checkpoint 1.6: Collector-Specific Models ✓
-- [ ] Extend `res.partner` for collector fields:
-  - [ ] ID number
-  - [ ] Vehicle type (selection)
-  - [ ] Working areas (many2many with location/city model)
-  - [ ] Approval status (pending/approved/rejected)
-  - [ ] Commission rate (%)
-  - [ ] Total orders completed
-  - [ ] Average rating
-- [ ] Create `cyclex.working.area` model:
-  - [ ] Name (city/district)
-  - [ ] Governorate
-  - [ ] Active status
-- [ ] Add validation: max 5 working areas per collector
+#### Checkpoint 1.6: Collector-Specific Models ✅
+- [x] Extend `res.partner` for collector fields:
+  - [x] ID number
+  - [x] Vehicle type (selection: bicycle/motorcycle/car/van/truck)
+  - [x] Working areas (many2many with cyclex.working.area)
+  - [x] Approval status (pending/approved/rejected/suspended)
+  - [x] Approval date, approved by, rejection reason
+  - [x] Commission rate (%) - Default: 5%, Range: 0-100%
+  - [x] Total orders completed (computed from requests)
+  - [x] Average rating (computed from customer ratings)
+- [x] Create `cyclex.working.area` model:
+  - [x] Name (city/district, translatable)
+  - [x] Governorate (translatable)
+  - [x] Description (translatable)
+  - [x] Active status
+  - [x] GPS coordinates (center lat/long, radius)
+  - [x] Collector count (computed)
+- [x] Add validation: max 5 working areas per collector
+- [x] Add 12 sample working areas (Cairo, Giza, Alexandria, Qalyubia, Dakahlia)
+- [x] Add approval workflow methods (approve, reject, suspend)
 
 #### Checkpoint 1.7: Commission System ✓
 - [ ] Create `cyclex.commission` model:
