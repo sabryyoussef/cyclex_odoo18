@@ -43,21 +43,23 @@
 - [x] Add verification code field (6-digit)
 - [x] Add verification expiry datetime
 
-#### Checkpoint 1.3: Core Models - Categories & Products ✓
-- [ ] Create `cyclex.category` model:
-  - [ ] Name (translatable)
-  - [ ] Parent category (hierarchical)
-  - [ ] Icon/image field
-  - [ ] Active status
-- [ ] Create root category: "CycleX"
-- [ ] Create subcategories (Plastic, Metal, Paper, Glass, etc.)
-- [ ] Create `cyclex.product` model:
-  - [ ] Name (translatable)
-  - [ ] Category (many2one)
-  - [ ] Price per kg
-  - [ ] Description
-  - [ ] Image
-  - [ ] Active status
+#### Checkpoint 1.3: Core Models - Categories & Products ✅
+- [x] Create `cyclex.category` model:
+  - [x] Name (translatable)
+  - [x] Parent category (hierarchical)
+  - [x] Icon/image field
+  - [x] Active status
+- [x] Create root category: "Recyclable Materials"
+- [x] Create main categories (Plastic, Metal, Paper, Glass, Cardboard, Electronics)
+- [x] Create subcategories (Plastic Bottles, Plastic Bags, Aluminum, Iron/Steel, Copper)
+- [x] Create `cyclex.product` model:
+  - [x] Name (translatable)
+  - [x] Category (many2one)
+  - [x] Price per kg
+  - [x] Description
+  - [x] Image
+  - [x] Active status
+- [x] Create 11 sample products with pricing (0.50 - 45.00 EGP/kg)
 
 #### Checkpoint 1.4: Core Models - Requests/Orders ✓
 - [ ] Create `cyclex.request` model:
