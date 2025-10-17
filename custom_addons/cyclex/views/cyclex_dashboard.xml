@@ -2,10 +2,24 @@
 <odoo>
     <data>
         
-        <!-- Dashboard Action -->
-        <record id="action_cyclex_dashboard" model="ir.actions.client">
+        <!-- Dashboard Action - Overview of All Requests -->
+        <delete model="ir.actions.client" id="action_cyclex_dashboard"/>
+        
+        <record id="action_cyclex_dashboard" model="ir.actions.act_window">
             <field name="name">CycleX Dashboard</field>
-            <field name="tag">cyclex_dashboard</field>
+            <field name="res_model">cyclex.request</field>
+            <field name="view_mode">kanban,graph,pivot,list,form</field>
+            <field name="context">{
+                'search_default_group_status': 1
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Welcome to CycleX Dashboard!
+                </p>
+                <p>
+                    Start by creating categories and products, then customers can submit recycling requests.
+                </p>
+            </field>
         </record>
         
         <!-- Request Analysis Action (Pivot View) -->

@@ -190,14 +190,15 @@ class CyclexRequest(models.Model):
         self.write({'status': 'pending'})
         return True
     
-    def action_assign_collector(self, collector_id):
+    def action_assign_collector(self):
         """Assign collector to request (pending -> assigned)"""
         self.ensure_one()
         if self.status != 'pending':
             raise ValidationError(_('Only pending requests can be assigned.'))
+        if not self.collector_id:
+            raise ValidationError(_('Please select a collector before assigning.'))
         self.write({
-            'status': 'assigned',
-            'collector_id': collector_id
+            'status': 'assigned'
         })
         # TODO: Send notification to collector
         return True
@@ -269,6 +270,53 @@ class CyclexRequest(models.Model):
             raise ValidationError(_('Collected requests cannot be cancelled.'))
         self.write({'status': 'cancelled'})
         return True
+    
+    def action_view_wallet_transactions(self):
+        """View wallet transactions related to this request"""
+        self.ensure_one()
+        
+        # Find wallet transactions related to this request
+        transactions = self.env['cyclex.wallet.transaction'].search([
+            ('request_id', '=', self.id)
+        ])
+        
+        return {
+            'name': _('Wallet Transactions'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'cyclex.wallet.transaction',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', transactions.ids)],
+            'context': {'create': False, 'edit': False},
+        }
+    
+    def action_view_commission(self):
+        """View commission related to this request"""
+        self.ensure_one()
+        
+        # Find commission record related to this request
+        commission = self.env['cyclex.commission'].search([
+            ('request_id', '=', self.id)
+        ], limit=1)
+        
+        if commission:
+            return {
+                'name': _('Commission'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'cyclex.commission',
+                'view_mode': 'form',
+                'res_id': commission.id,
+                'target': 'current',
+            }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': _('No commission record found for this request.'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
     
     @api.constrains('weight')
     def _check_weight(self):

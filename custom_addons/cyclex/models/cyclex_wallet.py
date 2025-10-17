@@ -63,6 +63,17 @@ class CyclexWallet(models.Model):
         string='Transactions'
     )
     
+    transaction_count = fields.Integer(
+        string='Transaction Count',
+        compute='_compute_transaction_count',
+        store=True
+    )
+    
+    @api.depends('transaction_ids')
+    def _compute_transaction_count(self):
+        for wallet in self:
+            wallet.transaction_count = len(wallet.transaction_ids)
+    
     @api.depends('transaction_ids', 'transaction_ids.amount')
     def _compute_balance(self):
         for wallet in self:
