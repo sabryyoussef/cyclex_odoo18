@@ -57,6 +57,7 @@ Technical Details:
         # Data
         'data/cyclex_data.xml',
         'data/cyclex_sequence.xml',
+        'data/cyclex_cron.xml',
         
         # Views (loaded before menu to ensure actions exist)
         'views/res_partner_views.xml',

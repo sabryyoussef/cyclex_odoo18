@@ -150,6 +150,7 @@
                     <field name="transaction_type" decoration-success="transaction_type == 'credit'" decoration-warning="transaction_type == 'debit'" widget="badge"/>
                     <field name="amount" widget="monetary" decoration-success="amount &gt; 0" decoration-danger="amount &lt; 0"/>
                     <field name="currency_id" column_invisible="1"/>
+                    <field name="withdrawal_status" optional="show" decoration-warning="withdrawal_status == 'pending'" decoration-success="withdrawal_status == 'approved'" decoration-danger="withdrawal_status == 'rejected'" widget="badge"/>
                     <field name="description"/>
                     <field name="request_id"/>
                 </list>
@@ -162,7 +163,15 @@
             <field name="model">cyclex.wallet.transaction</field>
             <field name="arch" type="xml">
                 <form string="Wallet Transaction" create="0" edit="0" delete="0">
+                    <header>
+                        <button name="action_approve_withdrawal" string="Approve" type="object" class="btn-success" invisible="transaction_type != 'debit' or withdrawal_status != 'pending'" groups="cyclex.group_cyclex_admin"/>
+                        <button name="action_reject_withdrawal" string="Reject" type="object" class="btn-danger" invisible="transaction_type != 'debit' or withdrawal_status != 'pending'" groups="cyclex.group_cyclex_admin"/>
+                        <field name="withdrawal_status" widget="statusbar" statusbar_visible="pending,approved,completed" invisible="transaction_type != 'debit'"/>
+                    </header>
                     <sheet>
+                        <widget name="web_ribbon" title="Pending Approval" bg_color="text-bg-warning" invisible="withdrawal_status != 'pending'"/>
+                        <widget name="web_ribbon" title="Approved" bg_color="text-bg-success" invisible="withdrawal_status != 'approved'"/>
+                        <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="withdrawal_status != 'rejected'"/>
                         <group>
                             <group>
                                 <field name="wallet_id"/>
@@ -174,10 +183,15 @@
                             <group>
                                 <field name="request_id"/>
                                 <field name="create_date"/>
+                                <field name="approved_by" invisible="not approved_by"/>
+                                <field name="approval_date" invisible="not approval_date"/>
                             </group>
                         </group>
                         <group>
                             <field name="description" nolabel="1"/>
+                        </group>
+                        <group invisible="not rejection_reason">
+                            <field name="rejection_reason" nolabel="1" placeholder="Rejection reason..."/>
                         </group>
                     </sheet>
                 </form>
@@ -195,6 +209,10 @@
                     <field name="request_id"/>
                     <filter string="Credits" name="credits" domain="[('transaction_type', '=', 'credit')]"/>
                     <filter string="Debits" name="debits" domain="[('transaction_type', '=', 'debit')]"/>
+                    <separator/>
+                    <filter string="Pending Withdrawals" name="pending_withdrawals" domain="[('transaction_type', '=', 'debit'), ('withdrawal_status', '=', 'pending')]"/>
+                    <filter string="Approved Withdrawals" name="approved_withdrawals" domain="[('transaction_type', '=', 'debit'), ('withdrawal_status', '=', 'approved')]"/>
+                    <filter string="Rejected Withdrawals" name="rejected_withdrawals" domain="[('transaction_type', '=', 'debit'), ('withdrawal_status', '=', 'rejected')]"/>
                     <separator/>
                     <filter string="This Month" name="this_month" domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().day-1)).strftime('%Y-%m-%d'))]"/>
                     <filter string="Today" name="today" domain="[('create_date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>

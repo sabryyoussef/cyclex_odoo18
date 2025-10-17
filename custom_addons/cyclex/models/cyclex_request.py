@@ -3,10 +3,13 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 import qrcode
 import base64
 from io import BytesIO
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class CyclexRequest(models.Model):
@@ -351,6 +354,51 @@ class CyclexRequest(models.Model):
                     'sticky': False,
                 }
             }
+    
+    # ==========================================
+    # Scheduled Actions (Cron Jobs)
+    # ==========================================
+    
+    @api.model
+    def _cron_auto_revert_overdue_orders(self):
+        """
+        Scheduled action to auto-revert orders that were not completed within 3 days
+        Runs every 6 hours
+        """
+        from datetime import timedelta
+        
+        # Find assigned orders older than 3 days
+        deadline = fields.Datetime.now() - timedelta(days=3)
+        
+        overdue_orders = self.search([
+            ('status', '=', 'assigned'),
+            ('write_date', '<', deadline)  # Last update was more than 3 days ago
+        ])
+        
+        reverted_count = 0
+        for order in overdue_orders:
+            # Revert to pending status
+            order.write({
+                'status': 'pending',
+                'collector_id': False,
+            })
+            
+            # Log activity
+            order.message_post(
+                body=_('Order auto-reverted to pending due to 3-day deadline exceeded. Previous collector: %s') % (order.collector_id.name if order.collector_id else 'N/A'),
+                subject=_('Order Auto-Reverted')
+            )
+            
+            reverted_count += 1
+        
+        if reverted_count > 0:
+            _logger.info(f"Auto-reverted {reverted_count} overdue orders")
+        
+        return True
+    
+    # ==========================================
+    # Validation Constraints
+    # ==========================================
     
     @api.constrains('weight')
     def _check_weight(self):

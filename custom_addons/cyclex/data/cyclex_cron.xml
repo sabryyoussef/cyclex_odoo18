@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Scheduled Action: Auto-revert Overdue Orders -->
+        <record id="ir_cron_auto_revert_orders" model="ir.cron">
+            <field name="name">CycleX: Auto-Revert Overdue Orders</field>
+            <field name="model_id" ref="model_cyclex_request"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_auto_revert_overdue_orders()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+        
+        <!-- Scheduled Action: Process Pending Withdrawals -->
+        <record id="ir_cron_process_withdrawals" model="ir.cron">
+            <field name="name">CycleX: Process Pending Withdrawals</field>
+            <field name="model_id" ref="model_cyclex_wallet"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_notify_pending_withdrawals()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+        
+    </data>
+</odoo>
+

@@ -4,6 +4,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import random
 import string
+import re
 from datetime import datetime, timedelta
 
 
@@ -497,6 +498,57 @@ class ResPartner(models.Model):
             vals['account_status'] = 'inactive'  # Will be active after verification
         
         return self.create(vals)
+    
+    # ==========================================
+    # Validation Constraints
+    # ==========================================
+    
+    @api.constrains('phone', 'cyclex_user_type')
+    def _check_phone_format(self):
+        """Validate Egyptian phone number format"""
+        for partner in self:
+            if partner.is_cyclex_user and partner.phone:
+                # Egyptian phone number format: starts with +20 or 01, followed by 10-11 digits
+                phone = partner.phone.replace(' ', '').replace('-', '')
+                
+                # Pattern: +20XXXXXXXXXX or 01XXXXXXXXX
+                if not re.match(r'^(\+20|0)(1[0-2,5])\d{8}$', phone):
+                    raise ValidationError(_(
+                        'Invalid Egyptian phone number format. '
+                        'Phone must start with +20 or 01 followed by 10 digits. '
+                        'Example: +201234567890 or 01234567890'
+                    ))
+    
+    @api.constrains('phone', 'cyclex_user_type')
+    def _check_duplicate_phone(self):
+        """Prevent duplicate phone numbers for CycleX users"""
+        for partner in self:
+            if partner.is_cyclex_user and partner.phone:
+                # Clean phone number
+                phone = partner.phone.replace(' ', '').replace('-', '')
+                
+                # Check if another CycleX user exists with same phone
+                duplicate = self.search([
+                    ('id', '!=', partner.id),
+                    ('is_cyclex_user', '=', True),
+                    ('phone', 'ilike', phone)
+                ], limit=1)
+                
+                if duplicate:
+                    raise ValidationError(_(
+                        'This phone number is already registered. '
+                        'Please use a different phone number or login with existing account.'
+                    ))
+    
+    @api.constrains('working_area_ids')
+    def _check_working_areas_limit(self):
+        """Limit collectors to max 5 working areas"""
+        for partner in self:
+            if partner.cyclex_user_type == 'collector' and len(partner.working_area_ids) > 5:
+                raise ValidationError(_(
+                    'Collectors can have a maximum of 5 working areas. '
+                    'Please remove some areas before adding new ones.'
+                ))
 
 
 class ResUsers(models.Model):

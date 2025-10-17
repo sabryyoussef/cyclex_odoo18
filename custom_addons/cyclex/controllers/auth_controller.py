@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 from odoo import http, _
 from odoo.http import request
 from odoo.exceptions import ValidationError, UserError
@@ -187,10 +188,12 @@ class CyclexAuthController(http.Controller):
                     'error_code': 'PASSWORD_MISMATCH'
                 }
             
-            if len(password) < 6:
+            # Password strength validation
+            password_validation = self._validate_password_strength(password)
+            if not password_validation['valid']:
                 return {
                     'success': False,
-                    'message': _('Password must be at least 6 characters'),
+                    'message': password_validation['message'],
                     'error_code': 'WEAK_PASSWORD'
                 }
             
@@ -560,4 +563,43 @@ class CyclexAuthController(http.Controller):
                 'message': _('An error occurred while updating profile'),
                 'error_code': 'SERVER_ERROR'
             }
+    
+    # ==========================================
+    # Helper Methods
+    # ==========================================
+    
+    def _validate_password_strength(self, password):
+        """
+        Validate password strength
+        Requirements:
+        - Minimum 8 characters
+        - At least one uppercase letter
+        - At least one lowercase letter
+        - At least one number
+        """
+        if len(password) < 8:
+            return {
+                'valid': False,
+                'message': _('Password must be at least 8 characters long')
+            }
+        
+        if not re.search(r'[A-Z]', password):
+            return {
+                'valid': False,
+                'message': _('Password must contain at least one uppercase letter')
+            }
+        
+        if not re.search(r'[a-z]', password):
+            return {
+                'valid': False,
+                'message': _('Password must contain at least one lowercase letter')
+            }
+        
+        if not re.search(r'\d', password):
+            return {
+                'valid': False,
+                'message': _('Password must contain at least one number')
+            }
+        
+        return {'valid': True}
 

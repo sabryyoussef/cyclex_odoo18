@@ -76,11 +76,25 @@ class CyclexRequestController(http.Controller):
                 'status': 'pending',
             }
             
-            # Add photos if provided
+            # Add photos if provided (with size validation)
             if 'photo_1' in kwargs and kwargs['photo_1']:
+                photo_validation = self._validate_image_size(kwargs['photo_1'])
+                if not photo_validation['valid']:
+                    return {
+                        'success': False,
+                        'message': photo_validation['message'],
+                        'error_code': 'IMAGE_TOO_LARGE'
+                    }
                 request_vals['photo_1'] = kwargs['photo_1']  # Base64
             
             if 'photo_2' in kwargs and kwargs['photo_2']:
+                photo_validation = self._validate_image_size(kwargs['photo_2'])
+                if not photo_validation['valid']:
+                    return {
+                        'success': False,
+                        'message': photo_validation['message'],
+                        'error_code': 'IMAGE_TOO_LARGE'
+                    }
                 request_vals['photo_2'] = kwargs['photo_2']  # Base64
             
             # Create request (QR code is auto-generated in create method)
@@ -336,4 +350,35 @@ class CyclexRequestController(http.Controller):
                 'message': _('An error occurred while cancelling request'),
                 'error_code': 'SERVER_ERROR'
             }
+    
+    # ==========================================
+    # Helper Methods
+    # ==========================================
+    
+    def _validate_image_size(self, base64_image):
+        """
+        Validate image size (max 5MB)
+        
+        Args:
+            base64_image: Base64 encoded image string
+            
+        Returns:
+            dict: {'valid': bool, 'message': str}
+        """
+        if not base64_image:
+            return {'valid': True}
+        
+        # Calculate size in bytes (base64 is about 1.37x larger than original)
+        size_bytes = len(base64_image) * 3 / 4
+        max_size_mb = 5
+        max_size_bytes = max_size_mb * 1024 * 1024
+        
+        if size_bytes > max_size_bytes:
+            actual_size_mb = size_bytes / (1024 * 1024)
+            return {
+                'valid': False,
+                'message': _('Image size (%.2f MB) exceeds maximum allowed size of %d MB') % (actual_size_mb, max_size_mb)
+            }
+        
+        return {'valid': True}
 

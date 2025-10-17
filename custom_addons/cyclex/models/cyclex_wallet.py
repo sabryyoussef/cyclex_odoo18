@@ -152,6 +152,7 @@ class CyclexWallet(models.Model):
             'amount': -amount,
             'transaction_type': 'debit',
             'description': description,
+            'withdrawal_status': 'pending',  # Withdrawals require approval
         })
         
         return transaction
@@ -207,6 +208,36 @@ class CyclexWallet(models.Model):
             'domain': [('wallet_id', '=', self.id)],
             'context': {'default_wallet_id': self.id}
         }
+    
+    # ==========================================
+    # Scheduled Actions (Cron Jobs)
+    # ==========================================
+    
+    @api.model
+    def _cron_notify_pending_withdrawals(self):
+        """
+        Scheduled action to notify admin about pending withdrawal requests
+        Runs daily
+        """
+        import logging
+        _logger = logging.getLogger(__name__)
+        
+        # Find pending withdrawal transactions
+        pending_withdrawals = self.env['cyclex.wallet.transaction'].search([
+            ('transaction_type', '=', 'debit'),
+            ('withdrawal_status', '=', 'pending')
+        ])
+        
+        if pending_withdrawals:
+            count = len(pending_withdrawals)
+            total_amount = sum(abs(t.amount) for t in pending_withdrawals)
+            
+            _logger.info(f"Found {count} pending withdrawal requests totaling {total_amount}")
+            
+            # TODO: Send notification to admin
+            # TODO: Send email digest to admin
+        
+        return True
 
 
 class CyclexWalletTransaction(models.Model):
@@ -249,6 +280,29 @@ class CyclexWalletTransaction(models.Model):
         ('debit', 'Debit'),
     ], string='Type', required=True, index=True)
     
+    withdrawal_status = fields.Selection([
+        ('pending', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('completed', 'Completed'),
+    ], string='Withdrawal Status', 
+       help="Status for withdrawal requests (only applicable for debit transactions)")
+    
+    approved_by = fields.Many2one(
+        'res.users',
+        string='Approved By',
+        readonly=True
+    )
+    
+    approval_date = fields.Datetime(
+        string='Approval Date',
+        readonly=True
+    )
+    
+    rejection_reason = fields.Text(
+        string='Rejection Reason'
+    )
+    
     description = fields.Char(
         string='Description',
         required=True
@@ -266,6 +320,58 @@ class CyclexWalletTransaction(models.Model):
         string='Currency',
         default=lambda self: self.env.company.currency_id
     )
+    
+    # ==========================================
+    # Withdrawal Approval Methods
+    # ==========================================
+    
+    def action_approve_withdrawal(self):
+        """Approve withdrawal request (admin action)"""
+        for transaction in self:
+            if transaction.transaction_type != 'debit':
+                raise ValidationError(_('Only withdrawal requests can be approved.'))
+            
+            if transaction.withdrawal_status != 'pending':
+                raise ValidationError(_('Only pending withdrawals can be approved.'))
+            
+            transaction.write({
+                'withdrawal_status': 'approved',
+                'approved_by': self.env.user.id,
+                'approval_date': fields.Datetime.now()
+            })
+            
+            # TODO: Send notification to customer
+            # TODO: Initiate actual bank transfer
+        
+        return True
+    
+    def action_reject_withdrawal(self):
+        """Reject withdrawal request (admin action)"""
+        for transaction in self:
+            if transaction.transaction_type != 'debit':
+                raise ValidationError(_('Only withdrawal requests can be rejected.'))
+            
+            if transaction.withdrawal_status != 'pending':
+                raise ValidationError(_('Only pending withdrawals can be rejected.'))
+            
+            # Return amount to wallet (mark as cancelled)
+            transaction.write({
+                'withdrawal_status': 'rejected',
+                'approved_by': self.env.user.id,
+                'approval_date': fields.Datetime.now()
+            })
+            
+            # Reverse the debit transaction (credit back to wallet)
+            self.env['cyclex.wallet.transaction'].create({
+                'wallet_id': transaction.wallet_id.id,
+                'amount': abs(transaction.amount),
+                'transaction_type': 'credit',
+                'description': _('Withdrawal Rejected: %s') % transaction.description,
+            })
+            
+            # TODO: Send notification to customer
+        
+        return True
     
     # ==========================================
     # Validation
