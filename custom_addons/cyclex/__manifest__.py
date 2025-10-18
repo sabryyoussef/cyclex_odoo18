@@ -58,6 +58,7 @@ Technical Details:
         'data/cyclex_data.xml',
         'data/cyclex_sequence.xml',
         'data/cyclex_cron.xml',
+        'data/cyclex_sample_data.xml',  # Sample/demo data for testing
         
         # Views (loaded before menu to ensure actions exist)
         'views/res_partner_views.xml',

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Sample Working Areas -->
+        <record id="working_area_nasr_city" model="cyclex.working.area">
+            <field name="name">Nasr City</field>
+            <field name="name_ar">مدينة نصر</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="working_area_maadi" model="cyclex.working.area">
+            <field name="name">Maadi</field>
+            <field name="name_ar">المعادي</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="working_area_heliopolis" model="cyclex.working.area">
+            <field name="name">Heliopolis</field>
+            <field name="name_ar">مصر الجديدة</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="working_area_zamalek" model="cyclex.working.area">
+            <field name="name">Zamalek</field>
+            <field name="name_ar">الزمالك</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="working_area_downtown" model="cyclex.working.area">
+            <field name="name">Downtown Cairo</field>
+            <field name="name_ar">وسط البلد</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Sample Categories with Images -->
+        <record id="category_plastic" model="cyclex.category">
+            <field name="name">Plastic</field>
+            <field name="name_ar">بلاستيك</field>
+            <field name="description">All types of plastic materials</field>
+            <field name="description_ar">جميع أنواع المواد البلاستيكية</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="category_paper" model="cyclex.category">
+            <field name="name">Paper &amp; Cardboard</field>
+            <field name="name_ar">ورق وكرتون</field>
+            <field name="description">Newspapers, magazines, cardboard boxes</field>
+            <field name="description_ar">جرائد، مجلات، صناديق كرتون</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="category_metal" model="cyclex.category">
+            <field name="name">Metal</field>
+            <field name="name_ar">معادن</field>
+            <field name="description">Aluminum cans, metal scraps</field>
+            <field name="description_ar">علب ألومنيوم، خردة معادن</field>
+            <field name="sequence">30</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="category_glass" model="cyclex.category">
+            <field name="name">Glass</field>
+            <field name="name_ar">زجاج</field>
+            <field name="description">Glass bottles and containers</field>
+            <field name="description_ar">زجاجات وحاويات زجاجية</field>
+            <field name="sequence">40</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="category_electronics" model="cyclex.category">
+            <field name="name">Electronics</field>
+            <field name="name_ar">إلكترونيات</field>
+            <field name="description">Old phones, computers, appliances</field>
+            <field name="description_ar">هواتف قديمة، أجهزة كمبيوتر، أجهزة منزلية</field>
+            <field name="sequence">50</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Sample Products - Plastic -->
+        <record id="product_plastic_bottles" model="cyclex.product">
+            <field name="name">Plastic Bottles (PET)</field>
+            <field name="name_ar">زجاجات بلاستيك</field>
+            <field name="category_id" ref="category_plastic"/>
+            <field name="price_per_kg">3.50</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">PET plastic bottles - water, soda bottles</field>
+            <field name="description_ar">زجاجات بلاستيك - زجاجات مياه وصودا</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_plastic_bags" model="cyclex.product">
+            <field name="name">Plastic Bags</field>
+            <field name="name_ar">أكياس بلاستيك</field>
+            <field name="category_id" ref="category_plastic"/>
+            <field name="price_per_kg">2.00</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Clean plastic bags</field>
+            <field name="description_ar">أكياس بلاستيك نظيفة</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_plastic_containers" model="cyclex.product">
+            <field name="name">Plastic Containers</field>
+            <field name="name_ar">حاويات بلاستيك</field>
+            <field name="category_id" ref="category_plastic"/>
+            <field name="price_per_kg">4.00</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Food containers, storage boxes</field>
+            <field name="description_ar">حاويات طعام، صناديق تخزين</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Sample Products - Paper -->
+        <record id="product_newspapers" model="cyclex.product">
+            <field name="name">Newspapers</field>
+            <field name="name_ar">جرائد</field>
+            <field name="category_id" ref="category_paper"/>
+            <field name="price_per_kg">1.50</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Old newspapers and magazines</field>
+            <field name="description_ar">جرائد ومجلات قديمة</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_cardboard" model="cyclex.product">
+            <field name="name">Cardboard Boxes</field>
+            <field name="name_ar">صناديق كرتون</field>
+            <field name="category_id" ref="category_paper"/>
+            <field name="price_per_kg">2.50</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Clean cardboard boxes</field>
+            <field name="description_ar">صناديق كرتون نظيفة</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_office_paper" model="cyclex.product">
+            <field name="name">Office Paper</field>
+            <field name="name_ar">ورق مكتبي</field>
+            <field name="category_id" ref="category_paper"/>
+            <field name="price_per_kg">3.00</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">White office paper, books</field>
+            <field name="description_ar">ورق مكتبي أبيض، كتب</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Sample Products - Metal -->
+        <record id="product_aluminum_cans" model="cyclex.product">
+            <field name="name">Aluminum Cans</field>
+            <field name="name_ar">علب ألومنيوم</field>
+            <field name="category_id" ref="category_metal"/>
+            <field name="price_per_kg">8.00</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Beverage cans, aluminum containers</field>
+            <field name="description_ar">علب مشروبات، حاويات ألومنيوم</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_scrap_metal" model="cyclex.product">
+            <field name="name">Scrap Metal</field>
+            <field name="name_ar">خردة معادن</field>
+            <field name="category_id" ref="category_metal"/>
+            <field name="price_per_kg">5.00</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Mixed metal scraps</field>
+            <field name="description_ar">خردة معادن مخلطة</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Sample Products - Glass -->
+        <record id="product_glass_bottles" model="cyclex.product">
+            <field name="name">Glass Bottles</field>
+            <field name="name_ar">زجاجات زجاجية</field>
+            <field name="category_id" ref="category_glass"/>
+            <field name="price_per_kg">1.00</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Clean glass bottles and jars</field>
+            <field name="description_ar">زجاجات وبرطمانات زجاجية نظيفة</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Sample Products - Electronics -->
+        <record id="product_mobile_phones" model="cyclex.product">
+            <field name="name">Old Mobile Phones</field>
+            <field name="name_ar">هواتف محمولة قديمة</field>
+            <field name="category_id" ref="category_electronics"/>
+            <field name="price_per_kg">50.00</field>
+            <field name="unit_of_measure">unit</field>
+            <field name="description">Old smartphones and feature phones</field>
+            <field name="description_ar">هواتف ذكية وهواتف قديمة</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_computer_parts" model="cyclex.product">
+            <field name="name">Computer Parts</field>
+            <field name="name_ar">قطع كمبيوتر</field>
+            <field name="category_id" ref="category_electronics"/>
+            <field name="price_per_kg">30.00</field>
+            <field name="unit_of_measure">kg</field>
+            <field name="description">Old motherboards, RAM, hard drives</field>
+            <field name="description_ar">لوحات أم قديمة، رامات، هاردات</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Sample Customers -->
+        <record id="partner_customer_1" model="res.partner">
+            <field name="name">Ahmed Hassan</field>
+            <field name="phone">+201001234567</field>
+            <field name="email">ahmed.hassan@example.com</field>
+            <field name="is_cyclex_user">True</field>
+            <field name="cyclex_user_type">customer</field>
+            <field name="language">ar</field>
+            <field name="phone_verified">True</field>
+            <field name="verification_code">123456</field>
+            <field name="street">15 El Nasr Street</field>
+            <field name="city">Nasr City</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="partner_customer_2" model="res.partner">
+            <field name="name">Fatma Mohamed</field>
+            <field name="phone">+201002345678</field>
+            <field name="email">fatma.mohamed@example.com</field>
+            <field name="is_cyclex_user">True</field>
+            <field name="cyclex_user_type">customer</field>
+            <field name="language">ar</field>
+            <field name="phone_verified">True</field>
+            <field name="verification_code">123456</field>
+            <field name="street">22 Road 9</field>
+            <field name="city">Maadi</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="partner_customer_3" model="res.partner">
+            <field name="name">Omar Ali</field>
+            <field name="phone">+201003456789</field>
+            <field name="email">omar.ali@example.com</field>
+            <field name="is_cyclex_user">True</field>
+            <field name="cyclex_user_type">customer</field>
+            <field name="language">en</field>
+            <field name="phone_verified">True</field>
+            <field name="verification_code">123456</field>
+            <field name="street">10 Merghany Street</field>
+            <field name="city">Heliopolis</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <!-- Sample Collectors -->
+        <record id="partner_collector_1" model="res.partner">
+            <field name="name">Mahmoud Saad</field>
+            <field name="phone">+201101234567</field>
+            <field name="email">mahmoud.saad@example.com</field>
+            <field name="is_cyclex_user">True</field>
+            <field name="cyclex_user_type">collector</field>
+            <field name="language">ar</field>
+            <field name="phone_verified">True</field>
+            <field name="collector_verified">True</field>
+            <field name="verification_code">123456</field>
+            <field name="commission_rate">15.00</field>
+            <field name="working_area_ids" eval="[(6, 0, [ref('working_area_nasr_city'), ref('working_area_heliopolis')])]"/>
+            <field name="street">5 Abbas El Akkad</field>
+            <field name="city">Nasr City</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="partner_collector_2" model="res.partner">
+            <field name="name">Khaled Ibrahim</field>
+            <field name="phone">+201102345678</field>
+            <field name="email">khaled.ibrahim@example.com</field>
+            <field name="is_cyclex_user">True</field>
+            <field name="cyclex_user_type">collector</field>
+            <field name="language">ar</field>
+            <field name="phone_verified">True</field>
+            <field name="collector_verified">True</field>
+            <field name="verification_code">123456</field>
+            <field name="commission_rate">15.00</field>
+            <field name="working_area_ids" eval="[(6, 0, [ref('working_area_maadi'), ref('working_area_zamalek')])]"/>
+            <field name="street">12 Road 218</field>
+            <field name="city">Maadi</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="partner_collector_3" model="res.partner">
+            <field name="name">Hassan Youssef</field>
+            <field name="phone">+201103456789</field>
+            <field name="email">hassan.youssef@example.com</field>
+            <field name="is_cyclex_user">True</field>
+            <field name="cyclex_user_type">collector</field>
+            <field name="language">ar</field>
+            <field name="phone_verified">True</field>
+            <field name="collector_verified">True</field>
+            <field name="verification_code">123456</field>
+            <field name="commission_rate">15.00</field>
+            <field name="working_area_ids" eval="[(6, 0, [ref('working_area_downtown'), ref('working_area_zamalek')])]"/>
+            <field name="street">8 26th July Street</field>
+            <field name="city">Zamalek</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <!-- Create Wallets for Customers (auto-created via model) -->
+        <!-- Wallets are auto-created when partners are created -->
+        
+    </data>
+</odoo>
+
