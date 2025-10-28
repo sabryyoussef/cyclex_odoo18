@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rbcCollection name="CycleX API - Complete Collection" base_url="{{base_url}}">
+  <info>
+    <description>Complete API collection for CycleX Recycling Mobile Application. Converted from Postman JSON to rbc-style XML.</description>
+    <date>2025-10-28</date>
+    <notes>Authentication is session-based (auth_token cookie). Use base_url variable to change host/port.</notes>
+  </info>
+
+  <!-- 1. Authentication -->
+  <folder name="1. Authentication" description="User authentication endpoints">
+    <request name="1.1 Register User" method="POST" endpoint="/api/cyclex/register">
+      <description>Register a new user (customer or collector). Required: name, phone, password, user_type. Optional: email, language.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "name": "Ahmed Hassan",
+        "phone": "+201234567890",
+        "password": "TestPass123",
+        "email": "ahmed@example.com",
+        "user_type": "customer",
+        "language": "ar"
+    },
+    "id": 1
+}
+      ]]></body>
+    </request>
+
+    <request name="1.2 Verify Phone" method="POST" endpoint="/api/cyclex/verify">
+      <description>Verify phone number with 6-digit code. Returns auth session on success.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "phone": "+201234567890",
+        "code": "123456"
+    },
+    "id": 2
+}
+      ]]></body>
+    </request>
+
+    <request name="1.3 Login" method="POST" endpoint="/api/cyclex/login">
+      <description>Login with phone and password. Returns user data and auth session.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "phone": "+201234567890",
+        "password": "TestPass123"
+    },
+    "id": 3
+}
+      ]]></body>
+    </request>
+
+    <request name="1.4 Resend Verification Code" method="POST" endpoint="/api/cyclex/resend-code">
+      <description>Resend verification code to phone. Rate limited to prevent abuse.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "phone": "+201234567890"
+    },
+    "id": 4
+}
+      ]]></body>
+    </request>
+  </folder>
+
+  <!-- 2. Categories & Products -->
+  <folder name="2. Categories & Products" description="Browse categories and products">
+    <request name="2.1 Get Categories" method="POST" endpoint="/api/cyclex/categories">
+      <description>Get all active recycling categories. Optional: language (ar/en).</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "language": "ar"
+    },
+    "id": 5
+}
+      ]]></body>
+    </request>
+
+    <request name="2.2 Get Products" method="POST" endpoint="/api/cyclex/products">
+      <description>Get products by category. Required: category_id. Optional: language.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "category_id": 1,
+        "language": "ar"
+    },
+    "id": 6
+}
+      ]]></body>
+    </request>
+  </folder>
+
+  <!-- 3. Recycling Requests (Customer) -->
+  <folder name="3. Recycling Requests (Customer)" description="Customer request management">
+    <request name="3.1 Create Request" method="POST" endpoint="/api/cyclex/request/create">
+      <description>Create a new recycling request. Required: product_id, quantity, unit, pickup_date, pickup_time, location_latitude, location_longitude, address. Optional: notes, image (base64).</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "product_id": 1,
+        "quantity": 15.5,
+        "unit": "kg",
+        "pickup_date": "2025-10-20",
+        "pickup_time": "morning",
+        "location_latitude": 30.0444,
+        "location_longitude": 31.2357,
+        "address": "123 شارع التحرير، القاهرة",
+        "notes": "Please call before arriving",
+        "image": "base64_encoded_image_string_here"
+    },
+    "id": 7
+}
+      ]]></body>
+    </request>
+
+    <request name="3.2 My Requests" method="POST" endpoint="/api/cyclex/request/my-requests">
+      <description>Get customer's requests. Optional: status, limit, offset.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "status": "all",
+        "limit": 20,
+        "offset": 0
+    },
+    "id": 8
+}
+      ]]></body>
+    </request>
+
+    <request name="3.3 Request Details" method="POST" endpoint="/api/cyclex/request/details">
+      <description>Get detailed request information. Required: request_id.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "request_id": 1
+    },
+    "id": 9
+}
+      ]]></body>
+    </request>
+
+    <request name="3.4 Rate Request" method="POST" endpoint="/api/cyclex/request/rate">
+      <description>Rate a completed request. Required: request_id, rating (1-5). Optional: comments.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "request_id": 1,
+        "rating": 5,
+        "comments": "Excellent service, very professional!"
+    },
+    "id": 10
+}
+      ]]></body>
+    </request>
+  </folder>
+
+  <!-- 4. Collector Actions -->
+  <folder name="4. Collector Actions" description="Collector order management">
+    <request name="4.1 Available Orders" method="POST" endpoint="/api/cyclex/collector/available-orders">
+      <description>Get available orders for collector. Requires verified collector.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "limit": 20,
+        "offset": 0
+    },
+    "id": 11
+}
+      ]]></body>
+    </request>
+
+    <request name="4.2 Accept Order" method="POST" endpoint="/api/cyclex/collector/accept-order">
+      <description>Accept a recycling order. Required: request_id. Business rules apply (max 5 pending, must complete within 3 days).</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "request_id": 1
+    },
+    "id": 12
+}
+      ]]></body>
+    </request>
+
+    <request name="4.3 Reject Order" method="POST" endpoint="/api/cyclex/collector/reject-order">
+      <description>Reject an assigned order. Required: request_id. Optional: reason.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "request_id": 1,
+        "reason": "Too far from my location"
+    },
+    "id": 13
+}
+      ]]></body>
+    </request>
+
+    <request name="4.4 Scan QR Code" method="POST" endpoint="/api/cyclex/collector/scan-qr">
+      <description>Scan QR code to complete order. Validates QR, marks order as collected, credits wallet, creates commission.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "qr_code": "CYCLEX-REQ-00001-a1b2c3d4e5f6"
+    },
+    "id": 14
+}
+      ]]></body>
+    </request>
+
+    <request name="4.5 My Completed Orders" method="POST" endpoint="/api/cyclex/collector/my-orders">
+      <description>Get collector's completed orders. Optional: limit, offset.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "limit": 20,
+        "offset": 0
+    },
+    "id": 15
+}
+      ]]></body>
+    </request>
+  </folder>
+
+  <!-- 5. Wallet -->
+  <folder name="5. Wallet" description="Wallet and transactions">
+    <request name="5.1 Get Balance" method="POST" endpoint="/api/cyclex/wallet/balance">
+      <description>Get current wallet balance. Returns balance and currency.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {},
+    "id": 16
+}
+      ]]></body>
+    </request>
+
+    <request name="5.2 Get Transactions" method="POST" endpoint="/api/cyclex/wallet/transactions">
+      <description>Get wallet transaction history. Optional: limit, offset.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "limit": 20,
+        "offset": 0
+    },
+    "id": 17
+}
+      ]]></body>
+    </request>
+
+    <request name="5.3 Request Credit (Admin Only)" method="POST" endpoint="/api/cyclex/wallet/credit">
+      <description>Add credit to customer wallet (Admin only). Required: customer_id, amount, description.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "customer_id": 5,
+        "amount": 100.00,
+        "description": "Bonus credit for new customer"
+    },
+    "id": 18
+}
+      ]]></body>
+    </request>
+
+    <request name="5.4 Request Withdrawal" method="POST" endpoint="/api/cyclex/wallet/withdrawal">
+      <description>Request wallet withdrawal. Required: amount, description. Business rules: min withdrawal 10 EGP, admin approval required.</description>
+      <body contentType="application/json"><![CDATA[
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": {
+        "amount": 50.00,
+        "description": "Withdrawal request"
+    },
+    "id": 19
+}
+      ]]></body>
+    </request>
+  </folder>
+
+  <!-- 6. Profile -->
+  <folder name="6. Profile" description="User profile management">
+    <request name="6.1 Get Profile" method="POST" endpoint="/api/cyclex/profile">
+      <description>Get user profile information. Returns complete profile data.</description>
+      <body contentType="application/json"><![CDATA[
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {},
+  "id": 20
+}
+      ]]></body>
+    </request>
+
+    <request name="6.2 Update Profile" method="POST" endpoint="/api/cyclex/profile/update">
+      <description>Update user profile. Optional fields: name, email, language. Phone cannot be changed.</description>
+      <body contentType="application/json"><![CDATA[
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "name": "New Name",
+    "email": "new@example.com",
+    "language": "ar"
+  },
+  "id": 21
+}
+      ]]></body>
+    </request>
+
+    <request name="6.3 Update FCM Token" method="POST" endpoint="/api/cyclex/profile/update-fcm">
+      <description>Update Firebase FCM token for push notifications. Required: fcm_token.</description>
+      <body contentType="application/json"><![CDATA[
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "fcm_token": "fcm_token_here"
+  },
+  "id": 22
+}
+      ]]></body>
+    </request>
+  </folder>
+
+  <!-- 7. Commission (Collector Only) -->
+  <folder name="7. Commission (Collector Only)" description="Collector earnings">
+    <request name="7.1 My Commission" method="POST" endpoint="/api/cyclex/collector/commission">
+      <description>Get collector commission history. Optional: limit, offset.</description>
+      <body contentType="application/json"><![CDATA[
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "limit": 20,
+    "offset": 0
+  },
+  "id": 23
+}
+      ]]></body>
+    </request>
+  </folder>
+
+  <variables>
+    <variable name="base_url" value="http://localhost:10018" />
+  </variables>
+</rbcCollection>

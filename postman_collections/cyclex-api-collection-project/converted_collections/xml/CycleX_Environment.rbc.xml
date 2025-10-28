@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rbcEnvironment name="CycleX - Development" source="Postman" exported_at="2025-10-17T22:00:00.000Z">
+  <info>
+    <description>Environment variables for CycleX development. Converted from Postman environment JSON.</description>
+    <notes>Use these variables with the converted rbc collection. Keep `auth_token` empty until authenticated.</notes>
+  </info>
+
+  <variables>
+    <variable name="base_url" value="http://localhost:10018" type="default" enabled="true" />
+    <variable name="customer_phone" value="+201234567890" type="default" enabled="true" />
+    <variable name="customer_password" value="TestPass123" type="default" enabled="true" />
+    <variable name="collector_phone" value="+201111111111" type="default" enabled="true" />
+    <variable name="collector_password" value="TestPass123" type="default" enabled="true" />
+    <variable name="auth_token" value="" type="secret" enabled="true" />
+    <variable name="user_id" value="" type="default" enabled="true" />
+    <variable name="request_id" value="" type="default" enabled="true" />
+    <variable name="category_id" value="1" type="default" enabled="true" />
+    <variable name="product_id" value="1" type="default" enabled="true" />
+  </variables>
+
+  <meta>
+    <postman_exported_using>Postman/10.0.0</postman_exported_using>
+  </meta>
+</rbcEnvironment>
