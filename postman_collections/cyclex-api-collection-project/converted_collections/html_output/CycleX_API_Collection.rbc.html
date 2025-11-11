@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Converted XML - CycleX_API_Collection.rbc.xml</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:20px;background:#f7f9fb;color:#222}
+h1{color:#2a7f62}
+.request{background:white;padding:15px;margin:12px 0;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+.request h3{margin:0 0 8px 0}
+.url{font-weight:600;color:#0b6e4f}
+.desc{margin:6px 0;color:#555}
+.hdr{width:100%;border-collapse:collapse;margin-top:8px}
+.hdr th,.hdr td{border:1px solid #e6eef0;padding:6px 8px;text-align:left;font-size:0.95em}
+pre{background:#07203a;color:#d6f7ff;padding:10px;border-radius:6px;overflow:auto}
+.details summary{cursor:pointer}
+.meta{font-size:0.9em;color:#666;margin-bottom:12px}
+</style>
+</head>
+<body>
+<h1>Converted: CycleX_API_Collection.rbc.xml</h1>
+<div class="meta">Converted on 2025-11-11T10:41:42.526624Z — Source file: /workspaces/cyclex_odoo18/postman_collections/cyclex-api-collection-project/converted_collections/xml/CycleX_API_Collection.rbc.xml</div>
+<h2>Request #1</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Register a new user (customer or collector). Required: name, phone, password, user_type. Optional: email, language.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;name&quot;: &quot;Ahmed Hassan&quot;,
+        &quot;phone&quot;: &quot;+201234567890&quot;,
+        &quot;password&quot;: &quot;TestPass123&quot;,
+        &quot;email&quot;: &quot;ahmed@example.com&quot;,
+        &quot;user_type&quot;: &quot;customer&quot;,
+        &quot;language&quot;: &quot;ar&quot;
+    },
+    &quot;id&quot;: 1
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;1.1 Register User&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/register&quot;&gt;
+      &lt;description&gt;Register a new user (customer or collector). Required: name, phone, password, user_type. Optional: email, language.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;name&quot;: &quot;Ahmed Hassan&quot;,
+        &quot;phone&quot;: &quot;+201234567890&quot;,
+        &quot;password&quot;: &quot;TestPass123&quot;,
+        &quot;email&quot;: &quot;ahmed@example.com&quot;,
+        &quot;user_type&quot;: &quot;customer&quot;,
+        &quot;language&quot;: &quot;ar&quot;
+    },
+    &quot;id&quot;: 1
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #2</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Verify phone number with 6-digit code. Returns auth session on success.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;phone&quot;: &quot;+201234567890&quot;,
+        &quot;code&quot;: &quot;123456&quot;
+    },
+    &quot;id&quot;: 2
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;1.2 Verify Phone&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/verify&quot;&gt;
+      &lt;description&gt;Verify phone number with 6-digit code. Returns auth session on success.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;phone&quot;: &quot;+201234567890&quot;,
+        &quot;code&quot;: &quot;123456&quot;
+    },
+    &quot;id&quot;: 2
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #3</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Login with phone and password. Returns user data and auth session.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;phone&quot;: &quot;+201234567890&quot;,
+        &quot;password&quot;: &quot;TestPass123&quot;
+    },
+    &quot;id&quot;: 3
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;1.3 Login&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/login&quot;&gt;
+      &lt;description&gt;Login with phone and password. Returns user data and auth session.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;phone&quot;: &quot;+201234567890&quot;,
+        &quot;password&quot;: &quot;TestPass123&quot;
+    },
+    &quot;id&quot;: 3
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #4</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Resend verification code to phone. Rate limited to prevent abuse.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;phone&quot;: &quot;+201234567890&quot;
+    },
+    &quot;id&quot;: 4
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;1.4 Resend Verification Code&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/resend-code&quot;&gt;
+      &lt;description&gt;Resend verification code to phone. Rate limited to prevent abuse.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;phone&quot;: &quot;+201234567890&quot;
+    },
+    &quot;id&quot;: 4
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+  </pre></details>
+</div>
+<h2>Request #5</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get all active recycling categories. Optional: language (ar/en).</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;language&quot;: &quot;ar&quot;
+    },
+    &quot;id&quot;: 5
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;2.1 Get Categories&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/categories&quot;&gt;
+      &lt;description&gt;Get all active recycling categories. Optional: language (ar/en).&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;language&quot;: &quot;ar&quot;
+    },
+    &quot;id&quot;: 5
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #6</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get products by category. Required: category_id. Optional: language.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;category_id&quot;: 1,
+        &quot;language&quot;: &quot;ar&quot;
+    },
+    &quot;id&quot;: 6
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;2.2 Get Products&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/products&quot;&gt;
+      &lt;description&gt;Get products by category. Required: category_id. Optional: language.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;category_id&quot;: 1,
+        &quot;language&quot;: &quot;ar&quot;
+    },
+    &quot;id&quot;: 6
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+  </pre></details>
+</div>
+<h2>Request #7</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Create a new recycling request. Required: product_id, quantity, unit, pickup_date, pickup_time, location_latitude, location_longitude, address. Optional: notes, image (base64).</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;product_id&quot;: 1,
+        &quot;quantity&quot;: 15.5,
+        &quot;unit&quot;: &quot;kg&quot;,
+        &quot;pickup_date&quot;: &quot;2025-10-20&quot;,
+        &quot;pickup_time&quot;: &quot;morning&quot;,
+        &quot;location_latitude&quot;: 30.0444,
+        &quot;location_longitude&quot;: 31.2357,
+        &quot;address&quot;: &quot;123 شارع التحرير، القاهرة&quot;,
+        &quot;notes&quot;: &quot;Please call before arriving&quot;,
+        &quot;image&quot;: &quot;base64_encoded_image_string_here&quot;
+    },
+    &quot;id&quot;: 7
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;3.1 Create Request&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/request/create&quot;&gt;
+      &lt;description&gt;Create a new recycling request. Required: product_id, quantity, unit, pickup_date, pickup_time, location_latitude, location_longitude, address. Optional: notes, image (base64).&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;product_id&quot;: 1,
+        &quot;quantity&quot;: 15.5,
+        &quot;unit&quot;: &quot;kg&quot;,
+        &quot;pickup_date&quot;: &quot;2025-10-20&quot;,
+        &quot;pickup_time&quot;: &quot;morning&quot;,
+        &quot;location_latitude&quot;: 30.0444,
+        &quot;location_longitude&quot;: 31.2357,
+        &quot;address&quot;: &quot;123 شارع التحرير، القاهرة&quot;,
+        &quot;notes&quot;: &quot;Please call before arriving&quot;,
+        &quot;image&quot;: &quot;base64_encoded_image_string_here&quot;
+    },
+    &quot;id&quot;: 7
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #8</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get customer&#x27;s requests. Optional: status, limit, offset.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;status&quot;: &quot;all&quot;,
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 8
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;3.2 My Requests&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/request/my-requests&quot;&gt;
+      &lt;description&gt;Get customer&#x27;s requests. Optional: status, limit, offset.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;status&quot;: &quot;all&quot;,
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 8
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #9</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get detailed request information. Required: request_id.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1
+    },
+    &quot;id&quot;: 9
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;3.3 Request Details&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/request/details&quot;&gt;
+      &lt;description&gt;Get detailed request information. Required: request_id.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1
+    },
+    &quot;id&quot;: 9
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #10</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Rate a completed request. Required: request_id, rating (1-5). Optional: comments.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1,
+        &quot;rating&quot;: 5,
+        &quot;comments&quot;: &quot;Excellent service, very professional!&quot;
+    },
+    &quot;id&quot;: 10
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;3.4 Rate Request&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/request/rate&quot;&gt;
+      &lt;description&gt;Rate a completed request. Required: request_id, rating (1-5). Optional: comments.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1,
+        &quot;rating&quot;: 5,
+        &quot;comments&quot;: &quot;Excellent service, very professional!&quot;
+    },
+    &quot;id&quot;: 10
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+  </pre></details>
+</div>
+<h2>Request #11</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get available orders for collector. Requires verified collector.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 11
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;4.1 Available Orders&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/collector/available-orders&quot;&gt;
+      &lt;description&gt;Get available orders for collector. Requires verified collector.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 11
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #12</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Accept a recycling order. Required: request_id. Business rules apply (max 5 pending, must complete within 3 days).</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1
+    },
+    &quot;id&quot;: 12
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;4.2 Accept Order&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/collector/accept-order&quot;&gt;
+      &lt;description&gt;Accept a recycling order. Required: request_id. Business rules apply (max 5 pending, must complete within 3 days).&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1
+    },
+    &quot;id&quot;: 12
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #13</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Reject an assigned order. Required: request_id. Optional: reason.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1,
+        &quot;reason&quot;: &quot;Too far from my location&quot;
+    },
+    &quot;id&quot;: 13
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;4.3 Reject Order&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/collector/reject-order&quot;&gt;
+      &lt;description&gt;Reject an assigned order. Required: request_id. Optional: reason.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;request_id&quot;: 1,
+        &quot;reason&quot;: &quot;Too far from my location&quot;
+    },
+    &quot;id&quot;: 13
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #14</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Scan QR code to complete order. Validates QR, marks order as collected, credits wallet, creates commission.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;qr_code&quot;: &quot;CYCLEX-REQ-00001-a1b2c3d4e5f6&quot;
+    },
+    &quot;id&quot;: 14
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;4.4 Scan QR Code&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/collector/scan-qr&quot;&gt;
+      &lt;description&gt;Scan QR code to complete order. Validates QR, marks order as collected, credits wallet, creates commission.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;qr_code&quot;: &quot;CYCLEX-REQ-00001-a1b2c3d4e5f6&quot;
+    },
+    &quot;id&quot;: 14
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #15</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get collector&#x27;s completed orders. Optional: limit, offset.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 15
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;4.5 My Completed Orders&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/collector/my-orders&quot;&gt;
+      &lt;description&gt;Get collector&#x27;s completed orders. Optional: limit, offset.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 15
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+  </pre></details>
+</div>
+<h2>Request #16</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get current wallet balance. Returns balance and currency.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {},
+    &quot;id&quot;: 16
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;5.1 Get Balance&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/wallet/balance&quot;&gt;
+      &lt;description&gt;Get current wallet balance. Returns balance and currency.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {},
+    &quot;id&quot;: 16
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #17</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get wallet transaction history. Optional: limit, offset.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 17
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;5.2 Get Transactions&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/wallet/transactions&quot;&gt;
+      &lt;description&gt;Get wallet transaction history. Optional: limit, offset.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;limit&quot;: 20,
+        &quot;offset&quot;: 0
+    },
+    &quot;id&quot;: 17
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #18</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Add credit to customer wallet (Admin only). Required: customer_id, amount, description.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;customer_id&quot;: 5,
+        &quot;amount&quot;: 100.00,
+        &quot;description&quot;: &quot;Bonus credit for new customer&quot;
+    },
+    &quot;id&quot;: 18
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;5.3 Request Credit (Admin Only)&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/wallet/credit&quot;&gt;
+      &lt;description&gt;Add credit to customer wallet (Admin only). Required: customer_id, amount, description.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;customer_id&quot;: 5,
+        &quot;amount&quot;: 100.00,
+        &quot;description&quot;: &quot;Bonus credit for new customer&quot;
+    },
+    &quot;id&quot;: 18
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #19</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Request wallet withdrawal. Required: amount, description. Business rules: min withdrawal 10 EGP, admin approval required.</p>
+<details open><summary>Body</summary><pre class="body">{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;amount&quot;: 50.00,
+        &quot;description&quot;: &quot;Withdrawal request&quot;
+    },
+    &quot;id&quot;: 19
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;5.4 Request Withdrawal&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/wallet/withdrawal&quot;&gt;
+      &lt;description&gt;Request wallet withdrawal. Required: amount, description. Business rules: min withdrawal 10 EGP, admin approval required.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+    &quot;jsonrpc&quot;: &quot;2.0&quot;,
+    &quot;method&quot;: &quot;call&quot;,
+    &quot;params&quot;: {
+        &quot;amount&quot;: 50.00,
+        &quot;description&quot;: &quot;Withdrawal request&quot;
+    },
+    &quot;id&quot;: 19
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+  </pre></details>
+</div>
+<h2>Request #20</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get user profile information. Returns complete profile data.</p>
+<details open><summary>Body</summary><pre class="body">{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {},
+  &quot;id&quot;: 20
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;6.1 Get Profile&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/profile&quot;&gt;
+      &lt;description&gt;Get user profile information. Returns complete profile data.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {},
+  &quot;id&quot;: 20
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #21</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Update user profile. Optional fields: name, email, language. Phone cannot be changed.</p>
+<details open><summary>Body</summary><pre class="body">{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {
+    &quot;name&quot;: &quot;New Name&quot;,
+    &quot;email&quot;: &quot;new@example.com&quot;,
+    &quot;language&quot;: &quot;ar&quot;
+  },
+  &quot;id&quot;: 21
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;6.2 Update Profile&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/profile/update&quot;&gt;
+      &lt;description&gt;Update user profile. Optional fields: name, email, language. Phone cannot be changed.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {
+    &quot;name&quot;: &quot;New Name&quot;,
+    &quot;email&quot;: &quot;new@example.com&quot;,
+    &quot;language&quot;: &quot;ar&quot;
+  },
+  &quot;id&quot;: 21
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+
+    </pre></details>
+</div>
+<h2>Request #22</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Update Firebase FCM token for push notifications. Required: fcm_token.</p>
+<details open><summary>Body</summary><pre class="body">{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {
+    &quot;fcm_token&quot;: &quot;fcm_token_here&quot;
+  },
+  &quot;id&quot;: 22
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;6.3 Update FCM Token&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/profile/update-fcm&quot;&gt;
+      &lt;description&gt;Update Firebase FCM token for push notifications. Required: fcm_token.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {
+    &quot;fcm_token&quot;: &quot;fcm_token_here&quot;
+  },
+  &quot;id&quot;: 22
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+  </pre></details>
+</div>
+<h2>Request #23</h2>
+<div class="request">
+<h3>POST: <span class="url"></span></h3>
+<p class="desc">Get collector commission history. Optional: limit, offset.</p>
+<details open><summary>Body</summary><pre class="body">{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {
+    &quot;limit&quot;: 20,
+    &quot;offset&quot;: 0
+  },
+  &quot;id&quot;: 23
+}</pre></details>
+<details><summary>Raw XML</summary><pre class="raw">&lt;request name=&quot;7.1 My Commission&quot; method=&quot;POST&quot; endpoint=&quot;/api/cyclex/collector/commission&quot;&gt;
+      &lt;description&gt;Get collector commission history. Optional: limit, offset.&lt;/description&gt;
+      &lt;body contentType=&quot;application/json&quot;&gt;
+{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;method&quot;: &quot;call&quot;,
+  &quot;params&quot;: {
+    &quot;limit&quot;: 20,
+    &quot;offset&quot;: 0
+  },
+  &quot;id&quot;: 23
+}
+      &lt;/body&gt;
+    &lt;/request&gt;
+  </pre></details>
+</div>
+</body>
+</html>
