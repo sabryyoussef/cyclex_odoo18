@@ -16,7 +16,7 @@ class CyclexAuthController(http.Controller):
     Handles login, registration, and phone verification
     """
     
-    @http.route('/api/cyclex/login', type='json', auth='public', methods=['POST'], csrf=False)
+    @http.route('/api/cyclex/login', type='http', auth='public', methods=['POST'], csrf=False)
     def login(self, **kwargs):
         """
         User login with phone number and password
@@ -32,16 +32,18 @@ class CyclexAuthController(http.Controller):
         - data: User profile and auth token
         """
         try:
-            phone = kwargs.get('phone')
-            password = kwargs.get('password')
-            fcm_token = kwargs.get('fcm_token')
+            # Parse JSON body
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            phone = data.get('phone')
+            password = data.get('password')
+            fcm_token = data.get('fcm_token')
             
             if not phone or not password:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Phone number and password are required'),
                     'error_code': 'MISSING_PARAMS'
-                }
+                })
             
             # Find user by phone
             partner = request.env['res.partner'].sudo().search([
@@ -50,15 +52,15 @@ class CyclexAuthController(http.Controller):
             ], limit=1)
             
             if not partner:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Invalid phone number or password'),
                     'error_code': 'INVALID_CREDENTIALS'
-                }
+                })
             
             # Check if phone is verified
             if not partner.phone_verified:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Phone number not verified. Please verify your account.'),
                     'error_code': 'PHONE_NOT_VERIFIED',
@@ -66,15 +68,15 @@ class CyclexAuthController(http.Controller):
                         'user_id': partner.id,
                         'phone': partner.phone
                     }
-                }
+                })
             
             # Check account status
             if partner.account_status != 'active':
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Account is %s. Please contact support.') % partner.account_status,
                     'error_code': 'ACCOUNT_SUSPENDED'
-                }
+                })
             
             # Verify password
             user = request.env['res.users'].sudo().search([
@@ -86,17 +88,17 @@ class CyclexAuthController(http.Controller):
                 try:
                     uid = request.session.authenticate(request.db, user.login, password)
                     if not uid:
-                        return {
+                        return request.make_json_response({
                             'success': False,
                             'message': _('Invalid phone number or password'),
                             'error_code': 'INVALID_CREDENTIALS'
-                        }
+                        })
                 except Exception as e:
-                    return {
+                    return request.make_json_response({
                         'success': False,
                         'message': _('Invalid phone number or password'),
                         'error_code': 'INVALID_CREDENTIALS'
-                    }
+                    })
             else:
                 # For partners without user accounts (API-only users)
                 # You may want to implement custom password verification here
@@ -110,7 +112,7 @@ class CyclexAuthController(http.Controller):
             partner.sudo().update_last_login()
             
             # Generate response with user data
-            return {
+            return request.make_json_response({
                 'success': True,
                 'message': _('Login successful'),
                 'data': {
@@ -130,17 +132,17 @@ class CyclexAuthController(http.Controller):
                     'total_orders': partner.total_requests_completed if partner.cyclex_user_type == 'collector' else 0,
                     'average_rating': partner.average_rating if partner.cyclex_user_type == 'collector' else 0,
                 }
-            }
+            })
             
         except Exception as e:
             _logger.error(f"Login error: {str(e)}")
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': _('An error occurred during login'),
                 'error_code': 'SERVER_ERROR'
-            }
+            })
     
-    @http.route('/api/cyclex/register', type='json', auth='public', methods=['POST'], csrf=False)
+    @http.route('/api/cyclex/register', type='http', auth='public', methods=['POST'], csrf=False)
     def register(self, **kwargs):
         """
         Register new user (customer or collector)
@@ -165,44 +167,46 @@ class CyclexAuthController(http.Controller):
         - data: User ID and verification info
         """
         try:
-            name = kwargs.get('name')
-            phone = kwargs.get('phone')
-            password = kwargs.get('password')
-            confirm_password = kwargs.get('confirm_password')
-            user_type = kwargs.get('user_type', 'customer')
-            fcm_token = kwargs.get('fcm_token')
-            language = kwargs.get('language', 'en')
+            # Parse JSON body
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            name = data.get('name')
+            phone = data.get('phone')
+            password = data.get('password')
+            confirm_password = data.get('confirm_password')
+            user_type = data.get('user_type', 'customer')
+            fcm_token = data.get('fcm_token')
+            language = data.get('language', 'en')
             
             # Validation
             if not all([name, phone, password, confirm_password]):
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Name, phone, password, and confirm password are required'),
                     'error_code': 'MISSING_PARAMS'
-                }
+                })
             
             if password != confirm_password:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Passwords do not match'),
                     'error_code': 'PASSWORD_MISMATCH'
-                }
+                })
             
             # Password strength validation
             password_validation = self._validate_password_strength(password)
             if not password_validation['valid']:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': password_validation['message'],
                     'error_code': 'WEAK_PASSWORD'
-                }
+                })
             
             if user_type not in ['customer', 'collector']:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Invalid user type'),
                     'error_code': 'INVALID_USER_TYPE'
-                }
+                })
             
             # Check if phone already exists
             existing = request.env['res.partner'].sudo().search([
@@ -211,11 +215,11 @@ class CyclexAuthController(http.Controller):
             ], limit=1)
             
             if existing:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Phone number already registered'),
                     'error_code': 'PHONE_EXISTS'
-                }
+                })
             
             # Prepare partner values
             partner_vals = {
@@ -232,12 +236,12 @@ class CyclexAuthController(http.Controller):
             # Add collector-specific fields
             if user_type == 'collector':
                 partner_vals.update({
-                    'collector_id_number': kwargs.get('id_number'),
-                    'collector_vehicle_type': kwargs.get('vehicle_type'),
+                    'collector_id_number': data.get('id_number'),
+                    'collector_vehicle_type': data.get('vehicle_type'),
                     'collector_approval_status': 'pending',
                 })
                 
-                working_areas = kwargs.get('working_area_ids', [])
+                working_areas = data.get('working_area_ids', [])
                 if working_areas:
                     partner_vals['working_area_ids'] = [(6, 0, working_areas)]
             
@@ -265,7 +269,7 @@ class CyclexAuthController(http.Controller):
             # For now, return the code in the response (remove in production)
             _logger.info(f"Verification code for {phone}: {verification_code}")
             
-            return {
+            return request.make_json_response({
                 'success': True,
                 'message': _('Registration successful. Please verify your phone number.'),
                 'data': {
@@ -276,23 +280,23 @@ class CyclexAuthController(http.Controller):
                     'verification_code': verification_code,  # TODO: Remove in production
                     'verification_sent': True
                 }
-            }
+            })
             
         except ValidationError as e:
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': str(e),
                 'error_code': 'VALIDATION_ERROR'
-            }
+            })
         except Exception as e:
             _logger.error(f"Registration error: {str(e)}")
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': _('An error occurred during registration'),
                 'error_code': 'SERVER_ERROR'
-            }
+            })
     
-    @http.route('/api/cyclex/verify', type='json', auth='public', methods=['POST'], csrf=False)
+    @http.route('/api/cyclex/verify', type='http', auth='public', methods=['POST'], csrf=False)
     def verify(self, **kwargs):
         """
         Verify phone number with code
@@ -307,15 +311,17 @@ class CyclexAuthController(http.Controller):
         - data: User profile
         """
         try:
-            phone = kwargs.get('phone')
-            code = kwargs.get('verification_code')
+            # Parse JSON body
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            phone = data.get('phone')
+            code = data.get('verification_code')
             
             if not phone or not code:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Phone number and verification code are required'),
                     'error_code': 'MISSING_PARAMS'
-                }
+                })
             
             # Find user
             partner = request.env['res.partner'].sudo().search([
@@ -324,18 +330,18 @@ class CyclexAuthController(http.Controller):
             ], limit=1)
             
             if not partner:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('User not found'),
                     'error_code': 'USER_NOT_FOUND'
-                }
+                })
             
             if partner.phone_verified:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Phone number already verified'),
                     'error_code': 'ALREADY_VERIFIED'
-                }
+                })
             
             # Verify code
             if partner.verify_code(code):
@@ -346,11 +352,11 @@ class CyclexAuthController(http.Controller):
                 
                 if user:
                     try:
-                        request.session.authenticate(request.db, user.login, kwargs.get('password', ''))
+                        request.session.authenticate(request.db, user.login, data.get('password', ''))
                     except:
                         pass
                 
-                return {
+                return request.make_json_response({
                     'success': True,
                     'message': _('Phone verified successfully'),
                     'data': {
@@ -361,23 +367,23 @@ class CyclexAuthController(http.Controller):
                         'account_status': partner.account_status,
                         'verified': True
                     }
-                }
+                })
             else:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Invalid or expired verification code'),
                     'error_code': 'INVALID_CODE'
-                }
+                })
                 
         except Exception as e:
             _logger.error(f"Verification error: {str(e)}")
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': _('An error occurred during verification'),
                 'error_code': 'SERVER_ERROR'
-            }
+            })
     
-    @http.route('/api/cyclex/resend-code', type='json', auth='public', methods=['POST'], csrf=False)
+    @http.route('/api/cyclex/resend-code', type='http', auth='public', methods=['POST'], csrf=False)
     def resend_code(self, **kwargs):
         """
         Resend verification code
@@ -390,14 +396,16 @@ class CyclexAuthController(http.Controller):
         - message: Status message
         """
         try:
-            phone = kwargs.get('phone')
+            # Parse JSON body
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            phone = data.get('phone')
             
             if not phone:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Phone number is required'),
                     'error_code': 'MISSING_PARAMS'
-                }
+                })
             
             # Find user
             partner = request.env['res.partner'].sudo().search([
@@ -406,18 +414,18 @@ class CyclexAuthController(http.Controller):
             ], limit=1)
             
             if not partner:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('User not found'),
                     'error_code': 'USER_NOT_FOUND'
-                }
+                })
             
             if partner.phone_verified:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Phone number already verified'),
                     'error_code': 'ALREADY_VERIFIED'
-                }
+                })
             
             # Generate new code
             verification_code = partner.generate_verification_code()
@@ -425,24 +433,24 @@ class CyclexAuthController(http.Controller):
             # TODO: Send SMS via SMS Misr
             _logger.info(f"Resent verification code for {phone}: {verification_code}")
             
-            return {
+            return request.make_json_response({
                 'success': True,
                 'message': _('Verification code sent successfully'),
                 'data': {
                     'verification_code': verification_code,  # TODO: Remove in production
                     'phone': phone
                 }
-            }
+            })
             
         except Exception as e:
             _logger.error(f"Resend code error: {str(e)}")
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': _('An error occurred while resending code'),
                 'error_code': 'SERVER_ERROR'
-            }
+            })
     
-    @http.route('/api/cyclex/profile', type='json', auth='user', methods=['GET'], csrf=False)
+    @http.route('/api/cyclex/profile', type='http', auth='user', methods=['GET'], csrf=False)
     def get_profile(self, **kwargs):
         """
         Get current user profile
@@ -455,13 +463,13 @@ class CyclexAuthController(http.Controller):
             partner = request.env.user.partner_id
             
             if not partner.is_cyclex_user:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Not a CycleX user'),
                     'error_code': 'NOT_CYCLEX_USER'
-                }
+                })
             
-            return {
+            return request.make_json_response({
                 'success': True,
                 'data': {
                     'user_id': partner.id,
@@ -483,17 +491,17 @@ class CyclexAuthController(http.Controller):
                     'average_rating': partner.average_rating if partner.cyclex_user_type == 'collector' else 0,
                     'commission_rate': partner.collector_commission_rate if partner.cyclex_user_type == 'collector' else 0,
                 }
-            }
+            })
             
         except Exception as e:
             _logger.error(f"Get profile error: {str(e)}")
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': _('An error occurred while fetching profile'),
                 'error_code': 'SERVER_ERROR'
-            }
+            })
     
-    @http.route('/api/cyclex/update-profile', type='json', auth='user', methods=['POST'], csrf=False)
+    @http.route('/api/cyclex/update-profile', type='http', auth='user', methods=['POST'], csrf=False)
     def update_profile(self, **kwargs):
         """
         Update user profile
@@ -511,58 +519,60 @@ class CyclexAuthController(http.Controller):
         - message: Status message
         """
         try:
+            # Parse JSON body
+            data = json.loads(request.httprequest.data.decode('utf-8'))
             partner = request.env.user.partner_id
             
             if not partner.is_cyclex_user:
-                return {
+                return request.make_json_response({
                     'success': False,
                     'message': _('Not a CycleX user'),
                     'error_code': 'NOT_CYCLEX_USER'
-                }
+                })
             
             # Prepare update values
             vals = {}
             
-            if 'name' in kwargs and kwargs['name']:
-                vals['name'] = kwargs['name']
+            if 'name' in data and data['name']:
+                vals['name'] = data['name']
             
-            if 'email' in kwargs:
-                vals['email'] = kwargs['email']
+            if 'email' in data:
+                vals['email'] = data['email']
             
-            if 'language' in kwargs and kwargs['language'] in ['en', 'ar']:
-                vals['preferred_language'] = kwargs['language']
+            if 'language' in data and data['language'] in ['en', 'ar']:
+                vals['preferred_language'] = data['language']
             
-            if 'fcm_token' in kwargs:
-                vals['fcm_token'] = kwargs['fcm_token']
+            if 'fcm_token' in data:
+                vals['fcm_token'] = data['fcm_token']
             
-            if 'gps_latitude' in kwargs and 'gps_longitude' in kwargs:
-                partner.update_gps_location(kwargs['gps_latitude'], kwargs['gps_longitude'])
+            if 'gps_latitude' in data and 'gps_longitude' in data:
+                partner.update_gps_location(data['gps_latitude'], data['gps_longitude'])
             
             if vals:
                 partner.sudo().write(vals)
             
-            return {
+            return request.make_json_response({
                 'success': True,
                 'message': _('Profile updated successfully'),
                 'data': {
                     'user_id': partner.id,
                     'name': partner.name
                 }
-            }
+            })
             
         except ValidationError as e:
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': str(e),
                 'error_code': 'VALIDATION_ERROR'
-            }
+            })
         except Exception as e:
             _logger.error(f"Update profile error: {str(e)}")
-            return {
+            return request.make_json_response({
                 'success': False,
                 'message': _('An error occurred while updating profile'),
                 'error_code': 'SERVER_ERROR'
-            }
+            })
     
     # ==========================================
     # Helper Methods
