@@ -1,0 +1,33 @@
+{
+	"info": {
+		"name": "32 - Collector Active Orders",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Assigned Orders",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/collector/orders?status=assigned",
+					"host": ["{{base_url}}"],
+					"path": ["collector", "orders"],
+					"query": [
+						{
+							"key": "status",
+							"value": "assigned"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

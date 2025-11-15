@@ -1,0 +1,35 @@
+{
+	"info": {
+		"name": "24 - Update Profile",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Update User Profile",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Nada Al Sharqawi\",\n  \"phone\": \"01000000000\",\n  \"email\": \"nada@example.com\",\n  \"language\": \"en\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/user/profile",
+					"host": ["{{base_url}}"],
+					"path": ["user", "profile"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

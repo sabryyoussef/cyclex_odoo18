@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- ====================
+             DEMO CUSTOMERS
+             ==================== -->
+        
+        <!-- Customer 1: Ahmed Ali -->
+        <record id="partner_customer_ahmed" model="res.partner" context="{'tracking_disable': True, 'mail_create_nolog': True, 'mail_notrack': True}">
+            <field name="name">Ahmed Ali</field>
+            <field name="phone">01200111111</field>
+            <field name="email">ahmed@example.com</field>
+            <field name="cyclex_user_type">customer</field>
+            <field name="preferred_language">en</field>
+            <field name="phone_verified">True</field>
+            <field name="account_status">active</field>
+            <field name="is_company">False</field>
+            <field name="verification_code">123456</field>
+            <field name="city">Cairo</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="user_customer_ahmed" model="res.users">
+            <field name="partner_id" ref="partner_customer_ahmed"/>
+            <field name="login">01200111111</field>
+            <field name="password">Test1234</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Customer 2: Sara Mohamed -->
+        <record id="partner_customer_sara" model="res.partner" context="{'tracking_disable': True, 'mail_create_nolog': True, 'mail_notrack': True}">
+            <field name="name">Sara Mohamed</field>
+            <field name="phone">01200222222</field>
+            <field name="email">sara@example.com</field>
+            <field name="cyclex_user_type">customer</field>
+            <field name="preferred_language">en</field>
+            <field name="phone_verified">True</field>
+            <field name="account_status">active</field>
+            <field name="is_company">False</field>
+            <field name="verification_code">123456</field>
+            <field name="city">Giza</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="user_customer_sara" model="res.users">
+            <field name="partner_id" ref="partner_customer_sara"/>
+            <field name="login">01200222222</field>
+            <field name="password">Test1234</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Customer 3: Omar Hassan -->
+        <record id="partner_customer_omar" model="res.partner" context="{'tracking_disable': True, 'mail_create_nolog': True, 'mail_notrack': True}">
+            <field name="name">Omar Hassan</field>
+            <field name="phone">01200333333</field>
+            <field name="email">omar@example.com</field>
+            <field name="cyclex_user_type">customer</field>
+            <field name="preferred_language">en</field>
+            <field name="phone_verified">True</field>
+            <field name="account_status">active</field>
+            <field name="is_company">False</field>
+            <field name="verification_code">123456</field>
+            <field name="city">Alexandria</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="user_customer_omar" model="res.users">
+            <field name="partner_id" ref="partner_customer_omar"/>
+            <field name="login">01200333333</field>
+            <field name="password">Test1234</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- ====================
+             DEMO COLLECTORS
+             ==================== -->
+        
+        <!-- Collector 1: Mahmoud Collector -->
+        <record id="partner_collector_mahmoud" model="res.partner" context="{'tracking_disable': True, 'mail_create_nolog': True, 'mail_notrack': True}">
+            <field name="name">Mahmoud Collector</field>
+            <field name="phone">01250111111</field>
+            <field name="email">mahmoud.collector@example.com</field>
+            <field name="cyclex_user_type">collector</field>
+            <field name="preferred_language">en</field>
+            <field name="phone_verified">True</field>
+            <field name="account_status">active</field>
+            <field name="collector_approval_status">approved</field>
+            <field name="is_company">False</field>
+            <field name="verification_code">123456</field>
+            <field name="city">Cairo</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="user_collector_mahmoud" model="res.users">
+            <field name="partner_id" ref="partner_collector_mahmoud"/>
+            <field name="login">01250111111</field>
+            <field name="password">Test1234</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Collector 2: Fatma Collector -->
+        <record id="partner_collector_fatma" model="res.partner" context="{'tracking_disable': True, 'mail_create_nolog': True, 'mail_notrack': True}">
+            <field name="name">Fatma Collector</field>
+            <field name="phone">01250222222</field>
+            <field name="email">fatma.collector@example.com</field>
+            <field name="cyclex_user_type">collector</field>
+            <field name="preferred_language">en</field>
+            <field name="phone_verified">True</field>
+            <field name="account_status">active</field>
+            <field name="collector_approval_status">approved</field>
+            <field name="is_company">False</field>
+            <field name="verification_code">123456</field>
+            <field name="city">Giza</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="user_collector_fatma" model="res.users">
+            <field name="partner_id" ref="partner_collector_fatma"/>
+            <field name="login">01250222222</field>
+            <field name="password">Test1234</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Collector 3: Youssef Collector -->
+        <record id="partner_collector_youssef" model="res.partner" context="{'tracking_disable': True, 'mail_create_nolog': True, 'mail_notrack': True}">
+            <field name="name">Youssef Collector</field>
+            <field name="phone">01250333333</field>
+            <field name="email">youssef.collector@example.com</field>
+            <field name="cyclex_user_type">collector</field>
+            <field name="preferred_language">en</field>
+            <field name="phone_verified">True</field>
+            <field name="account_status">active</field>
+            <field name="collector_approval_status">approved</field>
+            <field name="is_company">False</field>
+            <field name="verification_code">123456</field>
+            <field name="city">Alexandria</field>
+            <field name="country_id" ref="base.eg"/>
+        </record>
+        
+        <record id="user_collector_youssef" model="res.users">
+            <field name="partner_id" ref="partner_collector_youssef"/>
+            <field name="login">01250333333</field>
+            <field name="password">Test1234</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>
+

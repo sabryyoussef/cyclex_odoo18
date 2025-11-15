@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Wallet List View -->
+        <record id="view_cyclex_wallet_tree" model="ir.ui.view">
+            <field name="name">cyclex.wallet.tree</field>
+            <field name="model">cyclex.wallet</field>
+            <field name="arch" type="xml">
+                <list string="Wallets">
+                    <field name="user_id"/>
+                    <field name="balance" widget="monetary" decoration-success="balance &gt; 0" decoration-muted="balance == 0"/>
+                    <field name="total_earned" widget="monetary"/>
+                    <field name="total_withdrawn" widget="monetary"/>
+                    <field name="withdrawal_threshold" widget="monetary"/>
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="status" decoration-success="status == 'active'" decoration-danger="status == 'frozen'" widget="badge"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Wallet Form View -->
+        <record id="view_cyclex_wallet_form" model="ir.ui.view">
+            <field name="name">cyclex.wallet.form</field>
+            <field name="model">cyclex.wallet</field>
+            <field name="arch" type="xml">
+                <form string="Wallet">
+                    <header>
+                        <button name="action_request_withdrawal" string="Request Withdrawal" type="object" class="btn-primary" invisible="status != 'active' or balance &lt; withdrawal_threshold"/>
+                        <button name="action_freeze_wallet" string="Freeze Wallet" type="object" class="btn-warning" invisible="status != 'active'"/>
+                        <button name="action_activate_wallet" string="Activate Wallet" type="object" class="btn-success" invisible="status != 'frozen'"/>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_transactions" type="object" class="oe_stat_button" icon="fa-list">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">View</span>
+                                    <span class="o_stat_text">Transactions</span>
+                                </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Active" bg_color="text-bg-success" invisible="status != 'active'"/>
+                        <widget name="web_ribbon" title="Frozen" bg_color="text-bg-danger" invisible="status != 'frozen'"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="user_id" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Balance Information">
+                                <field name="balance" widget="monetary" class="o_stat_value text-success"/>
+                                <field name="total_earned" widget="monetary"/>
+                                <field name="total_withdrawn" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group string="Settings">
+                                <field name="withdrawal_threshold" widget="monetary"/>
+                                <field name="transaction_count"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Transactions" name="transactions">
+                                <field name="transaction_ids" readonly="1">
+                                    <list string="Transactions" create="0" delete="0">
+                                        <field name="create_date"/>
+                                        <field name="transaction_type" decoration-success="transaction_type == 'credit'" decoration-warning="transaction_type == 'debit'"/>
+                                        <field name="amount" widget="monetary" decoration-success="amount &gt; 0" decoration-danger="amount &lt; 0"/>
+                                        <field name="currency_id" column_invisible="1"/>
+                                        <field name="description"/>
+                                        <field name="request_id"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Wallet Kanban View -->
+        <record id="view_cyclex_wallet_kanban" model="ir.ui.view">
+            <field name="name">cyclex.wallet.kanban</field>
+            <field name="model">cyclex.wallet</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="user_id"/>
+                    <field name="balance"/>
+                    <field name="total_earned"/>
+                    <field name="total_withdrawn"/>
+                    <field name="status"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title"><field name="user_id"/></strong>
+                                        </div>
+                                        <span t-if="record.status.raw_value == 'active'" class="badge badge-success">Active</span>
+                                        <span t-else="" class="badge badge-danger">Frozen</span>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div class="text-success"><strong>Balance: <field name="balance" widget="monetary"/></strong></div>
+                                        <div><i class="fa fa-arrow-up"/> Earned: <field name="total_earned" widget="monetary"/></div>
+                                        <div><i class="fa fa-arrow-down"/> Withdrawn: <field name="total_withdrawn" widget="monetary"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Wallet Search View -->
+        <record id="view_cyclex_wallet_search" model="ir.ui.view">
+            <field name="name">cyclex.wallet.search</field>
+            <field name="model">cyclex.wallet</field>
+            <field name="arch" type="xml">
+                <search string="Search Wallets">
+                    <field name="user_id"/>
+                    <filter string="Active" name="active" domain="[('status', '=', 'active')]"/>
+                    <filter string="Frozen" name="frozen" domain="[('status', '=', 'frozen')]"/>
+                    <separator/>
+                    <filter string="With Balance" name="with_balance" domain="[('balance', '&gt;', 0)]"/>
+                    <filter string="Eligible for Withdrawal" name="eligible_withdrawal" domain="[('balance', '&gt;=', 'withdrawal_threshold')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Transaction List View -->
+        <record id="view_cyclex_wallet_transaction_tree" model="ir.ui.view">
+            <field name="name">cyclex.wallet.transaction.tree</field>
+            <field name="model">cyclex.wallet.transaction</field>
+            <field name="arch" type="xml">
+                <list string="Wallet Transactions" create="0" edit="0" delete="0">
+                    <field name="create_date"/>
+                    <field name="wallet_id"/>
+                    <field name="customer_id"/>
+                    <field name="transaction_type" decoration-success="transaction_type == 'credit'" decoration-warning="transaction_type == 'debit'" widget="badge"/>
+                    <field name="amount" widget="monetary" decoration-success="amount &gt; 0" decoration-danger="amount &lt; 0"/>
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="withdrawal_status" optional="show" decoration-warning="withdrawal_status == 'pending'" decoration-success="withdrawal_status == 'approved'" decoration-danger="withdrawal_status == 'rejected'" widget="badge"/>
+                    <field name="description"/>
+                    <field name="request_id"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Transaction Form View -->
+        <record id="view_cyclex_wallet_transaction_form" model="ir.ui.view">
+            <field name="name">cyclex.wallet.transaction.form</field>
+            <field name="model">cyclex.wallet.transaction</field>
+            <field name="arch" type="xml">
+                <form string="Wallet Transaction" create="0" edit="0" delete="0">
+                    <header>
+                        <button name="action_approve_withdrawal" string="Approve" type="object" class="btn-success" invisible="transaction_type != 'debit' or withdrawal_status != 'pending'" groups="cyclex.group_cyclex_admin"/>
+                        <button name="action_reject_withdrawal" string="Reject" type="object" class="btn-danger" invisible="transaction_type != 'debit' or withdrawal_status != 'pending'" groups="cyclex.group_cyclex_admin"/>
+                        <field name="withdrawal_status" widget="statusbar" statusbar_visible="pending,approved,completed" invisible="transaction_type != 'debit'"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Pending Approval" bg_color="text-bg-warning" invisible="withdrawal_status != 'pending'"/>
+                        <widget name="web_ribbon" title="Approved" bg_color="text-bg-success" invisible="withdrawal_status != 'approved'"/>
+                        <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="withdrawal_status != 'rejected'"/>
+                        <group>
+                            <group>
+                                <field name="wallet_id"/>
+                                <field name="customer_id"/>
+                                <field name="transaction_type"/>
+                                <field name="amount" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="request_id"/>
+                                <field name="create_date"/>
+                                <field name="approved_by" invisible="not approved_by"/>
+                                <field name="approval_date" invisible="not approval_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" nolabel="1"/>
+                        </group>
+                        <group invisible="not rejection_reason">
+                            <field name="rejection_reason" nolabel="1" placeholder="Rejection reason..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Transaction Search View -->
+        <record id="view_cyclex_wallet_transaction_search" model="ir.ui.view">
+            <field name="name">cyclex.wallet.transaction.search</field>
+            <field name="model">cyclex.wallet.transaction</field>
+            <field name="arch" type="xml">
+                <search string="Search Transactions">
+                    <field name="wallet_id"/>
+                    <field name="customer_id"/>
+                    <field name="request_id"/>
+                    <filter string="Credits" name="credits" domain="[('transaction_type', '=', 'credit')]"/>
+                    <filter string="Debits" name="debits" domain="[('transaction_type', '=', 'debit')]"/>
+                    <separator/>
+                    <filter string="Pending Withdrawals" name="pending_withdrawals" domain="[('transaction_type', '=', 'debit'), ('withdrawal_status', '=', 'pending')]"/>
+                    <filter string="Approved Withdrawals" name="approved_withdrawals" domain="[('transaction_type', '=', 'debit'), ('withdrawal_status', '=', 'approved')]"/>
+                    <filter string="Rejected Withdrawals" name="rejected_withdrawals" domain="[('transaction_type', '=', 'debit'), ('withdrawal_status', '=', 'rejected')]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month" domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().day-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today" name="today" domain="[('create_date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Wallet" name="group_wallet" context="{'group_by': 'wallet_id'}"/>
+                        <filter string="Customer" name="group_customer" context="{'group_by': 'customer_id'}"/>
+                        <filter string="Type" name="group_type" context="{'group_by': 'transaction_type'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Wallet Action -->
+        <record id="action_cyclex_wallet" model="ir.actions.act_window">
+            <field name="name">Wallets</field>
+            <field name="res_model">cyclex.wallet</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="view_cyclex_wallet_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No wallets yet
+                </p>
+                <p>
+                    Wallets are automatically created when customers complete their first request.
+                </p>
+            </field>
+        </record>
+
+        <!-- Wallet Transactions Action -->
+        <record id="action_cyclex_wallet_transaction" model="ir.actions.act_window">
+            <field name="name">Wallet Transactions</field>
+            <field name="res_model">cyclex.wallet.transaction</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_cyclex_wallet_transaction_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No transactions yet
+                </p>
+                <p>
+                    Wallet transactions are automatically created when requests are collected.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

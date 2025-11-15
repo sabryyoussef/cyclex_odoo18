@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="128" cy="128" r="120" fill="#2ECC71" opacity="0.95"/>
+  
+  <!-- Recycle Symbol with 3 Arrows -->
+  <!-- Top Arrow (pointing right) -->
+  <path d="M 128 60 L 150 90 L 106 90 Z" fill="#FFFFFF" stroke="#27AE60" stroke-width="2"/>
+  <path d="M 128 60 L 145 75 L 130 95" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Bottom Left Arrow (pointing up-right) -->
+  <path d="M 75 170 L 100 145 L 90 185 Z" fill="#FFFFFF" stroke="#27AE60" stroke-width="2"/>
+  <path d="M 75 170 L 90 155 L 110 165" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Bottom Right Arrow (pointing up-left) -->
+  <path d="M 181 170 L 166 185 L 156 145 Z" fill="#FFFFFF" stroke="#27AE60" stroke-width="2"/>
+  <path d="M 181 170 L 166 155 L 146 165" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Center Circle -->
+  <circle cx="128" cy="128" r="35" fill="#27AE60" opacity="0.3"/>
+  <circle cx="128" cy="128" r="25" fill="#FFFFFF"/>
+  
+  <!-- "X" for CycleX in center -->
+  <text x="128" y="145" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="#2ECC71" text-anchor="middle">X</text>
+  
+  <!-- Outer Circle Border -->
+  <circle cx="128" cy="128" r="120" fill="none" stroke="#27AE60" stroke-width="4"/>
+</svg>
+

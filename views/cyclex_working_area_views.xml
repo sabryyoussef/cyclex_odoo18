@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Working Area List View -->
+        <record id="view_cyclex_working_area_tree" model="ir.ui.view">
+            <field name="name">cyclex.working.area.tree</field>
+            <field name="model">cyclex.working.area</field>
+            <field name="arch" type="xml">
+                <list string="Working Areas">
+                    <field name="name"/>
+                    <field name="governorate"/>
+                    <field name="collector_count"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Working Area Form View -->
+        <record id="view_cyclex_working_area_form" model="ir.ui.view">
+            <field name="name">cyclex.working.area.form</field>
+            <field name="model">cyclex.working.area</field>
+            <field name="arch" type="xml">
+                <form string="Working Area">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(action_cyclex_collector)d" type="action" class="oe_stat_button" icon="fa-users" context="{'search_default_working_area_ids': id}">
+                                <field name="collector_count" widget="statinfo" string="Collectors"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="governorate"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="center_latitude"/>
+                                <field name="center_longitude"/>
+                                <field name="radius_km"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" nolabel="1" placeholder="Description of the working area..."/>
+                        </group>
+                        <notebook>
+                            <page string="Collectors" name="collectors">
+                                <field name="collector_ids">
+                                    <list string="Collectors">
+                                        <field name="name"/>
+                                        <field name="phone"/>
+                                        <field name="collector_vehicle_type"/>
+                                        <field name="collector_approval_status"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Working Area Search View -->
+        <record id="view_cyclex_working_area_search" model="ir.ui.view">
+            <field name="name">cyclex.working.area.search</field>
+            <field name="model">cyclex.working.area</field>
+            <field name="arch" type="xml">
+                <search string="Search Working Areas">
+                    <field name="name"/>
+                    <field name="governorate"/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Governorate" name="group_governorate" context="{'group_by': 'governorate'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Working Area Action -->
+        <record id="action_cyclex_working_area" model="ir.actions.act_window">
+            <field name="name">Working Areas</field>
+            <field name="res_model">cyclex.working.area</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_cyclex_working_area_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first working area
+                </p>
+                <p>
+                    Working areas define the geographical regions where collectors can operate.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+

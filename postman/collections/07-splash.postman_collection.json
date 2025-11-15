@@ -1,0 +1,28 @@
+{
+	"info": {
+		"name": "07 - Splash Screen",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get App Config",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/app/config?language={{language}}",
+					"host": ["{{base_url}}"],
+					"path": ["app", "config"],
+					"query": [
+						{
+							"key": "language",
+							"value": "{{language}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

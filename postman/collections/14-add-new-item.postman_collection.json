@@ -1,0 +1,58 @@
+{
+	"info": {
+		"name": "14 - Add New Item",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Custom Item (with photo)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "photo",
+							"type": "file",
+							"src": []
+						},
+						{
+							"key": "item_name",
+							"value": "Mixed plastic bottles",
+							"type": "text"
+						},
+						{
+							"key": "amount_type",
+							"value": "kg",
+							"type": "text",
+							"description": "kg or pieces"
+						},
+						{
+							"key": "amount_value",
+							"value": "1.50",
+							"type": "text"
+						},
+						{
+							"key": "notes",
+							"value": "Optional notes",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/orders/items/custom",
+					"host": ["{{base_url}}"],
+					"path": ["orders", "items", "custom"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

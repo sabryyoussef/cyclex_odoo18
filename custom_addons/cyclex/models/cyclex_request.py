@@ -1,0 +1,423 @@
+# -*- coding: utf-8 -*-
+
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
+import uuid
+from datetime import datetime, timedelta
+import qrcode
+import base64
+from io import BytesIO
+import logging
+
+_logger = logging.getLogger(__name__)
+
+
+class CyclexRequest(models.Model):
+    _name = 'cyclex.request'
+    _description = 'CycleX Recycling Request'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'create_date desc'
+
+    name = fields.Char(
+        string='Request Number',
+        required=True,
+        copy=False,
+        readonly=True,
+        index=True,
+        default=lambda self: _('New')
+    )
+    
+    customer_id = fields.Many2one(
+        'res.partner',
+        string='Customer',
+        required=True,
+        domain=[('cyclex_user_type', '=', 'customer')],
+        tracking=True
+    )
+    
+    collector_id = fields.Many2one(
+        'res.partner',
+        string='Collector',
+        domain=[('cyclex_user_type', '=', 'collector')],
+        tracking=True
+    )
+    
+    category_id = fields.Many2one(
+        'cyclex.category',
+        string='Category',
+        required=True
+    )
+    
+    product_id = fields.Many2one(
+        'cyclex.product',
+        string='Product',
+        required=True,
+        domain="[('category_id', '=', category_id)]"
+    )
+    
+    quantity = fields.Integer(
+        string='Quantity',
+        required=True,
+        default=1
+    )
+    
+    weight = fields.Float(
+        string='Weight (KG)',
+        required=True,
+        digits=(10, 2)
+    )
+    
+    calculated_price = fields.Monetary(
+        string='Calculated Price',
+        compute='_compute_calculated_price',
+        store=True,
+        currency_field='currency_id'
+    )
+    
+    status = fields.Selection([
+        ('draft', 'Draft'),
+        ('pending', 'Pending'),
+        ('assigned', 'Assigned'),
+        ('collected', 'Collected'),
+        ('cancelled', 'Cancelled'),
+    ], string='Status', default='draft', required=True, tracking=True)
+    
+    pickup_date = fields.Date(
+        string='Pickup Date',
+        required=True
+    )
+    
+    photo_1 = fields.Binary(
+        string='Photo 1',
+        attachment=True
+    )
+    
+    photo_2 = fields.Binary(
+        string='Photo 2',
+        attachment=True
+    )
+    
+    qr_code = fields.Char(
+        string='QR Code',
+        copy=False,
+        index=True
+    )
+    
+    qr_code_image = fields.Binary(
+        string='QR Code Image',
+        attachment=True,
+        help='QR Code image for order scanning'
+    )
+    
+    rating = fields.Selection([
+        ('1', '1 - Poor'),
+        ('2', '2 - Fair'),
+        ('3', '3 - Good'),
+        ('4', '4 - Very Good'),
+        ('5', '5 - Excellent'),
+    ], string='Rating')
+    
+    comments = fields.Text(
+        string='Customer Comments'
+    )
+    
+    # GPS Location (from customer at request time)
+    gps_latitude = fields.Float(
+        string='GPS Latitude',
+        digits=(10, 7),
+        help="Customer's latitude when creating the request"
+    )
+    
+    gps_longitude = fields.Float(
+        string='GPS Longitude',
+        digits=(10, 7),
+        help="Customer's longitude when creating the request"
+    )
+    
+    # Dates
+    create_date = fields.Datetime(
+        string='Creation Date',
+        readonly=True,
+        index=True
+    )
+    
+    completion_date = fields.Datetime(
+        string='Completion Date',
+        readonly=True,
+        tracking=True
+    )
+    
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Currency',
+        default=lambda self: self.env.company.currency_id
+    )
+    
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        default=lambda self: self.env.company
+    )
+    
+    @api.depends('weight', 'product_id', 'product_id.price_per_kg')
+    def _compute_calculated_price(self):
+        for request in self:
+            if request.product_id and request.weight:
+                request.calculated_price = request.weight * request.product_id.price_per_kg
+            else:
+                request.calculated_price = 0.0
+    
+    @api.model
+    def create(self, vals):
+        # Generate sequence number
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('cyclex.request') or _('New')
+        
+        # Generate unique QR code and image
+        if not vals.get('qr_code'):
+            qr_data = self._generate_qr_code()
+            vals['qr_code'] = qr_data
+            vals['qr_code_image'] = self._generate_qr_code_image(qr_data)
+        
+        # Get customer's GPS location if available
+        if vals.get('customer_id') and not vals.get('gps_latitude'):
+            customer = self.env['res.partner'].browse(vals['customer_id'])
+            if customer.gps_latitude and customer.gps_longitude:
+                vals['gps_latitude'] = customer.gps_latitude
+                vals['gps_longitude'] = customer.gps_longitude
+        
+        return super(CyclexRequest, self).create(vals)
+    
+    def _generate_qr_code(self):
+        """Generate a unique QR code for the request"""
+        return str(uuid.uuid4())
+    
+    def _generate_qr_code_image(self, qr_data):
+        """Generate QR code image from the QR data"""
+        # Create QR code
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        
+        # Create image
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convert to binary
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        img_binary = base64.b64encode(buffer.getvalue())
+        buffer.close()
+        
+        return img_binary
+    
+    # ==========================================
+    # Business Methods
+    # ==========================================
+    
+    def action_submit(self):
+        """Submit request (draft -> pending)"""
+        self.ensure_one()
+        if self.status != 'draft':
+            raise ValidationError(_('Only draft requests can be submitted.'))
+        self.write({'status': 'pending'})
+        return True
+    
+    def action_assign_collector(self):
+        """Assign collector to request (pending -> assigned)"""
+        self.ensure_one()
+        if self.status != 'pending':
+            raise ValidationError(_('Only pending requests can be assigned.'))
+        if not self.collector_id:
+            raise ValidationError(_('Please select a collector before assigning.'))
+        self.write({
+            'status': 'assigned'
+        })
+        # TODO: Send notification to collector
+        return True
+    
+    def action_mark_collected(self):
+        """Mark request as collected (assigned -> collected)"""
+        self.ensure_one()
+        if self.status != 'assigned':
+            raise ValidationError(_('Only assigned requests can be marked as collected.'))
+        
+        # Update request status
+        self.write({
+            'status': 'collected',
+            'completion_date': fields.Datetime.now()
+        })
+        
+        # Create wallet transaction for customer
+        self._create_wallet_transaction()
+        
+        # Create commission record for collector
+        self._create_commission_record()
+        
+        # TODO: Send notification to customer
+        # TODO: Send notification to collector
+        return True
+    
+    def _create_wallet_transaction(self):
+        """Create wallet transaction when request is collected"""
+        self.ensure_one()
+        
+        # Get or create customer wallet
+        Wallet = self.env['cyclex.wallet']
+        wallet = Wallet.search([('user_id', '=', self.customer_id.id)], limit=1)
+        if not wallet:
+            wallet = Wallet.create_wallet_for_customer(self.customer_id.id)
+        
+        # Add credit to wallet
+        description = _('Payment for request %s - %s kg of %s') % (
+            self.name, 
+            self.weight, 
+            self.product_id.name
+        )
+        
+        wallet.add_credit(
+            amount=self.calculated_price,
+            description=description,
+            request_id=self.id
+        )
+        
+        return wallet
+    
+    def _create_commission_record(self):
+        """Create commission record when request is collected"""
+        self.ensure_one()
+        
+        if not self.collector_id:
+            return None
+        
+        # Create commission using factory method
+        Commission = self.env['cyclex.commission']
+        commission = Commission.create_commission_for_request(self)
+        
+        return commission
+    
+    def action_cancel(self):
+        """Cancel the request"""
+        self.ensure_one()
+        if self.status == 'collected':
+            raise ValidationError(_('Collected requests cannot be cancelled.'))
+        self.write({'status': 'cancelled'})
+        return True
+    
+    def action_view_wallet_transactions(self):
+        """View wallet transactions related to this request"""
+        self.ensure_one()
+        
+        # Find wallet transactions related to this request
+        transactions = self.env['cyclex.wallet.transaction'].search([
+            ('request_id', '=', self.id)
+        ])
+        
+        return {
+            'name': _('Wallet Transactions'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'cyclex.wallet.transaction',
+            'view_mode': 'tree,form',
+            'domain': [('id', 'in', transactions.ids)],
+            'context': {'create': False, 'edit': False},
+        }
+    
+    def action_view_commission(self):
+        """View commission related to this request"""
+        self.ensure_one()
+        
+        # Find commission record related to this request
+        commission = self.env['cyclex.commission'].search([
+            ('request_id', '=', self.id)
+        ], limit=1)
+        
+        if commission:
+            return {
+                'name': _('Commission'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'cyclex.commission',
+                'view_mode': 'form',
+                'res_id': commission.id,
+                'target': 'current',
+            }
+        else:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': _('No commission record found for this request.'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+    
+    # ==========================================
+    # Scheduled Actions (Cron Jobs)
+    # ==========================================
+    
+    @api.model
+    def _cron_auto_revert_overdue_orders(self):
+        """
+        Scheduled action to auto-revert orders that were not completed within 3 days
+        Runs every 6 hours
+        """
+        from datetime import timedelta
+        
+        # Find assigned orders older than 3 days
+        deadline = fields.Datetime.now() - timedelta(days=3)
+        
+        overdue_orders = self.search([
+            ('status', '=', 'assigned'),
+            ('write_date', '<', deadline)  # Last update was more than 3 days ago
+        ])
+        
+        reverted_count = 0
+        for order in overdue_orders:
+            # Revert to pending status
+            order.write({
+                'status': 'pending',
+                'collector_id': False,
+            })
+            
+            # Log activity
+            order.message_post(
+                body=_('Order auto-reverted to pending due to 3-day deadline exceeded. Previous collector: %s') % (order.collector_id.name if order.collector_id else 'N/A'),
+                subject=_('Order Auto-Reverted')
+            )
+            
+            reverted_count += 1
+        
+        if reverted_count > 0:
+            _logger.info(f"Auto-reverted {reverted_count} overdue orders")
+        
+        return True
+    
+    # ==========================================
+    # Validation Constraints
+    # ==========================================
+    
+    @api.constrains('weight')
+    def _check_weight(self):
+        """Validate weight is positive"""
+        for request in self:
+            if request.weight <= 0:
+                raise ValidationError(_('Weight must be greater than zero.'))
+    
+    @api.constrains('quantity')
+    def _check_quantity(self):
+        """Validate quantity is positive"""
+        for request in self:
+            if request.quantity <= 0:
+                raise ValidationError(_('Quantity must be greater than zero.'))
+    
+    @api.constrains('pickup_date')
+    def _check_pickup_date(self):
+        """Validate pickup date is not in the past"""
+        for request in self:
+            if request.pickup_date and request.pickup_date < fields.Date.today():
+                raise ValidationError(_('Pickup date cannot be in the past.'))
+

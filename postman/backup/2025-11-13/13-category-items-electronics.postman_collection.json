@@ -1,0 +1,33 @@
+{
+	"info": {
+		"name": "13 - Category Items (Electronics)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Electronics Category Items",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/catalog/categories/ELECTRONICS/items?language={{language}}",
+					"host": ["{{base_url}}"],
+					"path": ["catalog", "categories", "ELECTRONICS", "items"],
+					"query": [
+						{
+							"key": "language",
+							"value": "{{language}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

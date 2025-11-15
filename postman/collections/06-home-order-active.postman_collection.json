@@ -1,0 +1,37 @@
+{
+	"info": {
+		"name": "06 - Home (Order Active)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Home Summary with Active Order",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/home/summary?language={{language}}&include_active_order=true",
+					"host": ["{{base_url}}"],
+					"path": ["home", "summary"],
+					"query": [
+						{
+							"key": "language",
+							"value": "{{language}}"
+						},
+						{
+							"key": "include_active_order",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

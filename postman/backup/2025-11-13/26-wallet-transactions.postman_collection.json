@@ -1,0 +1,27 @@
+{
+	"info": {
+		"name": "26 - Wallet Transactions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Wallet Transactions",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/wallet/transactions",
+					"host": ["{{base_url}}"],
+					"path": ["wallet", "transactions"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

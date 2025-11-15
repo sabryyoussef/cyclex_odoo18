@@ -1,0 +1,35 @@
+{
+	"info": {
+		"name": "15 - Estimate Item",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Calculate Item Estimate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount_type\": \"kg\",\n  \"amount_value\": 1.5,\n  \"category_id\": \"PLASTIC\",\n  \"item_name\": \"Mixed plastic\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/orders/items/custom/estimate",
+					"host": ["{{base_url}}"],
+					"path": ["orders", "items", "custom", "estimate"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

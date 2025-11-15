@@ -1,0 +1,27 @@
+{
+	"info": {
+		"name": "31 - Collector Home",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Collector Home",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/collector/home",
+					"host": ["{{base_url}}"],
+					"path": ["collector", "home"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

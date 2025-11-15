@@ -1,0 +1,59 @@
+{
+	"info": {
+		"name": "33 - Scan QR",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Scan QR Code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"QR scan successful\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('request_id');",
+							"        pm.expect(json.data).to.have.property('customer_name');",
+							"        pm.expect(json.data).to.have.property('status');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"qr_code\": \"CX-REQ-001-ABC123\",\n  \"gps_latitude\": 30.0444,\n  \"gps_longitude\": 31.2357\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cyclex/collector/scan-qr",
+					"host": ["{{base_url}}"],
+					"path": ["api", "cyclex", "collector", "scan-qr"]
+				}
+			},
+			"response": []
+		}
+	]
+}

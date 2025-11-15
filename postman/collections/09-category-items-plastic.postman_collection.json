@@ -1,0 +1,33 @@
+{
+	"info": {
+		"name": "09 - Category Items (Plastic)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Plastic Category Items",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/catalog/categories/PLASTIC/items?language={{language}}",
+					"host": ["{{base_url}}"],
+					"path": ["catalog", "categories", "PLASTIC", "items"],
+					"query": [
+						{
+							"key": "language",
+							"value": "{{language}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

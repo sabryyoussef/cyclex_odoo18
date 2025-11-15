@@ -1,0 +1,35 @@
+{
+	"info": {
+		"name": "16 - Add Other Items",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Catalog Item to Order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"catalog_item_id\": 101,\n  \"amount_type\": \"kg\",\n  \"amount_value\": 3.5\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/orders/items",
+					"host": ["{{base_url}}"],
+					"path": ["orders", "items"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

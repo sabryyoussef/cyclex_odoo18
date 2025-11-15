@@ -1,0 +1,36 @@
+{
+	"info": {
+		"name": "26 - Wallet Transactions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Wallet Transactions",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cyclex/wallet/transactions",
+					"host": ["{{base_url}}"],
+					"path": ["api", "cyclex", "wallet", "transactions"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

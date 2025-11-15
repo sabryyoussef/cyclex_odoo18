@@ -1,0 +1,51 @@
+{
+	"info": {
+		"name": "02 - Sign Up",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign Up (customer)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"if (json.success && json.data && json.data.user_id) {",
+							"    pm.environment.set(\"user_id\", json.data.user_id);",
+							"    pm.environment.set(\"verification_phone\", json.data.phone);",
+							"}",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Nada Al Sharqawi\",\n  \"phone\": \"01000000000\",\n  \"password\": \"secret123\",\n  \"confirm_password\": \"secret123\",\n  \"user_type\": \"customer\",\n  \"language\": \"en\",\n  \"fcm_token\": \"sample_fcm_token\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cyclex/register",
+					"host": ["{{base_url}}"],
+					"path": ["api", "cyclex", "register"]
+				}
+			},
+			"response": []
+		}
+	]
+}

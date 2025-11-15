@@ -1,0 +1,59 @@
+{
+	"info": {
+		"name": "25 - Profile Wallet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Wallet Balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Response has wallet data\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('balance');",
+							"        pm.expect(json.data).to.have.property('total_earned');",
+							"        pm.expect(json.data).to.have.property('currency');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cyclex/wallet/balance",
+					"host": ["{{base_url}}"],
+					"path": ["api", "cyclex", "wallet", "balance"]
+				}
+			},
+			"response": []
+		}
+	]
+}

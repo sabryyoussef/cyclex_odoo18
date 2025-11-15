@@ -1,0 +1,57 @@
+{
+	"info": {
+		"name": "28 - Login Collector",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login (collector)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"if (json.success && json.data && json.data.user_id) {",
+							"    pm.environment.set(\"collector_id\", json.data.user_id);",
+							"    pm.environment.set(\"collector_name\", json.data.name);",
+							"    pm.environment.set(\"collector_status\", json.data.collector_status);",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"User type is collector\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data.user_type).to.equal('collector');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phone\": \"01111111111\",\n  \"password\": \"collector123\",\n  \"fcm_token\": \"collector_fcm_token\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cyclex/auth/login",
+					"host": ["{{base_url}}"],
+					"path": ["api", "cyclex", "auth", "login"]
+				}
+			},
+			"response": []
+		}
+	]
+}

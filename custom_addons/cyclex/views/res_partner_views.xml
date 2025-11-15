@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Customer List View -->
+        <record id="view_cyclex_customer_tree" model="ir.ui.view">
+            <field name="name">cyclex.customer.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <list string="Customers" create="0">
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="phone_verified" widget="boolean_toggle"/>
+                    <field name="account_status" decoration-success="account_status == 'active'" decoration-danger="account_status in ['suspended', 'banned']"/>
+                    <field name="total_requests_created"/>
+                    <field name="total_earnings" widget="monetary"/>
+                    <field name="registration_date"/>
+                    <field name="last_login_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Customer Form View -->
+        <record id="view_cyclex_customer_form" model="ir.ui.view">
+            <field name="name">cyclex.customer.form</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Customer">
+                    <header>
+                        <button name="action_view_requests" string="View Requests" type="object" class="oe_highlight"/>
+                        <button name="action_view_wallet" string="View Wallet" type="object" class="oe_highlight"/>
+                        <button name="action_suspend_user" string="Suspend" type="object" class="btn-danger" invisible="account_status in ['suspended', 'banned']"/>
+                        <field name="account_status" widget="statusbar" statusbar_visible="inactive,active,suspended"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_requests" type="object" class="oe_stat_button" icon="fa-list">
+                                <field name="total_requests_created" widget="statinfo" string="Requests"/>
+                            </button>
+                            <button name="action_view_wallet" type="object" class="oe_stat_button" icon="fa-money">
+                                <field name="total_earnings" widget="statinfo" string="Earnings"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Verified" bg_color="text-bg-success" invisible="not phone_verified"/>
+                        <widget name="web_ribbon" title="Not Verified" bg_color="text-bg-warning" invisible="phone_verified"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Customer Name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Contact Information">
+                                <field name="phone" required="1"/>
+                                <field name="email"/>
+                                <field name="phone_verified" widget="boolean_toggle"/>
+                                <field name="preferred_language"/>
+                            </group>
+                            <group string="Account Information">
+                                <field name="cyclex_user_type" invisible="1"/>
+                                <field name="registration_date"/>
+                                <field name="last_login_date"/>
+                                <field name="fcm_token" password="True"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Location">
+                                <field name="street" placeholder="Street..."/>
+                                <field name="city"/>
+                                <field name="state_id"/>
+                                <field name="country_id"/>
+                                <field name="gps_latitude"/>
+                                <field name="gps_longitude"/>
+                                <field name="location_last_updated"/>
+                            </group>
+                            <group string="Statistics">
+                                <field name="total_requests_created"/>
+                                <field name="total_earnings" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="Verification Details" invisible="phone_verified">
+                            <field name="verification_code"/>
+                            <field name="verification_code_expiry"/>
+                            <field name="last_verification_sent"/>
+                        </group>
+                        <group string="Suspension Details" invisible="account_status not in ['suspended', 'banned']">
+                            <field name="suspension_reason"/>
+                            <field name="suspension_date"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Collector List View -->
+        <record id="view_cyclex_collector_tree" model="ir.ui.view">
+            <field name="name">cyclex.collector.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <list string="Collectors" create="0">
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="collector_vehicle_type"/>
+                    <field name="working_area_count"/>
+                    <field name="collector_approval_status" decoration-success="collector_approval_status == 'approved'" decoration-warning="collector_approval_status == 'pending'" decoration-danger="collector_approval_status == 'rejected'"/>
+                    <field name="total_requests_completed"/>
+                    <field name="average_rating" widget="percentage"/>
+                    <field name="collector_commission_rate"/>
+                    <field name="registration_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Collector Form View -->
+        <record id="view_cyclex_collector_form" model="ir.ui.view">
+            <field name="name">cyclex.collector.form</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Collector">
+                    <header>
+                        <button name="action_approve_collector" string="Approve" type="object" class="btn-success" invisible="collector_approval_status != 'pending'"/>
+                        <button name="action_reject_collector" string="Reject" type="object" class="btn-danger" invisible="collector_approval_status != 'pending'"/>
+                        <button name="action_view_requests" string="View Orders" type="object" class="oe_highlight"/>
+                        <button name="action_view_commissions" string="View Commissions" type="object" class="oe_highlight"/>
+                        <field name="collector_approval_status" widget="statusbar" statusbar_visible="pending,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_requests" type="object" class="oe_stat_button" icon="fa-truck">
+                                <field name="total_requests_completed" widget="statinfo" string="Orders Completed"/>
+                            </button>
+                            <button name="action_view_commissions" type="object" class="oe_stat_button" icon="fa-money">
+                                <field name="total_commissions" widget="statinfo" string="Commissions"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Approved" bg_color="text-bg-success" invisible="collector_approval_status != 'approved'"/>
+                        <widget name="web_ribbon" title="Pending Approval" bg_color="text-bg-warning" invisible="collector_approval_status != 'pending'"/>
+                        <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger" invisible="collector_approval_status != 'rejected'"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Collector Name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Contact Information">
+                                <field name="phone" required="1"/>
+                                <field name="email"/>
+                                <field name="phone_verified" widget="boolean_toggle"/>
+                                <field name="preferred_language"/>
+                            </group>
+                            <group string="Collector Information">
+                                <field name="cyclex_user_type" invisible="1"/>
+                                <field name="collector_id_number"/>
+                                <field name="collector_vehicle_type"/>
+                                <field name="collector_commission_rate"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Working Areas">
+                                <field name="working_area_ids" widget="many2many_tags" options="{'color_field': 'governorate'}"/>
+                                <field name="working_area_count"/>
+                            </group>
+                            <group string="Performance">
+                                <field name="total_requests_completed"/>
+                                <field name="average_rating" widget="percentpie"/>
+                                <field name="total_commissions" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Account Status">
+                                <field name="account_status"/>
+                                <field name="registration_date"/>
+                                <field name="last_login_date"/>
+                            </group>
+                            <group string="Approval Details">
+                                <field name="collector_approval_date"/>
+                                <field name="collector_approved_by"/>
+                            </group>
+                        </group>
+                        <group string="Rejection Details" invisible="collector_approval_status != 'rejected'">
+                            <field name="collector_rejection_reason" nolabel="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Address" name="address">
+                                <group>
+                                    <group>
+                                        <field name="street" placeholder="Street..."/>
+                                        <field name="street2"/>
+                                        <field name="city"/>
+                                        <field name="state_id"/>
+                                        <field name="zip"/>
+                                        <field name="country_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="gps_latitude"/>
+                                        <field name="gps_longitude"/>
+                                        <field name="location_last_updated"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Customer Kanban View -->
+        <record id="view_cyclex_customer_kanban" model="ir.ui.view">
+            <field name="name">cyclex.customer.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="phone_verified"/>
+                    <field name="account_status"/>
+                    <field name="total_requests_created"/>
+                    <field name="total_earnings"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                            <span class="o_kanban_record_subtitle"><field name="phone"/></span>
+                                        </div>
+                                        <span t-if="record.phone_verified.raw_value" class="badge badge-success">Verified</span>
+                                        <span t-else="" class="badge badge-warning">Not Verified</span>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <field name="account_status" widget="label_selection" options="{'classes': {'active': 'success', 'suspended': 'warning', 'banned': 'danger'}}"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <span><i class="fa fa-list"/> <field name="total_requests_created"/> Requests</span>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span><i class="fa fa-money"/> <field name="total_earnings" widget="monetary"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Customer Search View -->
+        <record id="view_cyclex_customer_search" model="ir.ui.view">
+            <field name="name">cyclex.customer.search</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <search string="Search Customers">
+                    <field name="name" string="Name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <filter string="Verified" name="verified" domain="[('phone_verified', '=', True)]"/>
+                    <filter string="Not Verified" name="not_verified" domain="[('phone_verified', '=', False)]"/>
+                    <filter string="Active" name="active" domain="[('account_status', '=', 'active')]"/>
+                    <filter string="Suspended" name="suspended" domain="[('account_status', 'in', ['suspended', 'banned'])]"/>
+                    <separator/>
+                    <filter string="Arabic Users" name="arabic" domain="[('preferred_language', '=', 'ar')]"/>
+                    <filter string="English Users" name="english" domain="[('preferred_language', '=', 'en')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Account Status" name="group_status" context="{'group_by': 'account_status'}"/>
+                        <filter string="Verification Status" name="group_verified" context="{'group_by': 'phone_verified'}"/>
+                        <filter string="Language" name="group_language" context="{'group_by': 'preferred_language'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Collector Kanban View -->
+        <record id="view_cyclex_collector_kanban" model="ir.ui.view">
+            <field name="name">cyclex.collector.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="collector_approval_status"/>
+                    <field name="collector_vehicle_type"/>
+                    <field name="working_area_count"/>
+                    <field name="total_requests_completed"/>
+                    <field name="average_rating"/>
+                    <field name="total_commissions"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                            <span class="o_kanban_record_subtitle"><field name="phone"/></span>
+                                        </div>
+                                        <span t-if="record.collector_approval_status.raw_value == 'approved'" class="badge badge-success">Approved</span>
+                                        <span t-elif="record.collector_approval_status.raw_value == 'pending'" class="badge badge-warning">Pending</span>
+                                        <span t-else="" class="badge badge-danger">Rejected</span>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div><i class="fa fa-car"/> <field name="collector_vehicle_type"/></div>
+                                        <div><i class="fa fa-map-marker"/> <field name="working_area_count"/> Areas</div>
+                                        <div><i class="fa fa-star"/> Rating: <field name="average_rating" widget="float"/> / 5</div>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <span><field name="total_requests_completed"/> Orders</span>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span><i class="fa fa-money"/> <field name="total_commissions" widget="monetary"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Collector Search View -->
+        <record id="view_cyclex_collector_search" model="ir.ui.view">
+            <field name="name">cyclex.collector.search</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <search string="Search Collectors">
+                    <field name="name" string="Name"/>
+                    <field name="phone"/>
+                    <field name="collector_id_number"/>
+                    <field name="working_area_ids"/>
+                    <filter string="Pending Approval" name="pending" domain="[('collector_approval_status', '=', 'pending')]"/>
+                    <filter string="Approved" name="approved" domain="[('collector_approval_status', '=', 'approved')]"/>
+                    <filter string="Rejected" name="rejected" domain="[('collector_approval_status', '=', 'rejected')]"/>
+                    <separator/>
+                    <filter string="Active Account" name="active_account" domain="[('account_status', '=', 'active')]"/>
+                    <separator/>
+                    <filter string="By Vehicle: Bicycle" name="vehicle_bicycle" domain="[('collector_vehicle_type', '=', 'bicycle')]"/>
+                    <filter string="By Vehicle: Car" name="vehicle_car" domain="[('collector_vehicle_type', '=', 'car')]"/>
+                    <filter string="By Vehicle: Truck" name="vehicle_truck" domain="[('collector_vehicle_type', '=', 'truck')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Approval Status" name="group_approval" context="{'group_by': 'collector_approval_status'}"/>
+                        <filter string="Vehicle Type" name="group_vehicle" context="{'group_by': 'collector_vehicle_type'}"/>
+                        <filter string="Account Status" name="group_status" context="{'group_by': 'account_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Customer Action -->
+        <record id="action_cyclex_customer" model="ir.actions.act_window">
+            <field name="name">Customers</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[('cyclex_user_type', '=', 'customer')]</field>
+            <field name="context">{'default_cyclex_user_type': 'customer', 'default_customer_rank': 1}</field>
+            <field name="search_view_id" ref="view_cyclex_customer_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No customers found
+                </p>
+                <p>
+                    Customers register through the mobile app and appear here once verified.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_cyclex_customer_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_cyclex_customer_tree"/>
+            <field name="act_window_id" ref="action_cyclex_customer"/>
+        </record>
+
+        <record id="action_cyclex_customer_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_cyclex_customer_form"/>
+            <field name="act_window_id" ref="action_cyclex_customer"/>
+        </record>
+
+        <!-- Collector Action -->
+        <record id="action_cyclex_collector" model="ir.actions.act_window">
+            <field name="name">Collectors</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[('cyclex_user_type', '=', 'collector')]</field>
+            <field name="context">{'default_cyclex_user_type': 'collector'}</field>
+            <field name="search_view_id" ref="view_cyclex_collector_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No collectors found
+                </p>
+                <p>
+                    Collectors register through the mobile app and require approval before they can accept orders.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_cyclex_collector_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_cyclex_collector_tree"/>
+            <field name="act_window_id" ref="action_cyclex_collector"/>
+        </record>
+
+        <record id="action_cyclex_collector_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_cyclex_collector_form"/>
+            <field name="act_window_id" ref="action_cyclex_collector"/>
+        </record>
+
+        <!-- Pending Collectors Action -->
+        <record id="action_cyclex_collector_pending" model="ir.actions.act_window">
+            <field name="name">Pending Collector Approvals</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('cyclex_user_type', '=', 'collector'), ('collector_approval_status', '=', 'pending')]</field>
+            <field name="context">{'search_default_pending': 1}</field>
+            <field name="search_view_id" ref="view_cyclex_collector_search"/>
+        </record>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,53 @@
+{
+	"info": {
+		"name": "08 - Categories List",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Response has categories data\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('categories');",
+							"        pm.expect(json.data.categories).to.be.an('array');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"language\": \"{{language}}\",\n  \"parent_id\": null\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cyclex/catalog/categories",
+					"host": ["{{base_url}}"],
+					"path": ["api", "cyclex", "catalog", "categories"]
+				}
+			},
+			"response": []
+		}
+	]
+}

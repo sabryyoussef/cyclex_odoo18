@@ -1,0 +1,33 @@
+{
+	"info": {
+		"name": "05 - Home Summary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Home Summary",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/home/summary?language={{language}}",
+					"host": ["{{base_url}}"],
+					"path": ["home", "summary"],
+					"query": [
+						{
+							"key": "language",
+							"value": "{{language}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

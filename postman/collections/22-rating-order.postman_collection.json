@@ -1,0 +1,58 @@
+{
+	"info": {
+		"name": "22 - Rating Order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Rate Completed Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Rating submitted successfully\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('request_id');",
+							"        pm.expect(json.data).to.have.property('rating');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"rating\": \"5\",\n  \"comments\": \"Excellent service! Very professional collector.\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cyclex/orders/{{order_id}}/rate",
+					"host": ["{{base_url}}"],
+					"path": ["api", "cyclex", "orders", "{{order_id}}", "rate"]
+				}
+			},
+			"response": []
+		}
+	]
+}

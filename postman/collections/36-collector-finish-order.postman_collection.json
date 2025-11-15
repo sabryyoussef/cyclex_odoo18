@@ -1,0 +1,41 @@
+{
+	"info": {
+		"name": "36 - Collector Finish Order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Complete Order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"items\": [\n    {\n      \"item_id\": 101,\n      \"actual_weight\": 3.2,\n      \"actual_pieces\": null\n    }\n  ],\n  \"photos\": [\n    \"https://example.com/photo1.jpg\"\n  ],\n  \"notes\": \"Order completed successfully\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/collector/orders/:order_id/complete",
+					"host": ["{{base_url}}"],
+					"path": ["collector", "orders", ":order_id", "complete"],
+					"variable": [
+						{
+							"key": "order_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

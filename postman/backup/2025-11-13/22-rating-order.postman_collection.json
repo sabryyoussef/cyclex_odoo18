@@ -1,0 +1,41 @@
+{
+	"info": {
+		"name": "22 - Rating Order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Rate Order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"rating\": 5,\n  \"comment\": \"Great service!\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/orders/:order_id/rate",
+					"host": ["{{base_url}}"],
+					"path": ["orders", ":order_id", "rate"],
+					"variable": [
+						{
+							"key": "order_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

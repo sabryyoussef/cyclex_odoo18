@@ -1,0 +1,33 @@
+{
+	"info": {
+		"name": "19 - My Orders",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All My Orders",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/orders?status=all",
+					"host": ["{{base_url}}"],
+					"path": ["orders"],
+					"query": [
+						{
+							"key": "status",
+							"value": "all"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

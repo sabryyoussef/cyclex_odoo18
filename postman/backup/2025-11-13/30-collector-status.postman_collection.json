@@ -1,0 +1,27 @@
+{
+	"info": {
+		"name": "30 - Collector Status",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Collector Approval Status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/collector/status",
+					"host": ["{{base_url}}"],
+					"path": ["collector", "status"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

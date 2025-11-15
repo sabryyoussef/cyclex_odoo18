@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Categories - These are children of the root "Recyclable Materials" category from cyclex_data.xml -->
+        <record id="demo_category_plastic" model="cyclex.category">
+            <field name="name">Plastic Demo</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">PET and HDPE plastic bottles, containers</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="demo_category_paper" model="cyclex.category">
+            <field name="name">Paper Demo</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">Newspapers, magazines, cardboard boxes</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="demo_category_metal" model="cyclex.category">
+            <field name="name">Metal Demo</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">Aluminum cans, steel items</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="demo_category_glass" model="cyclex.category">
+            <field name="name">Glass Demo</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">Glass bottles and jars</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="demo_category_electronics" model="cyclex.category">
+            <field name="name">Electronics Demo</field>
+            <field name="parent_id" ref="category_root_cyclex"/>
+            <field name="description">Small electronic devices</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>
+

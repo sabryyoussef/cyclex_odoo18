@@ -1,0 +1,33 @@
+{
+	"info": {
+		"name": "08 - Categories List",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All Categories",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/catalog/categories?language={{language}}",
+					"host": ["{{base_url}}"],
+					"path": ["catalog", "categories"],
+					"query": [
+						{
+							"key": "language",
+							"value": "{{language}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

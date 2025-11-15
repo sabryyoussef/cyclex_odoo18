@@ -1,0 +1,33 @@
+{
+	"info": {
+		"name": "10 - Category Items (Paper)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Paper Category Items",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/catalog/categories/PAPER/items?language={{language}}",
+					"host": ["{{base_url}}"],
+					"path": ["catalog", "categories", "PAPER", "items"],
+					"query": [
+						{
+							"key": "language",
+							"value": "{{language}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

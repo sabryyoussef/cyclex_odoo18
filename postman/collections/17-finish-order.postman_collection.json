@@ -1,0 +1,35 @@
+{
+	"info": {
+		"name": "17 - Finish Order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"address_id\": 12,\n  \"time_slot\": \"2025-11-13T17:00:00Z\",\n  \"items\": [\n    {\n      \"catalog_item_id\": 101,\n      \"amount_type\": \"kg\",\n      \"amount_value\": 3.5\n    },\n    {\n      \"custom_item_id\": 55\n    }\n  ],\n  \"notes\": \"Please call on arrival\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/orders",
+					"host": ["{{base_url}}"],
+					"path": ["orders"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

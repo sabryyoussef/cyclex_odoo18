@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Plastic Products - Use existing Plastic category from cyclex_data.xml -->
+        <record id="product_pet_bottles_demo" model="cyclex.product">
+            <field name="name">PET Bottles (Clear) - Demo</field>
+            <field name="description">Clear PET plastic bottles (water, soda)</field>
+            <field name="category_id" ref="category_plastic"/>
+            <field name="price_per_kg">3.80</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_hdpe_bottles_demo" model="cyclex.product">
+            <field name="name">HDPE Bottles (Colored) - Demo</field>
+            <field name="description">HDPE plastic bottles (milk, detergent)</field>
+            <field name="category_id" ref="category_plastic"/>
+            <field name="price_per_kg">3.20</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_plastic_bags_demo" model="cyclex.product">
+            <field name="name">Plastic Bags - Demo</field>
+            <field name="description">Clean plastic shopping bags</field>
+            <field name="category_id" ref="category_plastic"/>
+            <field name="price_per_kg">2.50</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Paper Products - Use existing Paper category from cyclex_data.xml -->
+        <record id="product_newspapers_demo" model="cyclex.product">
+            <field name="name">Newspapers - Demo</field>
+            <field name="description">Old newspapers and magazines</field>
+            <field name="category_id" ref="category_paper"/>
+            <field name="price_per_kg">1.20</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_cardboard_demo" model="cyclex.product">
+            <field name="name">Cardboard Boxes - Demo</field>
+            <field name="description">Corrugated cardboard boxes</field>
+            <field name="category_id" ref="category_cardboard"/>
+            <field name="price_per_kg">1.50</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_office_paper_demo" model="cyclex.product">
+            <field name="name">Office Paper - Demo</field>
+            <field name="description">White office paper</field>
+            <field name="category_id" ref="category_paper"/>
+            <field name="price_per_kg">2.00</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Metal Products - Use existing Metal category from cyclex_data.xml -->
+        <record id="product_aluminum_cans_demo" model="cyclex.product">
+            <field name="name">Aluminum Cans - Demo</field>
+            <field name="description">Aluminum beverage cans</field>
+            <field name="category_id" ref="category_metal"/>
+            <field name="price_per_kg">5.00</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_copper_wire_demo" model="cyclex.product">
+            <field name="name">Copper Wire - Demo</field>
+            <field name="description">Copper electrical wire</field>
+            <field name="category_id" ref="category_metal"/>
+            <field name="price_per_kg">25.00</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Glass Products - Use existing Glass category from cyclex_data.xml -->
+        <record id="product_glass_clear_demo" model="cyclex.product">
+            <field name="name">Glass Bottles (Clear) - Demo</field>
+            <field name="description">Clear glass bottles</field>
+            <field name="category_id" ref="category_glass"/>
+            <field name="price_per_kg">0.90</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_glass_colored_demo" model="cyclex.product">
+            <field name="name">Glass Bottles (Colored) - Demo</field>
+            <field name="description">Colored glass bottles</field>
+            <field name="category_id" ref="category_glass"/>
+            <field name="price_per_kg">0.70</field>
+            <field name="active">True</field>
+        </record>
+        
+        <!-- Electronics Products - Use existing Electronics category from cyclex_data.xml -->
+        <record id="product_mobile_phones_demo" model="cyclex.product">
+            <field name="name">Mobile Phones - Demo</field>
+            <field name="description">Old mobile phones</field>
+            <field name="category_id" ref="category_electronics"/>
+            <field name="price_per_kg">20.00</field>
+            <field name="active">True</field>
+        </record>
+        
+        <record id="product_small_appliances_demo" model="cyclex.product">
+            <field name="name">Small Appliances - Demo</field>
+            <field name="description">Small electronic appliances</field>
+            <field name="category_id" ref="category_electronics"/>
+            <field name="price_per_kg">12.00</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>
+

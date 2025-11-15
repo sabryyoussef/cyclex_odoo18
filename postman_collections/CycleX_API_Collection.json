@@ -1,0 +1,589 @@
+{
+	"info": {
+		"_postman_id": "cyclex-api-collection-v1",
+		"name": "CycleX API - Complete Collection",
+		"description": "Complete API collection for CycleX Recycling Mobile Application.\n\n**Base URL:** http://localhost:10018 (update in environment)\n\n**Authentication:** Session-based (auth_token cookie)\n\n**Total Endpoints:** 22\n\n**Categories:**\n- Authentication (4 endpoints)\n- Categories & Products (2 endpoints)\n- Requests (4 endpoints)\n- Collector Actions (4 endpoints)\n- Wallet (4 endpoints)\n- Profile (3 endpoints)\n- Commission (1 endpoint)\n\n**Created for:** Odoo 18 Backend\n**Date:** October 2025",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "1.1 Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"name\": \"Ahmed Hassan\",\n        \"phone\": \"+201234567890\",\n        \"password\": \"TestPass123\",\n        \"email\": \"ahmed@example.com\",\n        \"user_type\": \"customer\",\n        \"language\": \"ar\"\n    },\n    \"id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "register"]
+						},
+						"description": "Register a new user (customer or collector).\n\n**Required:**\n- name\n- phone (Egyptian format: +20XXXXXXXXXX)\n- password (min 8 chars, uppercase, lowercase, number)\n- user_type (customer/collector)\n\n**Optional:**\n- email\n- language (ar/en, default: ar)\n\n**Note:** Verification code will be sent via SMS in Phase 7"
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 Verify Phone",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"phone\": \"+201234567890\",\n        \"code\": \"123456\"\n    },\n    \"id\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/verify",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "verify"]
+						},
+						"description": "Verify phone number with 6-digit code.\n\n**Required:**\n- phone\n- code (6-digit verification code)\n\n**Returns:** Auth session"
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"phone\": \"+201234567890\",\n        \"password\": \"TestPass123\"\n    },\n    \"id\": 3\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "login"]
+						},
+						"description": "Login with phone and password.\n\n**Required:**\n- phone\n- password\n\n**Returns:** User data and auth session"
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 Resend Verification Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"phone\": \"+201234567890\"\n    },\n    \"id\": 4\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/resend-code",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "resend-code"]
+						},
+						"description": "Resend verification code to phone.\n\n**Required:**\n- phone\n\n**Note:** Rate limited to prevent abuse"
+					},
+					"response": []
+				}
+			],
+			"description": "User authentication endpoints"
+		},
+		{
+			"name": "2. Categories & Products",
+			"item": [
+				{
+					"name": "2.1 Get Categories",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"language\": \"ar\"\n    },\n    \"id\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "categories"]
+						},
+						"description": "Get all active recycling categories.\n\n**Optional:**\n- language (ar/en, default: ar)\n\n**Returns:** List of categories with names and images"
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 Get Products",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"category_id\": 1,\n        \"language\": \"ar\"\n    },\n    \"id\": 6\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "products"]
+						},
+						"description": "Get products by category.\n\n**Required:**\n- category_id\n\n**Optional:**\n- language (ar/en, default: ar)\n\n**Returns:** List of products with prices per kg/unit"
+					},
+					"response": []
+				}
+			],
+			"description": "Browse categories and products"
+		},
+		{
+			"name": "3. Recycling Requests (Customer)",
+			"item": [
+				{
+					"name": "3.1 Create Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"product_id\": 1,\n        \"quantity\": 15.5,\n        \"unit\": \"kg\",\n        \"pickup_date\": \"2025-10-20\",\n        \"pickup_time\": \"morning\",\n        \"location_latitude\": 30.0444,\n        \"location_longitude\": 31.2357,\n        \"address\": \"123 شارع التحرير، القاهرة\",\n        \"notes\": \"Please call before arriving\",\n        \"image\": \"base64_encoded_image_string_here\"\n    },\n    \"id\": 7\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/request/create",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "request", "create"]
+						},
+						"description": "Create a new recycling request.\n\n**Required:**\n- product_id\n- quantity\n- unit (kg/unit/ton)\n- pickup_date (YYYY-MM-DD)\n- pickup_time (morning/afternoon/evening)\n- location_latitude\n- location_longitude\n- address\n\n**Optional:**\n- notes\n- image (base64, max 5MB)\n\n**Returns:** Request details with QR code"
+					},
+					"response": []
+				},
+				{
+					"name": "3.2 My Requests",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"status\": \"all\",\n        \"limit\": 20,\n        \"offset\": 0\n    },\n    \"id\": 8\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/request/my-requests",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "request", "my-requests"]
+						},
+						"description": "Get customer's requests.\n\n**Optional:**\n- status (all/pending/assigned/collected/cancelled)\n- limit (default: 20)\n- offset (default: 0)\n\n**Returns:** Paginated list of requests"
+					},
+					"response": []
+				},
+				{
+					"name": "3.3 Request Details",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"request_id\": 1\n    },\n    \"id\": 9\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/request/details",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "request", "details"]
+						},
+						"description": "Get detailed request information.\n\n**Required:**\n- request_id\n\n**Returns:** Full request data including QR code"
+					},
+					"response": []
+				},
+				{
+					"name": "3.4 Rate Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"request_id\": 1,\n        \"rating\": 5,\n        \"comments\": \"Excellent service, very professional!\"\n    },\n    \"id\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/request/rate",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "request", "rate"]
+						},
+						"description": "Rate a completed request.\n\n**Required:**\n- request_id\n- rating (1-5 stars)\n\n**Optional:**\n- comments\n\n**Note:** Only for collected requests"
+					},
+					"response": []
+				}
+			],
+			"description": "Customer request management"
+		},
+		{
+			"name": "4. Collector Actions",
+			"item": [
+				{
+					"name": "4.1 Available Orders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"limit\": 20,\n        \"offset\": 0\n    },\n    \"id\": 11\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/collector/available-orders",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "collector", "available-orders"]
+						},
+						"description": "Get available orders for collector.\n\n**Optional:**\n- limit (default: 20)\n- offset (default: 0)\n\n**Returns:** Orders in collector's working areas\n\n**Note:** Requires verified collector account"
+					},
+					"response": []
+				},
+				{
+					"name": "4.2 Accept Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"request_id\": 1\n    },\n    \"id\": 12\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/collector/accept-order",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "collector", "accept-order"]
+						},
+						"description": "Accept a recycling order.\n\n**Required:**\n- request_id\n\n**Business Rules:**\n- Max 5 pending orders per collector\n- Must complete within 3 days\n- Auto-reverts if deadline exceeded"
+					},
+					"response": []
+				},
+				{
+					"name": "4.3 Reject Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"request_id\": 1,\n        \"reason\": \"Too far from my location\"\n    },\n    \"id\": 13\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/collector/reject-order",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "collector", "reject-order"]
+						},
+						"description": "Reject an assigned order.\n\n**Required:**\n- request_id\n\n**Optional:**\n- reason (rejection explanation)\n\n**Note:** Returns order to pending status"
+					},
+					"response": []
+				},
+				{
+					"name": "4.4 Scan QR Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"qr_code\": \"CYCLEX-REQ-00001-a1b2c3d4e5f6\"\n    },\n    \"id\": 14\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/collector/scan-qr",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "collector", "scan-qr"]
+						},
+						"description": "Scan QR code to complete order.\n\n**Required:**\n- qr_code (UUID string from customer's QR)\n\n**Actions:**\n- Validates QR code\n- Marks order as collected\n- Credits customer wallet\n- Creates collector commission\n\n**Returns:** Order completion details"
+					},
+					"response": []
+				},
+				{
+					"name": "4.5 My Completed Orders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"limit\": 20,\n        \"offset\": 0\n    },\n    \"id\": 15\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/collector/my-orders",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "collector", "my-orders"]
+						},
+						"description": "Get collector's completed orders.\n\n**Optional:**\n- limit (default: 20)\n- offset (default: 0)\n\n**Returns:** History of collected orders"
+					},
+					"response": []
+				}
+			],
+			"description": "Collector order management"
+		},
+		{
+			"name": "5. Wallet",
+			"item": [
+				{
+					"name": "5.1 Get Balance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {},\n    \"id\": 16\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/wallet/balance",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "wallet", "balance"]
+						},
+						"description": "Get current wallet balance.\n\n**Returns:** Current balance and currency"
+					},
+					"response": []
+				},
+				{
+					"name": "5.2 Get Transactions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"limit\": 20,\n        \"offset\": 0\n    },\n    \"id\": 17\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/wallet/transactions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "wallet", "transactions"]
+						},
+						"description": "Get wallet transaction history.\n\n**Optional:**\n- limit (default: 20)\n- offset (default: 0)\n\n**Returns:** List of credit/debit transactions"
+					},
+					"response": []
+				},
+				{
+					"name": "5.3 Request Credit (Admin Only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"customer_id\": 5,\n        \"amount\": 100.00,\n        \"description\": \"Bonus credit for new customer\"\n    },\n    \"id\": 18\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/wallet/credit",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "wallet", "credit"]
+						},
+						"description": "Add credit to customer wallet (Admin only).\n\n**Required:**\n- customer_id\n- amount\n- description\n\n**Note:** Requires admin permissions"
+					},
+					"response": []
+				},
+				{
+					"name": "5.4 Request Withdrawal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"amount\": 50.00,\n        \"description\": \"Withdrawal request\"\n    },\n    \"id\": 19\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/wallet/debit",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "wallet", "debit"]
+						},
+						"description": "Request wallet withdrawal.\n\n**Required:**\n- amount (must be <= balance)\n- description\n\n**Business Rules:**\n- Minimum withdrawal: 10 EGP\n- Status: pending → approved → completed\n- Admin approval required"
+					},
+					"response": []
+				}
+			],
+			"description": "Wallet and transactions"
+		},
+		{
+			"name": "6. Profile",
+			"item": [
+				{
+					"name": "6.1 Get Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {},\n    \"id\": 20\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/profile",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "profile"]
+						},
+						"description": "Get user profile information.\n\n**Returns:** Complete user profile data"
+					},
+					"response": []
+				},
+				{
+					"name": "6.2 Update Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"name\": \"Ahmed Hassan Updated\",\n        \"email\": \"ahmed.new@example.com\",\n        \"language\": \"en\"\n    },\n    \"id\": 21\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/profile/update",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "profile", "update"]
+						},
+						"description": "Update user profile.\n\n**Optional fields:**\n- name\n- email\n- language (ar/en)\n\n**Note:** Phone cannot be changed"
+					},
+					"response": []
+				},
+				{
+					"name": "6.3 Update FCM Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"fcm_token\": \"dXYzABC123def456ghi789jklmno...pqrstuv\"\n    },\n    \"id\": 22\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/profile/update-fcm-token",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "profile", "update-fcm-token"]
+						},
+						"description": "Update Firebase FCM token for push notifications.\n\n**Required:**\n- fcm_token (from Firebase Messaging)\n\n**Note:** Call during login/app start\n\n**Phase:** 7.2 (Firebase integration)"
+					},
+					"response": []
+				}
+			],
+			"description": "User profile management"
+		},
+		{
+			"name": "7. Commission (Collector Only)",
+			"item": [
+				{
+					"name": "7.1 My Commission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jsonrpc\": \"2.0\",\n    \"method\": \"call\",\n    \"params\": {\n        \"limit\": 20,\n        \"offset\": 0\n    },\n    \"id\": 23\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cyclex/collector/my-commission",
+							"host": ["{{base_url}}"],
+							"path": ["api", "cyclex", "collector", "my-commission"]
+						},
+						"description": "Get collector commission history.\n\n**Optional:**\n- limit (default: 20)\n- offset (default: 0)\n\n**Returns:** Commission earned per order\n\n**Note:** Collector only"
+					},
+					"response": []
+				}
+			],
+			"description": "Collector earnings"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:10018",
+			"type": "string"
+		}
+	]
+}
+

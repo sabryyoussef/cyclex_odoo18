@@ -1,0 +1,41 @@
+{
+	"info": {
+		"name": "18 - Confirm Order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Confirm Order",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"payment_method\": \"cash\",\n  \"confirm\": true\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/orders/:order_id/confirm",
+					"host": ["{{base_url}}"],
+					"path": ["orders", ":order_id", "confirm"],
+					"variable": [
+						{
+							"key": "order_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

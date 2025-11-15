@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Commission List View -->
+        <record id="view_cyclex_commission_tree" model="ir.ui.view">
+            <field name="name">cyclex.commission.tree</field>
+            <field name="model">cyclex.commission</field>
+            <field name="arch" type="xml">
+                <list string="Commissions">
+                    <field name="create_date"/>
+                    <field name="collector_id"/>
+                    <field name="customer_id"/>
+                    <field name="request_id"/>
+                    <field name="order_value" widget="monetary"/>
+                    <field name="commission_rate"/>
+                    <field name="commission_amount" widget="monetary" sum="Total Commissions"/>
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="status" decoration-warning="status == 'pending'" decoration-success="status == 'paid'" widget="badge"/>
+                    <field name="payment_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Commission Form View -->
+        <record id="view_cyclex_commission_form" model="ir.ui.view">
+            <field name="name">cyclex.commission.form</field>
+            <field name="model">cyclex.commission</field>
+            <field name="arch" type="xml">
+                <form string="Commission" create="0" edit="0">
+                    <header>
+                        <button name="action_mark_paid" string="Mark as Paid" type="object" class="btn-success" invisible="status != 'pending'"/>
+                        <button name="action_mark_pending" string="Mark as Pending" type="object" class="btn-warning" invisible="status != 'paid'"/>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <widget name="web_ribbon" title="Pending Payment" bg_color="text-bg-warning" invisible="status != 'pending'"/>
+                        <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="status != 'paid'"/>
+                        <group>
+                            <group string="Commission Information">
+                                <field name="collector_id"/>
+                                <field name="customer_id"/>
+                                <field name="request_id"/>
+                                <field name="create_date"/>
+                            </group>
+                            <group string="Financial Details">
+                                <field name="order_value" widget="monetary"/>
+                                <field name="commission_rate" widget="percentage"/>
+                                <field name="commission_amount" widget="monetary" class="o_stat_value text-success"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="Payment Information" invisible="status != 'paid'">
+                            <field name="payment_date"/>
+                        </group>
+                        <group string="Notes">
+                            <field name="notes" placeholder="Add any notes about this commission..." nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Commission Kanban View -->
+        <record id="view_cyclex_commission_kanban" model="ir.ui.view">
+            <field name="name">cyclex.commission.kanban</field>
+            <field name="model">cyclex.commission</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="status" class="o_kanban_small_column">
+                    <field name="id"/>
+                    <field name="collector_id"/>
+                    <field name="customer_id"/>
+                    <field name="request_id"/>
+                    <field name="order_value"/>
+                    <field name="commission_rate"/>
+                    <field name="commission_amount"/>
+                    <field name="status"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title"><field name="collector_id"/></strong>
+                                            <span class="o_kanban_record_subtitle"><field name="request_id"/></span>
+                                        </div>
+                                        <div class="o_dropdown_kanban dropdown">
+                                            <a class="dropdown-toggle o-no-caret btn" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                                <span class="fa fa-ellipsis-v"/>
+                                            </a>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a t-if="record.status.raw_value == 'pending'" role="menuitem" type="object" name="action_mark_paid" class="dropdown-item">Mark as Paid</a>
+                                                <a t-if="record.status.raw_value == 'paid'" role="menuitem" type="object" name="action_mark_pending" class="dropdown-item">Mark as Pending</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div><i class="fa fa-user"/> <field name="customer_id"/></div>
+                                        <div><i class="fa fa-money"/> Order: <field name="order_value" widget="monetary"/></div>
+                                        <div><i class="fa fa-percent"/> Rate: <field name="commission_rate"/>%</div>
+                                        <div class="text-success"><strong>Commission: <field name="commission_amount" widget="monetary"/></strong></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Commission Search View -->
+        <record id="view_cyclex_commission_search" model="ir.ui.view">
+            <field name="name">cyclex.commission.search</field>
+            <field name="model">cyclex.commission</field>
+            <field name="arch" type="xml">
+                <search string="Search Commissions">
+                    <field name="collector_id"/>
+                    <field name="customer_id"/>
+                    <field name="request_id"/>
+                    <filter string="Pending" name="pending" domain="[('status', '=', 'pending')]"/>
+                    <filter string="Paid" name="paid" domain="[('status', '=', 'paid')]"/>
+                    <separator/>
+                    <filter string="This Month" name="this_month" domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().day-1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week" name="this_week" domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today" name="today" domain="[('create_date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Collector" name="group_collector" context="{'group_by': 'collector_id'}"/>
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="Payment Date" name="group_payment_date" context="{'group_by': 'payment_date:month'}"/>
+                        <filter string="Create Date" name="group_create_date" context="{'group_by': 'create_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Commission Action -->
+        <record id="action_cyclex_commission" model="ir.actions.act_window">
+            <field name="name">Commissions</field>
+            <field name="res_model">cyclex.commission</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="view_cyclex_commission_search"/>
+            <field name="context">{'search_default_pending': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No commissions yet
+                </p>
+                <p>
+                    Commissions are automatically generated when collectors complete pickup requests.
+                </p>
+            </field>
+        </record>
+
+        <!-- Pending Commissions Action -->
+        <record id="action_cyclex_commission_pending" model="ir.actions.act_window">
+            <field name="name">Pending Commissions</field>
+            <field name="res_model">cyclex.commission</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="domain">[('status', '=', 'pending')]</field>
+            <field name="context">{'search_default_pending': 1}</field>
+            <field name="search_view_id" ref="view_cyclex_commission_search"/>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,48 @@
+{
+	"info": {
+		"name": "03 - Verify OTP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Verify OTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"if (json.token) {",
+							"    pm.environment.set(\"auth_token\", json.token);",
+							"}",
+							"if (json.user && json.user.id) {",
+							"    pm.environment.set(\"user_id\", json.user.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phone\": \"01000000000\",\n  \"otp\": \"123456\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/auth/verify-otp",
+					"host": ["{{base_url}}"],
+					"path": ["auth", "verify-otp"]
+				}
+			},
+			"response": []
+		}
+	]
+}
+

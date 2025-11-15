@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Category List View (Tree Structure) -->
+        <record id="view_cyclex_category_tree" model="ir.ui.view">
+            <field name="name">cyclex.category.tree</field>
+            <field name="model">cyclex.category</field>
+            <field name="arch" type="xml">
+                <list string="Categories">
+                    <field name="image" widget="image" width="40px" height="40px"/>
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="product_count"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Category Form View -->
+        <record id="view_cyclex_category_form" model="ir.ui.view">
+            <field name="name">cyclex.category.form</field>
+            <field name="model">cyclex.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Category Name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="parent_id" domain="[('id', '!=', id)]"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="product_count"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Category description..." nolabel="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Child Categories" name="child_categories">
+                                <field name="child_ids">
+                                    <list string="Child Categories">
+                                        <field name="name"/>
+                                        <field name="product_count"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Category Kanban View -->
+        <record id="view_cyclex_category_kanban" model="ir.ui.view">
+            <field name="name">cyclex.category.kanban</field>
+            <field name="model">cyclex.category</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="product_count"/>
+                    <field name="image"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('cyclex.category', 'image', record.id.raw_value)" alt="Category Image" class="o_image_64_cover"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <div class="o_kanban_record_top">
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div t-if="record.parent_id.raw_value">Parent: <field name="parent_id"/></div>
+                                        <div><i class="fa fa-box"/> <field name="product_count"/> Products</div>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <span t-if="!record.active.raw_value" class="badge badge-secondary">Archived</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Category Search View -->
+        <record id="view_cyclex_category_search" model="ir.ui.view">
+            <field name="name">cyclex.category.search</field>
+            <field name="model">cyclex.category</field>
+            <field name="arch" type="xml">
+                <search string="Search Categories">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Root Categories" name="root" domain="[('parent_id', '=', False)]"/>
+                    <filter string="Subcategories" name="subcategories" domain="[('parent_id', '!=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Parent Category" name="group_parent" context="{'group_by': 'parent_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Category Action -->
+        <record id="action_cyclex_category" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">cyclex.category</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="view_cyclex_category_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first category
+                </p>
+                <p>
+                    Categories organize recyclable items into hierarchical groups (e.g., Plastic → PET Bottles).
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>
+
