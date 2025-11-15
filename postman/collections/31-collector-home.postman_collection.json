@@ -48,9 +48,9 @@
 					"raw": "{\n  \"limit\": 20,\n  \"offset\": 0\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/cyclex/collector/orders",
+					"raw": "{{base_url}}/api/cyclex/collector/available-orders",
 					"host": ["{{base_url}}"],
-					"path": ["api", "cyclex", "collector", "orders"]
+					"path": ["api", "cyclex", "collector", "available-orders"]
 				}
 			},
 			"response": []

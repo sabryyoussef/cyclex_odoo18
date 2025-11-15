@@ -47,9 +47,9 @@
 					"raw": "{\n  \"rating\": \"5\",\n  \"comments\": \"Excellent service! Very professional collector.\"\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/cyclex/orders/{{order_id}}/rate",
+					"raw": "{{base_url}}/api/cyclex/order/rate/{{request_id}}",
 					"host": ["{{base_url}}"],
-					"path": ["api", "cyclex", "orders", "{{order_id}}", "rate"]
+					"path": ["api", "cyclex", "order", "rate", "{{request_id}}"]
 				}
 			},
 			"response": []

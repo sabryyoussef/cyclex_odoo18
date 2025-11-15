@@ -10,19 +10,25 @@
 				{
 					"listen": "test",
 					"script": {
-						"exec": [
-							"const json = pm.response.json();",
-							"if (json.success && json.data && json.data.user_id) {",
-							"    pm.environment.set(\"user_id\", json.data.user_id);",
-							"    pm.environment.set(\"verification_phone\", json.data.phone);",
-							"}",
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});",
-							"pm.test(\"Response has success field\", function () {",
-							"    pm.expect(json).to.have.property('success');",
-							"});"
-						],
+				"exec": [
+					"const json = pm.response.json();",
+					"if (json.success && json.data && json.data.user_id) {",
+					"    pm.environment.set(\"user_id\", json.data.user_id);",
+					"    pm.environment.set(\"verification_phone\", json.data.phone);",
+					"}",
+					"pm.test(\"Status code is 201\", function () {",
+					"    pm.response.to.have.status(201);",
+					"});",
+					"pm.test(\"Response has success field\", function () {",
+					"    pm.expect(json).to.have.property('success');",
+					"});",
+					"pm.test(\"Registration successful\", function () {",
+					"    if (json.success) {",
+					"        pm.expect(json.data).to.have.property('user_id');",
+					"        pm.expect(json.data).to.have.property('phone');",
+					"    }",
+					"});"
+				],
 						"type": "text/javascript"
 					}
 				}
@@ -37,7 +43,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"Nada Al Sharqawi\",\n  \"phone\": \"01000000000\",\n  \"password\": \"secret123\",\n  \"confirm_password\": \"secret123\",\n  \"user_type\": \"customer\",\n  \"language\": \"en\",\n  \"fcm_token\": \"sample_fcm_token\"\n}"
+					"raw": "{\n  \"name\": \"{{test_name}}\",\n  \"phone\": \"{{test_phone}}\",\n  \"password\": \"{{test_password}}\",\n  \"confirm_password\": \"{{test_password}}\",\n  \"user_type\": \"customer\",\n  \"language\": \"{{language}}\",\n  \"fcm_token\": \"{{fcm_token}}\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cyclex/register",

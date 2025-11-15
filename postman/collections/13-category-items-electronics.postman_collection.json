@@ -6,24 +6,50 @@
 	"item": [
 		{
 			"name": "Get Electronics Category Items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Response has products data\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('products');",
+							"        pm.expect(json.data.products).to.be.an('array');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "Bearer {{auth_token}}"
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"category_id\": \"{{electronics_category_id}}\",\n  \"limit\": 20,\n  \"offset\": 0\n}"
+				},
 				"url": {
-					"raw": "{{base_url}}/catalog/categories/ELECTRONICS/items?language={{language}}",
+					"raw": "{{base_url}}/api/cyclex/products",
 					"host": ["{{base_url}}"],
-					"path": ["catalog", "categories", "ELECTRONICS", "items"],
-					"query": [
-						{
-							"key": "language",
-							"value": "{{language}}"
-						}
-					]
+					"path": ["api", "cyclex", "products"]
 				}
 			},
 			"response": []

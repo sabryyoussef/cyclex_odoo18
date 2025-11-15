@@ -45,12 +45,12 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"estimated_pickup_time\": \"2024-01-15 14:00:00\",\n  \"notes\": \"I will arrive within the estimated time\"\n}"
+					"raw": "{}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/cyclex/collector/orders/{{order_id}}/accept",
+					"raw": "{{base_url}}/api/cyclex/collector/accept-order/{{order_id}}",
 					"host": ["{{base_url}}"],
-					"path": ["api", "cyclex", "collector", "orders", "{{order_id}}", "accept"]
+					"path": ["api", "cyclex", "collector", "accept-order", "{{order_id}}"]
 				}
 			},
 			"response": []

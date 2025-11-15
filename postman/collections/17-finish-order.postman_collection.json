@@ -5,27 +5,53 @@
 	},
 	"item": [
 		{
-			"name": "Create Order",
+			"name": "Create Recycling Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"if (json.success && json.data && json.data.request_id) {",
+							"    pm.environment.set(\"created_request_id\", json.data.request_id);",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Request created successfully\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('request_id');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "Bearer {{auth_token}}"
-					},
-					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"address_id\": 12,\n  \"time_slot\": \"2025-11-13T17:00:00Z\",\n  \"items\": [\n    {\n      \"catalog_item_id\": 101,\n      \"amount_type\": \"kg\",\n      \"amount_value\": 3.5\n    },\n    {\n      \"custom_item_id\": 55\n    }\n  ],\n  \"notes\": \"Please call on arrival\"\n}"
+					"raw": "{\n  \"items\": [\n    {\n      \"product_id\": \"{{plastic_product_id}}\",\n      \"quantity\": 5,\n      \"weight\": 3.5\n    },\n    {\n      \"item_name\": \"Mixed plastic bottles\",\n      \"quantity\": 1,\n      \"weight\": 1.2\n    }\n  ],\n  \"pickup_address_id\": \"{{user_address_id}}\",\n  \"preferred_date\": \"2025-11-15\",\n  \"preferred_time_slot\": \"morning\",\n  \"notes\": \"Please call on arrival\"\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/orders",
+					"raw": "{{base_url}}/api/cyclex/request/create",
 					"host": ["{{base_url}}"],
-					"path": ["orders"]
+					"path": ["api", "cyclex", "request", "create"]
 				}
 			},
 			"response": []

@@ -6,32 +6,50 @@
 	"item": [
 		{
 			"name": "Complete Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Order completed successfully\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('order_id');",
+							"        pm.expect(json.data).to.have.property('status');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "Bearer {{auth_token}}"
-					},
-					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"items\": [\n    {\n      \"item_id\": 101,\n      \"actual_weight\": 3.2,\n      \"actual_pieces\": null\n    }\n  ],\n  \"photos\": [\n    \"https://example.com/photo1.jpg\"\n  ],\n  \"notes\": \"Order completed successfully\"\n}"
+					"raw": "{}"
 				},
 				"url": {
-					"raw": "{{base_url}}/collector/orders/:order_id/complete",
+					"raw": "{{base_url}}/api/cyclex/collector/complete-order/{{order_id}}",
 					"host": ["{{base_url}}"],
-					"path": ["collector", "orders", ":order_id", "complete"],
-					"variable": [
-						{
-							"key": "order_id",
-							"value": "1"
-						}
-					]
+					"path": ["api", "cyclex", "collector", "complete-order", "{{order_id}}"]
 				}
 			},
 			"response": []

@@ -6,6 +6,29 @@
 	"item": [
 		{
 			"name": "Get Wallet Transactions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Response has transactions data\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('transactions');",
+							"        pm.expect(json.data.transactions).to.be.an('array');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [

@@ -45,12 +45,12 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"status\": \"all\",\n  \"limit\": 20,\n  \"offset\": 0\n}"
+					"raw": "{\n  \"status\": \"pending\",\n  \"limit\": 20,\n  \"offset\": 0\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/cyclex/orders",
+					"raw": "{{base_url}}/api/cyclex/request/list",
 					"host": ["{{base_url}}"],
-					"path": ["api", "cyclex", "orders"]
+					"path": ["api", "cyclex", "request", "list"]
 				}
 			},
 			"response": []

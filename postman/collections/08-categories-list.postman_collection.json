@@ -35,16 +35,21 @@
 					{
 						"key": "Content-Type",
 						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"language\": \"{{language}}\",\n  \"parent_id\": null\n}"
+					"raw": "{}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/cyclex/catalog/categories",
+					"raw": "{{base_url}}/api/cyclex/categories",
 					"host": ["{{base_url}}"],
-					"path": ["api", "cyclex", "catalog", "categories"]
+					"path": ["api", "cyclex", "categories"]
 				}
 			},
 			"response": []

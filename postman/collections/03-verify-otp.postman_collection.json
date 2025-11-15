@@ -10,24 +10,29 @@
 				{
 					"listen": "test",
 					"script": {
-						"exec": [
-							"const json = pm.response.json();",
-							"if (json.success && json.data && json.data.user_id) {",
-							"    pm.environment.set(\"user_id\", json.data.user_id);",
-							"    pm.environment.set(\"user_verified\", \"true\");",
-							"}",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test(\"Response has success field\", function () {",
-							"    pm.expect(json).to.have.property('success');",
-							"});",
-							"pm.test(\"User is verified\", function () {",
-							"    if (json.success) {",
-							"        pm.expect(json.data.verified).to.be.true;",
-							"    }",
-							"});"
-						],
+				"exec": [
+					"const json = pm.response.json();",
+					"if (json.success && json.data && json.data.user_id) {",
+					"    pm.environment.set(\"user_id\", json.data.user_id);",
+					"    pm.environment.set(\"user_verified\", \"true\");",
+					"}",
+					"// Capture session cookie for authentication after verification",
+					"const cookies = pm.cookies.toObject();",
+					"if (cookies.session_id) {",
+					"    pm.environment.set(\"session_id\", cookies.session_id);",
+					"}",
+					"pm.test(\"Status code is 200\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});",
+					"pm.test(\"Response has success field\", function () {",
+					"    pm.expect(json).to.have.property('success');",
+					"});",
+					"pm.test(\"User is verified\", function () {",
+					"    if (json.success) {",
+					"        pm.expect(json.data.verified).to.be.true;",
+					"    }",
+					"});"
+				],
 						"type": "text/javascript"
 					}
 				}
@@ -42,7 +47,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"phone\": \"{{verification_phone}}\",\n  \"verification_code\": \"123456\",\n  \"password\": \"secret123\"\n}"
+					"raw": "{\n  \"phone\": \"{{verification_phone}}\",\n  \"verification_code\": \"{{verification_code}}\",\n  \"password\": \"{{test_password}}\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cyclex/verify",

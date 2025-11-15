@@ -6,24 +6,50 @@
 	"item": [
 		{
 			"name": "Get Active Orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response has success field\", function () {",
+							"    pm.expect(json).to.have.property('success');",
+							"});",
+							"pm.test(\"Response has requests data\", function () {",
+							"    if (json.success) {",
+							"        pm.expect(json.data).to.have.property('requests');",
+							"        pm.expect(json.data.requests).to.be.an('array');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "Bearer {{auth_token}}"
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "session_id={{session_id}}",
+						"description": "Odoo session authentication"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"status\": \"assigned\",\n  \"limit\": 20,\n  \"offset\": 0\n}"
+				},
 				"url": {
-					"raw": "{{base_url}}/orders?status=active",
+					"raw": "{{base_url}}/api/cyclex/request/list",
 					"host": ["{{base_url}}"],
-					"path": ["orders"],
-					"query": [
-						{
-							"key": "status",
-							"value": "active"
-						}
-					]
+					"path": ["api", "cyclex", "request", "list"]
 				}
 			},
 			"response": []

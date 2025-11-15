@@ -10,20 +10,30 @@
 				{
 					"listen": "test",
 					"script": {
-						"exec": [
-							"const json = pm.response.json();",
-							"if (json.success && json.data && json.data.user_id) {",
-							"    pm.environment.set(\"user_id\", json.data.user_id);",
-							"    pm.environment.set(\"user_name\", json.data.name);",
-							"    pm.environment.set(\"user_type\", json.data.user_type);",
-							"}",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test(\"Response has success field\", function () {",
-							"    pm.expect(json).to.have.property('success');",
-							"});"
-						],
+				"exec": [
+					"const json = pm.response.json();",
+					"if (json.success && json.data && json.data.user_id) {",
+					"    pm.environment.set(\"user_id\", json.data.user_id);",
+					"    pm.environment.set(\"user_name\", json.data.name);",
+					"    pm.environment.set(\"user_type\", json.data.user_type);",
+					"}",
+					"// Capture session cookie for authentication",
+					"const cookies = pm.cookies.toObject();",
+					"if (cookies.session_id) {",
+					"    pm.environment.set(\"session_id\", cookies.session_id);",
+					"}",
+					"pm.test(\"Status code is 200\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});",
+					"pm.test(\"Response has success field\", function () {",
+					"    pm.expect(json).to.have.property('success');",
+					"});",
+					"pm.test(\"Login successful\", function () {",
+					"    if (json.success) {",
+					"        pm.expect(json.data).to.have.property('user_id');",
+					"    }",
+					"});"
+				],
 						"type": "text/javascript"
 					}
 				}
@@ -38,7 +48,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"phone\": \"01000000000\",\n  \"password\": \"secret123\",\n  \"fcm_token\": \"sample_fcm_token\"\n}"
+					"raw": "{\n  \"phone\": \"{{test_phone}}\",\n  \"password\": \"{{test_password}}\",\n  \"fcm_token\": \"{{fcm_token}}\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cyclex/login",

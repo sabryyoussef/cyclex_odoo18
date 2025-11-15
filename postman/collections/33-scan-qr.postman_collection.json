@@ -45,7 +45,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"qr_code\": \"CX-REQ-001-ABC123\",\n  \"gps_latitude\": 30.0444,\n  \"gps_longitude\": 31.2357\n}"
+					"raw": "{\n  \"qr_code_data\": \"CX-REQ-001-ABC123\"\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cyclex/collector/scan-qr",
