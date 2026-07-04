@@ -3,7 +3,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class CyclexRequest(models.Model):
@@ -134,6 +134,13 @@ class CyclexRequest(models.Model):
         readonly=True,
         tracking=True
     )
+
+    completion_deadline = fields.Datetime(
+        string='Completion Deadline',
+        readonly=True,
+        tracking=True,
+        help='Deadline for the collector to complete the order after acceptance',
+    )
     
     currency_id = fields.Many2one(
         'res.currency',
@@ -195,11 +202,27 @@ class CyclexRequest(models.Model):
         self.ensure_one()
         if self.status != 'pending':
             raise ValidationError(_('Only pending requests can be assigned.'))
+        deadline_days = int(self.env['ir.config_parameter'].sudo().get_param(
+            'cyclex.completion_deadline_days', '3'
+        ))
         self.write({
             'status': 'assigned',
-            'collector_id': collector_id
+            'collector_id': collector_id,
+            'completion_deadline': fields.Datetime.now() + timedelta(days=deadline_days),
         })
         # TODO: Send notification to collector
+        return True
+
+    def action_reject_by_collector(self):
+        """Revert an assigned order back to pending when collector rejects it."""
+        self.ensure_one()
+        if self.status != 'assigned':
+            raise ValidationError(_('Only assigned requests can be rejected by collector.'))
+        self.write({
+            'status': 'pending',
+            'collector_id': False,
+            'completion_deadline': False,
+        })
         return True
     
     def action_mark_collected(self):

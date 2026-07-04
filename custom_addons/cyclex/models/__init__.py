@@ -7,4 +7,5 @@ from . import cyclex_request
 from . import cyclex_wallet
 from . import cyclex_commission
 from . import cyclex_working_area
+from . import cyclex_api_token
 

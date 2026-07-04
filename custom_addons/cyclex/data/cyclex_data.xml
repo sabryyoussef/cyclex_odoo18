@@ -20,6 +20,12 @@
             <field name="value">3</field>
         </record>
 
+        <!-- API Token Lifetime (days) -->
+        <record id="default_api_token_lifetime" model="ir.config_parameter">
+            <field name="key">cyclex.api_token_lifetime_days</field>
+            <field name="value">30</field>
+        </record>
+
         <!-- SMS Misr Configuration Placeholders -->
         <record id="sms_misr_username" model="ir.config_parameter">
             <field name="key">cyclex.sms_misr_username</field>
