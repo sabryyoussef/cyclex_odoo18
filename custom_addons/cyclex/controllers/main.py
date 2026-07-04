@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from odoo import http
-from odoo.http import request
 
-class CycleXController(http.Controller):
-    """
-    Main controller for CycleX API endpoints.
-    This will be expanded in Phase 3 with all API methods.
-    """
-    
-    @http.route('/api/cyclex/health', type='json', auth='public', methods=['GET'], csrf=False)
-    def health_check(self):
-        """Health check endpoint to verify API is running"""
-        return {
+from .api_base import CycleXApiBase
+
+
+class CycleXController(CycleXApiBase):
+    """Main controller for CycleX API endpoints."""
+
+    @http.route('/api/cyclex/health', type='http', auth='public', methods=['GET'], csrf=False)
+    def health_check(self, **kwargs):
+        """Health check endpoint to verify API is running."""
+        return self._success({
             'status': 'ok',
             'message': 'CycleX API is running',
-            'version': '1.0.0'
-        }
-
+            'version': '1.0.0',
+        })

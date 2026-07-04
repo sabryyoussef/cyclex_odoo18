@@ -14,4 +14,5 @@ access_cyclex_commission_collector,cyclex.commission.collector,model_cyclex_comm
 access_cyclex_commission_manager,cyclex.commission.manager,model_cyclex_commission,group_cyclex_manager,1,1,1,1
 access_cyclex_working_area_collector,cyclex.working.area.collector,model_cyclex_working_area,group_cyclex_collector,1,0,0,0
 access_cyclex_working_area_manager,cyclex.working.area.manager,model_cyclex_working_area,group_cyclex_manager,1,1,1,1
+access_cyclex_api_token_system,cyclex.api.token.system,model_cyclex_api_token,base.group_system,1,1,1,1
 
