@@ -1,0 +1,33 @@
+{
+  "run_id": "20260815T125224",
+  "source_reports": {
+    "html": "postman/latest/report/cyclex-latest-20260815T125224-report.sanitized.html",
+    "json": "postman/latest/report/cyclex-latest-20260815T125224-report.sanitized.json"
+  },
+  "started_utc": "2026-08-15T12:52:25.144Z",
+  "completed_utc": "2026-08-15T12:52:59.567Z",
+  "display_local_utc_plus_3": "2026-08-15 15:52:25 +03:00",
+  "newman": {
+    "requests_total": 60,
+    "requests_failed": 0,
+    "assertions_total": 130,
+    "assertions_failed": 0,
+    "skipped": 0,
+    "duration_seconds": 34.4
+  },
+  "target": {
+    "base_url": "http://127.0.0.1:18018",
+    "helper_url": "http://127.0.0.1:18019",
+    "database": "cyclex_api_test_20260815"
+  },
+  "collection_description_branch": "cursor/implement-cyclex-api-endpoints-8b1d",
+  "july_api_base_commit": "eb762e68ae51dc0f60dfca95751b8beb2ab4fdf0",
+  "note": "Newman JSON/HTML do not embed a git commit SHA. The collection description names the July API branch. Test artifacts live on branch test/latest-api-newman-20260815. SHA is recorded from git, not from the Newman runner.",
+  "odoo_version_xmlrpc": "18.0",
+  "cyclex_module_from_helper_health_during_run": {
+    "name": "cyclex",
+    "latest_version": "18.0.1.0.0",
+    "state": "installed"
+  },
+  "production_accessed": false
+}
