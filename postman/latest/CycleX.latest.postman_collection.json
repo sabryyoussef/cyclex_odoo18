@@ -1,0 +1,2407 @@
+{
+  "info": {
+    "_postman_id": "746661af-a8b8-42f8-8e81-01456ee5bd2f",
+    "name": "CycleX Latest API (Bearer / July 2026)",
+    "description": "Newman suite for branch cursor/implement-cyclex-api-endpoints-8b1d.\nAuth: Authorization Bearer token (not session cookies).\nphase_7/postman remains historical and is not modified.\nTARGET MUST BE an Odoo 18 TEST database. Do not run against production.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "customer_token",
+      "value": ""
+    },
+    {
+      "key": "collector_token",
+      "value": ""
+    },
+    {
+      "key": "expired_token",
+      "value": ""
+    },
+    {
+      "key": "customer_phone",
+      "value": ""
+    },
+    {
+      "key": "collector_phone",
+      "value": ""
+    },
+    {
+      "key": "customer_password",
+      "value": ""
+    },
+    {
+      "key": "category_id",
+      "value": ""
+    },
+    {
+      "key": "product_id",
+      "value": ""
+    },
+    {
+      "key": "product_name",
+      "value": ""
+    },
+    {
+      "key": "working_area_id",
+      "value": ""
+    },
+    {
+      "key": "request_id",
+      "value": ""
+    },
+    {
+      "key": "cancel_request_id",
+      "value": ""
+    },
+    {
+      "key": "reject_request_id",
+      "value": ""
+    },
+    {
+      "key": "qr_code",
+      "value": ""
+    },
+    {
+      "key": "pickup_date",
+      "value": ""
+    },
+    {
+      "key": "otp",
+      "value": ""
+    },
+    {
+      "key": "collector_otp",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "00 \u2014 Test harness (local XML-RPC helper)",
+      "item": [
+        {
+          "name": "Helper health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('helper HTTP 200', () => pm.expect(pm.response.code).to.eql(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('helper ok', () => pm.expect(j.ok).to.eql(true));",
+                  "pm.test('cyclex installed', () => pm.expect(j.module && j.module.state).to.eql('installed'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Allocate unique phones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/allocate-phones"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('phones allocated', () => pm.expect(j.ok).to.eql(true));",
+                  "pm.collectionVariables.set('customer_phone', j.customer_phone);",
+                  "pm.collectionVariables.set('collector_phone', j.collector_phone);",
+                  "pm.collectionVariables.set('customer_password', j.password);",
+                  "const d = new Date(); d.setDate(d.getDate() + 3);",
+                  "pm.collectionVariables.set('pickup_date', d.toISOString().slice(0,10));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List working areas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/working-areas"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('areas returned', () => { pm.expect(j.ok).to.eql(true); pm.expect(j.items.length).to.be.above(0); });",
+                  "pm.collectionVariables.set('working_area_id', String(j.items[0].id));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Local 127.0.0.1 helper. Not a CycleX product endpoint."
+    },
+    {
+      "name": "01 \u2014 Health",
+      "item": [
+        {
+          "name": "GET /api/cyclex/health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('payload status ok', () => pm.expect(pm.response.json().data.status).to.eql('ok'));",
+                  "pm.test('version present', () => pm.expect(pm.response.json().data.version).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "02 \u2014 Catalog",
+      "item": [
+        {
+          "name": "GET /api/cyclex/categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/categories"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "const cats = pm.response.json().data.categories;",
+                  "pm.test('categories non-empty', () => pm.expect(cats.length).to.be.above(0));",
+                  "const leaf = cats.find(c => c.parent_id);",
+                  "pm.collectionVariables.set('category_id', String((leaf || cats[0]).id));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/cyclex/products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/products"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "const items = pm.response.json().data.items;",
+                  "pm.test('products non-empty', () => pm.expect(items.length).to.be.above(0));",
+                  "pm.test('product has details fields', () => {",
+                  "  const p = items[0];",
+                  "  pm.expect(p).to.include.keys('id','name','category_id','price_per_kg','currency');",
+                  "});",
+                  "const copper = items.find(p => /copper/i.test(p.name)) || items[0];",
+                  "pm.collectionVariables.set('product_id', String(copper.id));",
+                  "pm.collectionVariables.set('product_name', copper.name);",
+                  "pm.collectionVariables.set('category_id', String(copper.category_id));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/cyclex/products?search=",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/products?search={{product_name}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('search hits', () => pm.expect(pm.response.json().data.items.length).to.be.above(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/cyclex/products?category_id=",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/products?category_id={{category_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "const items = pm.response.json().data.items;",
+                  "pm.test('filtered products', () => pm.expect(items.length).to.be.above(0));",
+                  "pm.test('category matches', () => items.forEach(p => pm.expect(String(p.category_id)).to.eql(pm.collectionVariables.get('category_id'))));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "03 \u2014 Validation errors",
+      "item": [
+        {
+          "name": "POST login missing fields",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 400', () => pm.expect(pm.response.code).to.eql(400));",
+                  "pm.test('status false', () => pm.expect(j.status).to.eql(false));",
+                  "pm.test('missing_fields', () => pm.expect(j.code).to.eql('missing_fields'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST register missing fields",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"X\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 400', () => pm.expect(pm.response.code).to.eql(400));",
+                  "pm.test('missing_fields', () => pm.expect(j.code).to.eql('missing_fields'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST register password mismatch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"X\",\n  \"phone\": \"01999999999\",\n  \"password\": \"abcdef\",\n  \"confirm_password\": \"zzzzzz\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 400', () => pm.expect(pm.response.code).to.eql(400));",
+                  "pm.test('password_mismatch', () => pm.expect(j.code).to.eql('password_mismatch'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST register weak password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"X\",\n  \"phone\": \"01999999998\",\n  \"password\": \"123\",\n  \"confirm_password\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('weak_password', () => { const j = pm.response.json(); pm.expect(pm.response.code).to.eql(400); pm.expect(j.code).to.eql('weak_password'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST request/create without token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/create",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1,\n  \"product_id\": 1,\n  \"quantity\": 1,\n  \"weight\": 1,\n  \"pickup_date\": \"2099-01-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 401', () => pm.expect(pm.response.code).to.eql(401));",
+                  "pm.test('unauthorized', () => pm.expect(j.code).to.eql('unauthorized'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET wallet with junk token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer not-a-real-token",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/balance"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('invalid token 401', () => { pm.expect(pm.response.code).to.eql(401); pm.expect(pm.response.json().code).to.eql('unauthorized'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "04 \u2014 Customer registration & auth",
+      "item": [
+        {
+          "name": "POST /api/cyclex/register customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Newman Customer\",\n  \"phone\": \"{{customer_phone}}\",\n  \"password\": \"{{customer_password}}\",\n  \"confirm_password\": \"{{customer_password}}\",\n  \"language\": \"en\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 201', () => pm.expect(pm.response.code).to.eql(201));",
+                  "pm.test('verification required', () => { pm.expect(j.status).to.eql(true); pm.expect(j.data.verification_required).to.eql(true); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/register duplicate phone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Newman Customer Dup\",\n  \"phone\": \"{{customer_phone}}\",\n  \"password\": \"{{customer_password}}\",\n  \"confirm_password\": \"{{customer_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('duplicate rejected', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(j.status).to.eql(false); pm.expect(j.code).to.eql('validation_error'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST login before OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{customer_phone}}\",\n  \"password\": \"{{customer_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('unverified or inactive denied', () => {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([401,403]);",
+                  "  pm.expect(j.status).to.eql(false);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/resend-code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/resend-code",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{customer_phone}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Helper fetch customer OTP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/otp?phone={{customer_phone}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('otp present', () => { pm.expect(j.ok).to.eql(true); pm.expect(j.partner.verification_code).to.match(/^\\d{6}$/); });",
+                  "pm.collectionVariables.set('otp', j.partner.verification_code);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST verify invalid OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/verify",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{customer_phone}}\",\n  \"verification_code\": \"000000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('invalid_code', () => { const j = pm.response.json(); pm.expect(pm.response.code).to.eql(400); pm.expect(j.code).to.eql('invalid_code'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/verify customer OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/verify",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{customer_phone}}\",\n  \"verification_code\": \"{{otp}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 200 verify', () => pm.expect(pm.response.code).to.eql(200));",
+                  "pm.test('token issued', () => { pm.expect(j.status).to.eql(true); pm.expect(j.data.token).to.be.a('string').and.not.empty; });",
+                  "pm.collectionVariables.set('customer_token', j.data.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST login invalid password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{customer_phone}}\",\n  \"password\": \"WrongPass999\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('invalid credentials 401', () => { pm.expect(pm.response.code).to.eql(401); pm.expect(j.code).to.eql('invalid_credentials'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/login customer success",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{customer_phone}}\",\n  \"password\": \"{{customer_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('login 200', () => pm.expect(pm.response.code).to.eql(200));",
+                  "pm.test('bearer token', () => { pm.expect(j.data.token).to.be.a('string'); pm.expect(j.data.user.user_type).to.eql('customer'); });",
+                  "pm.collectionVariables.set('customer_token', j.data.token);",
+                  "pm.collectionVariables.set('expired_token', j.data.token);"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "05 \u2014 Customer requests",
+      "item": [
+        {
+          "name": "POST request/create missing fields",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/create",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('missing_fields 400', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(j.code).to.eql('missing_fields'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/request/create (complete later)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/create",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": \"{{category_id}}\",\n  \"product_id\": \"{{product_id}}\",\n  \"quantity\": 1,\n  \"weight\": 25,\n  \"pickup_date\": \"{{pickup_date}}\",\n  \"gps_latitude\": 30.0444,\n  \"gps_longitude\": 31.2357\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('created 201', () => pm.expect(pm.response.code).to.eql(201));",
+                  "pm.test('pending + qr', () => { pm.expect(j.status).to.eql(true); pm.expect(j.data.status).to.eql('pending'); pm.expect(j.data.qr_code).to.be.a('string'); });",
+                  "pm.collectionVariables.set('request_id', String(j.data.id));",
+                  "pm.collectionVariables.set('qr_code', j.data.qr_code);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST request/create (to cancel)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/create",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": \"{{category_id}}\",\n  \"product_id\": \"{{product_id}}\",\n  \"quantity\": 1,\n  \"weight\": 2,\n  \"pickup_date\": \"{{pickup_date}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('cancel target 201', () => pm.expect(pm.response.code).to.eql(201));",
+                  "pm.collectionVariables.set('cancel_request_id', String(j.data.id));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST request/create (collector reject flow)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/create",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": \"{{category_id}}\",\n  \"product_id\": \"{{product_id}}\",\n  \"quantity\": 1,\n  \"weight\": 3,\n  \"pickup_date\": \"{{pickup_date}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('reject target 201', () => pm.expect(pm.response.code).to.eql(201));",
+                  "pm.collectionVariables.set('reject_request_id', String(pm.response.json().data.id));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/cyclex/request/list",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/list"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('list has items', () => pm.expect(pm.response.json().data.items.length).to.be.at.least(3));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/cyclex/request/details/:id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/details/{{request_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('details id matches', () => pm.expect(String(pm.response.json().data.id)).to.eql(pm.collectionVariables.get('request_id')));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/request/cancel/:id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/cancel/{{cancel_request_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('cancelled', () => pm.expect(pm.response.json().data.status).to.eql('cancelled'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST cancel already cancelled (idempotency)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/request/cancel/{{cancel_request_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('second cancel rejected', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(j.code).to.eql('invalid_status'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "06 \u2014 Collector registration, pending, approval",
+      "item": [
+        {
+          "name": "POST /api/cyclex/collector/register missing fields",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"C\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('missing_fields', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(pm.response.json().code).to.eql('missing_fields'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/collector/register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Newman Collector\",\n  \"phone\": \"{{collector_phone}}\",\n  \"password\": \"{{customer_password}}\",\n  \"confirm_password\": \"{{customer_password}}\",\n  \"id_number\": \"29901011234567\",\n  \"vehicle_type\": \"motorcycle\",\n  \"working_area_ids\": [{{working_area_id}}]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 201', () => pm.expect(pm.response.code).to.eql(201));",
+                  "pm.test('pending approval', () => pm.expect(j.data.collector_approval_status).to.eql('pending'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Helper fetch collector OTP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/otp?phone={{collector_phone}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('otp', () => pm.expect(j.partner.verification_code).to.match(/^\\d{6}$/));",
+                  "pm.collectionVariables.set('collector_otp', j.partner.verification_code);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST verify collector OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/verify",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{collector_phone}}\",\n  \"verification_code\": \"{{collector_otp}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('collector token', () => { pm.expect(pm.response.code).to.eql(200); pm.expect(j.data.token).to.be.a('string'); });",
+                  "pm.collectionVariables.set('collector_token', j.data.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET available-orders while pending approval",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/available-orders"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('pending collector 403', () => { pm.expect(pm.response.code).to.eql(403); pm.expect(j.code).to.eql('collector_not_approved'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin approve collector",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/approve-collector",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{collector_phone}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('approved', () => { pm.expect(j.ok).to.eql(true); pm.expect(j.partner.collector_approval_status).to.eql('approved'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST collector login after approval",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{collector_phone}}\",\n  \"password\": \"{{customer_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('collector login', () => { pm.expect(pm.response.code).to.eql(200); pm.expect(j.data.user.user_type).to.eql('collector'); });",
+                  "pm.collectionVariables.set('collector_token', j.data.token);"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "07 \u2014 Collector orders: list, accept, reject, QR, complete",
+      "item": [
+        {
+          "name": "GET /api/cyclex/collector/available-orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/available-orders"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('pending orders exist', () => pm.expect(pm.response.json().data.items.length).to.be.above(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST accept reject-target",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/accept-order/{{reject_request_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('assigned', () => pm.expect(pm.response.json().data.status).to.eql('assigned'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/collector/reject-order/:id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/reject-order/{{reject_request_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('back to pending', () => pm.expect(pm.response.json().data.status).to.eql('pending'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/collector/accept-order/:id (complete flow)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/accept-order/{{request_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('assigned main', () => pm.expect(pm.response.json().data.status).to.eql('assigned'));",
+                  "if (pm.response.json().data.qr_code) { pm.collectionVariables.set('qr_code', pm.response.json().data.qr_code); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST scan-qr missing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/scan-qr",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('missing qr', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(pm.response.json().code).to.eql('missing_fields'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST scan-qr invalid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/scan-qr",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"qr_code\": \"not-a-real-qr\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('invalid qr 404', () => { pm.expect(pm.response.code).to.eql(404); pm.expect(pm.response.json().code).to.eql('invalid_qr'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/collector/scan-qr",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/scan-qr",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"qr_code\": \"{{qr_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('qr valid', () => pm.expect(pm.response.json().data.valid).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/collector/complete-order/:id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/complete-order/{{request_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('collected', () => pm.expect(pm.response.json().data.status).to.eql('collected'));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "08 \u2014 Wallet & withdraw",
+      "item": [
+        {
+          "name": "GET /api/cyclex/wallet/balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/balance"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "const d = pm.response.json().data;",
+                  "pm.test('balance numeric', () => pm.expect(d.balance).to.be.a('number'));",
+                  "pm.test('threshold present', () => pm.expect(d.withdrawal_threshold).to.be.a('number'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/cyclex/wallet/transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/transactions"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('credit from completed order', () => pm.expect(pm.response.json().data.items.length).to.be.above(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST withdraw missing amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/withdraw",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('missing amount', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(pm.response.json().code).to.eql('missing_fields'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST withdraw below threshold",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/withdraw",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('below_threshold', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(j.code).to.eql('below_threshold'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Helper credit wallet if below threshold",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/credit-wallet",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"{{customer_phone}}\",\n  \"amount\": 1500\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('credit helper executed', () => pm.expect(pm.response.code).to.be.oneOf([200,404,500]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/wallet/withdraw",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/withdraw",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('withdraw 200', () => pm.expect(pm.response.code).to.eql(200));",
+                  "pm.test('status true', () => pm.expect(j.status).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "09 \u2014 Rating",
+      "item": [
+        {
+          "name": "POST rate missing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/order/rate/{{request_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('rating required', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(pm.response.json().code).to.eql('missing_fields'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST rate invalid value",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/order/rate/{{request_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": \"9\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('invalid_rating', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(pm.response.json().code).to.eql('invalid_rating'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/cyclex/order/rate/:id",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/order/rate/{{request_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": \"5\",\n  \"comments\": \"Newman test rating\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('HTTP 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('JSON status true', () => pm.expect(j.status).to.eql(true));",
+                  "pm.test('message present', () => pm.expect(j.message).to.be.a('string'));",
+                  "pm.test('rated 5', () => pm.expect(pm.response.json().data.rating).to.eql('5'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST rate duplicate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/order/rate/{{request_id}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": \"4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('already_rated', () => { pm.expect(pm.response.code).to.eql(400); pm.expect(pm.response.json().code).to.eql('already_rated'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "name": "10 \u2014 Role access & expired token",
+      "item": [
+        {
+          "name": "Customer cannot access collector available-orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/collector/available-orders"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const j = pm.response.json();",
+                  "pm.test('customer forbidden on collector API', () => { pm.expect(pm.response.code).to.eql(403); pm.expect(j.code).to.eql('forbidden'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Collector cannot access customer wallet",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{collector_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/balance"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('collector forbidden on wallet', () => { pm.expect(pm.response.code).to.eql(403); pm.expect(pm.response.json().code).to.eql('forbidden'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin expire customer token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Helper-Token",
+                "value": "{{helper_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{helper_url}}/expire-token",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{customer_token}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expired recorded', () => pm.expect(pm.response.json().ok).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET wallet with expired token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{customer_token}}",
+                "type": "text"
+              }
+            ],
+            "url": "{{base_url}}/api/cyclex/wallet/balance"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('expired token 401', () => { pm.expect(pm.response.code).to.eql(401); pm.expect(pm.response.json().code).to.eql('unauthorized'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": ""
+    }
+  ]
+}

@@ -12,6 +12,15 @@ build/
 venv/
 env/
 ENV/
+.venv18/
+node_modules/
+
+# Local TEST runner (never commit secrets)
+.odoo-test-data/
+postman/latest/CycleX.latest.local.postman_environment.json
+postman/latest/odoo18_test.conf
+postman/latest/.env.local
+postman/latest/report/*-unsanitized*
 
 # Odoo
 *.log
@@ -43,3 +52,9 @@ Thumbs.db
 odoo.log
 odoo-server.log
 
+postman/latest/odoo18-test.log
+postman/latest/helper.log
+postman/latest/node_modules/
+postman/latest/report/*-report.json
+postman/latest/report/*-report.html
+postman/latest/screenshots/*.png

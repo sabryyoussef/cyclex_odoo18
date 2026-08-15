@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'CycleX - Recycling Management System',
-    'version': '18.0.1.0.0',
+    'version': '18.0.1.0.1',
     'category': 'Sales',
     'summary': 'Recycling mobile application with collector and customer management',
     'description': """

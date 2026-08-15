@@ -1,0 +1,21 @@
+[options]
+; Example TEST Odoo 18 config. Copy to odoo18_test.conf (gitignored).
+; Do NOT point this at production.
+addons_path = /opt/odoo18-src/addons,/opt/cyclex_odoo18/custom_addons
+admin_passwd = CHANGE_ME
+db_name = cyclex_api_test_20260815
+db_user = odoo
+db_password = CHANGE_ME
+db_host = 127.0.0.1
+db_port = False
+dbfilter = ^cyclex_api_test_20260815$
+list_db = False
+http_port = 18018
+http_interface = 127.0.0.1
+workers = 0
+max_cron_threads = 0
+xmlrpc_interface = 127.0.0.1
+logfile = /opt/cyclex_odoo18/postman/latest/odoo18-test.log
+log_level = info
+data_dir = /opt/cyclex_odoo18/.odoo-test-data
+without_demo = True

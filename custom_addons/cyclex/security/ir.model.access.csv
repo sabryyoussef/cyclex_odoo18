@@ -15,4 +15,7 @@ access_cyclex_commission_manager,cyclex.commission.manager,model_cyclex_commissi
 access_cyclex_working_area_collector,cyclex.working.area.collector,model_cyclex_working_area,group_cyclex_collector,1,0,0,0
 access_cyclex_working_area_manager,cyclex.working.area.manager,model_cyclex_working_area,group_cyclex_manager,1,1,1,1
 access_cyclex_api_token_system,cyclex.api.token.system,model_cyclex_api_token,base.group_system,1,1,1,1
+access_mail_message_cyclex_customer,mail.message.cyclex.customer,mail.model_mail_message,group_cyclex_customer,1,1,1,0
+access_mail_activity_cyclex_customer,mail.activity.cyclex.customer,mail.model_mail_activity,group_cyclex_customer,1,1,1,0
+access_ir_attachment_cyclex_customer,ir.attachment.cyclex.customer,base.model_ir_attachment,group_cyclex_customer,1,1,1,0
 

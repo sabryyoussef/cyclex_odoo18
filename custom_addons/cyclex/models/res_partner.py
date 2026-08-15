@@ -489,13 +489,14 @@ class ResPartner(models.Model):
         """Helper method to create a CycleX user with proper defaults"""
         if 'is_company' not in vals:
             vals['is_company'] = False
-        if 'customer_rank' not in vals:
+        # customer_rank exists in sale/account, not on community res.partner
+        if 'customer_rank' not in vals and 'customer_rank' in self._fields:
             vals['customer_rank'] = 1
         if 'registration_date' not in vals:
             vals['registration_date'] = fields.Datetime.now()
         if 'account_status' not in vals:
             vals['account_status'] = 'inactive'  # Will be active after verification
-        
+        vals = {key: value for key, value in vals.items() if key in self._fields}
         return self.create(vals)
 
 

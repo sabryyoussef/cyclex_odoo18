@@ -250,40 +250,29 @@ class CyclexRequest(models.Model):
     def _create_wallet_transaction(self):
         """Create wallet transaction when request is collected"""
         self.ensure_one()
-        
-        # Get or create customer wallet
-        Wallet = self.env['cyclex.wallet']
+        Wallet = self.env['cyclex.wallet'].sudo()
         wallet = Wallet.search([('user_id', '=', self.customer_id.id)], limit=1)
         if not wallet:
             wallet = Wallet.create_wallet_for_customer(self.customer_id.id)
-        
-        # Add credit to wallet
+
         description = _('Payment for request %s - %s kg of %s') % (
-            self.name, 
-            self.weight, 
+            self.name,
+            self.weight,
             self.product_id.name
         )
-        
         wallet.add_credit(
             amount=self.calculated_price,
             description=description,
             request_id=self.id
         )
-        
         return wallet
-    
+
     def _create_commission_record(self):
         """Create commission record when request is collected"""
         self.ensure_one()
-        
         if not self.collector_id:
             return None
-        
-        # Create commission using factory method
-        Commission = self.env['cyclex.commission']
-        commission = Commission.create_commission_for_request(self)
-        
-        return commission
+        return self.env['cyclex.commission'].sudo().create_commission_for_request(self)
     
     def action_cancel(self):
         """Cancel the request"""

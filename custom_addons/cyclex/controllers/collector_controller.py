@@ -30,6 +30,8 @@ class CycleXCollectorController(CycleXApiBase):
             working_area_ids = params.get('working_area_ids') or params.get('working_areas') or []
             if isinstance(working_area_ids, str):
                 working_area_ids = [int(x) for x in working_area_ids.split(',') if x.strip()]
+            elif isinstance(working_area_ids, list):
+                working_area_ids = [int(x) for x in working_area_ids if str(x).strip()]
             params['working_area_ids'] = working_area_ids
 
             if len(working_area_ids) > 5:
